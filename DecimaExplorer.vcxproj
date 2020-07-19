@@ -22,32 +22,32 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{05B0E20F-1ED1-4EA1-B3BF-9FDFDD7E26B3}</ProjectGuid>
     <RootNamespace>DecimaExplorer</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -117,6 +117,8 @@
   <ItemGroup>
     <ClCompile Include="archive\DecimaArchive.cpp" />
     <ClCompile Include="cli\CLI.cpp" />
+    <ClCompile Include="hash\md5.c" />
+    <ClCompile Include="hash\MurmurHash3.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ooz\Kraken.cpp" />
   </ItemGroup>
@@ -124,11 +126,15 @@
     <ClInclude Include="archive\DecimaArchive.h" />
     <ClInclude Include="archive\DecimaArchiveError.h" />
     <ClInclude Include="cli\CLI.h" />
+    <ClInclude Include="hash\md5.h" />
+    <ClInclude Include="hash\MurmurHash3.h" />
     <ClInclude Include="ooz\Kraken.h" />
     <ClInclude Include="ooz\targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="LICENSE.md" />
     <None Include="ooz\LICENSE.md" />
+    <None Include="README.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
