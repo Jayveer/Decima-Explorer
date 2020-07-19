@@ -2,7 +2,11 @@
 #include "DecimaArchiveError.h"
 
 bool DecimaArchive::checkMagic() {
-	return header.magic == 0x20304050;
+	return (header.magic == 0x20304050) || (header.magic == 0x21304050);
+}
+
+bool DecimaArchive::isEncrypted() {
+	return header.magic == 0x21304050;
 }
 
 std::string DecimaArchive::getFilename() {
@@ -18,7 +22,7 @@ DecimaArchive::DecimaArchive(std::string filename) {
 }
 
 int DecimaArchive::getVersion() {
-	return header.version;
+	return header.key;
 }
 
 DecimaArchive::~DecimaArchive() {
@@ -38,7 +42,7 @@ int DecimaArchive::calculateChunkTableOffset(uint64_t fileTableCount) {
 
 void DecimaArchive::parseHeader(FILE* f) {
 	fread(&header.magic, 4, 1, f);
-	fread(&header.version, 4, 1, f);
+	fread(&header.key, 4, 1, f);
 	fread(&header.fileSize, 8, 1, f);
 	fread(&header.dataSize, 8, 1, f);
 	fread(&header.fileTableCount, 8, 1, f);
@@ -51,11 +55,11 @@ void DecimaArchive::parseFileTable(FILE* f, uint64_t fileTableCount) {
 		DecimaFileEntry fileEntry;
 
 		fread(&fileEntry.entryNum, 4, 1, f);
-		fread(&fileEntry.unknown, 4, 1, f);
-		fread(&fileEntry.unknown2, 8, 1, f);
+		fread(&fileEntry.key, 4, 1, f);
+		fread(&fileEntry.hash, 8, 1, f);
 		fread(&fileEntry.offset, 8, 1, f);
 		fread(&fileEntry.size, 4, 1, f);
-		fread(&fileEntry.unknown3, 4, 1, f);
+		fread(&fileEntry.key2, 4, 1, f);
 
 		fileTable.push_back(fileEntry);
 	}
@@ -68,10 +72,10 @@ void DecimaArchive::parseChunkTable(FILE* f, uint64_t chunkTableCount) {
 
 		fread(&chunkEntry.uncompressedOffset, 8, 1, f);
 		fread(&chunkEntry.uncompressedSize, 4, 1, f);
-		fread(&chunkEntry.unknown, 4, 1, f);
+		fread(&chunkEntry.key, 4, 1, f);
 		fread(&chunkEntry.compressedOffset, 8, 1, f);
 		fread(&chunkEntry.compressedSize, 4, 1, f);
-		fread(&chunkEntry.unknown2, 4, 1, f);
+		fread(&chunkEntry.key2, 4, 1, f);
 
 		chunkTable.push_back(chunkEntry);
 	}
@@ -146,7 +150,9 @@ DataBuffer DecimaArchive::extract(DecimaFileEntry fileEntry) {
 	DataBuffer tempBuffer(maxNeededSize);
 
 	for (int i = firstChunkRow; i <= lastChunkRow; i++) {
-		decompressChunkData(getChunkData(chunkTable[i]), chunkTable[i].uncompressedSize, &tempBuffer[pos]);
+		DataBuffer chunkData = getChunkData(chunkTable[i]);
+		if (isEncrypted()) decryptChunkData(i, &chunkData);
+		decompressChunkData(chunkData, chunkTable[i].uncompressedSize, &tempBuffer[pos]);
 		pos += chunkTable[i].uncompressedSize;
 	}
 
@@ -158,6 +164,61 @@ DataBuffer DecimaArchive::extract(DecimaFileEntry fileEntry) {
 
 	return file;
 
+}
+
+void DecimaArchive::decryptHeader() {
+	uint32_t* p = (uint32_t*)&header + 2;
+	cipher(header.key, header.key + 1, p);
+}
+
+void DecimaArchive::decryptFileTable() {
+	for (int i = 0; i< header.fileTableCount; i++) {
+		uint32_t* p = (uint32_t*)&fileTable[i];
+		cipher(fileTable[i].key, fileTable[i].key2, p);
+	}
+}
+
+void DecimaArchive::decryptChunkTable() {
+	for (int i = 0; i < header.chunkTableCount; i++) {
+		uint32_t* p = (uint32_t*)&chunkTable[i];
+		uint32_t saveKey = chunkTable[i].key;
+		cipher(chunkTable[i].key, chunkTable[i].key2, p);
+		chunkTable[i].key = saveKey;
+	}
+}
+
+void DecimaArchive::decryptChunkData(int32_t id, DataBuffer* data) {
+	dataCipher(id, &(*data)[0], data->size());
+}
+
+void DecimaArchive::cipher(uint32_t key, uint32_t key2, uint32_t *src) {
+	uint32_t iv[4];
+	uint32_t inputKey[2][4] = {
+								{ key,  murmurSalt[1], murmurSalt[2], murmurSalt[3] }, 
+								{ key2, murmurSalt[1], murmurSalt[2], murmurSalt[3] } 
+	};
+
+	for (int i = 0; i < 2; i++) {
+		MurmurHash3_x64_128(inputKey[i], 0x10, seed, iv);
+		for (int j = 0; j < 4; j++) {
+			src[(i * 4) + j] ^= iv[j];
+		}
+	}
+}
+
+void DecimaArchive::dataCipher(uint32_t chunkID, uint8_t* src, int size) {
+	uint32_t iv[4];
+	MurmurHash3_x64_128(&chunkTable[chunkID].uncompressedOffset, 0x10, seed, iv);
+
+	for (int i = 0; i < 4; i++) {
+		iv[i] ^= murmurSalt2[i];
+	}
+	
+	md5_byte_t* digest = md5Hash((md5_byte_t*)iv, 16);
+
+	for (int i = 0; i < size; i++) {
+		src[i] ^= digest[i % 16];
+	}
 }
 
 int DecimaArchive::open() {
@@ -176,8 +237,14 @@ int DecimaArchive::open() {
 		return 0;
 	}
 
+	if (isEncrypted()) decryptHeader();
+
 	parseFileTable(f, header.fileTableCount);
+	if (isEncrypted()) decryptFileTable();
+
 	parseChunkTable(f, header.chunkTableCount);
+	if (isEncrypted()) decryptChunkTable();
+
 	fclose(f);
 	return 1;
 }

@@ -27,6 +27,12 @@
     <ClCompile Include="cli\CLI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="hash\MurmurHash3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hash\md5.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ooz\Kraken.h">
@@ -44,8 +50,16 @@
     <ClInclude Include="cli\CLI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="hash\MurmurHash3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="hash\md5.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ooz\LICENSE.md" />
+    <None Include="LICENSE.md" />
+    <None Include="README.md" />
   </ItemGroup>
 </Project>
