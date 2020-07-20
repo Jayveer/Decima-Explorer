@@ -106,6 +106,23 @@ uint32_t DecimaArchive::getFileEntryIndex(int id) {
 	return -1;
 }
 
+uint64_t DecimaArchive::getFileHash(std::string filename) {
+	uint64_t hash;
+	uint8_t byte[16];
+	MurmurHash3_x64_128(filename.c_str(), filename.size() + 1, seed, &byte);
+	memcpy(&hash, byte, 8);
+	return hash;
+}
+
+uint32_t DecimaArchive::getFileEntryIndex(std::string filename) {
+	uint64_t hash = getFileHash(filename);
+	for (int i = 0; i < fileTable.size(); i++) {
+		if (fileTable[i].hash == hash)
+			return i;
+	}
+	return -1;
+}
+
 DecimaFileEntry DecimaArchive::getFileEntry(int id) {
 	for (int i = 0; i < fileTable.size(); i++) {
 		if (fileTable[i].entryNum == id)
@@ -254,6 +271,20 @@ int DecimaArchive::extractFile(uint32_t id, std::string output) {
 
 	if (i == -1) {
 		showError(FINDINDEXFAIL);
+		return 0;
+	}
+
+	DataBuffer data = extract(fileTable[i]);
+	if (!writeDataToFile(data, output)) return 0;
+	return 1;
+}
+
+int DecimaArchive::extractFile(std::string filename, std::string output) {
+	if (!hasExtension(filename, "core")) addExtension(filename, "core");
+	uint32_t i = getFileEntryIndex(filename);
+
+	if (i == -1) {
+		showError(INVALIDFILENAME);
 		return 0;
 	}
 

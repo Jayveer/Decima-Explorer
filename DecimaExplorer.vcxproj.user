@@ -8,7 +8,7 @@
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LocalDebuggerCommandArguments>-e 7017f9bb9d52fc1c4433599203cc51b1.bin 0 0out.bin</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>-e 7017f9bb9d52fc1c4433599203cc51b1.bin "shit.core" shit.core</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
 </Project>

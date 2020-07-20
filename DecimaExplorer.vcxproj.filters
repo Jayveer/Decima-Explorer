@@ -56,6 +56,15 @@
     <ClInclude Include="hash\md5.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="file\prefetch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="file\DecimaCore.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="fileutils\Fileutils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ooz\LICENSE.md" />

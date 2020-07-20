@@ -17,11 +17,11 @@ private:
 	int argc;
 	char **argv;
 
-	const char *USAGE_MESSAGE = "Usage:\t DecimaExplorer.exe [option] inputfile fileid outputfile\n Available Options:\n Extract: -e, -extract\n";
+	const char *USAGE_MESSAGE = "Usage:\t DecimaExplorer.exe [option] inputfile fileid outputfile or\n\t DecimaExplorer.exe [option] inputfile filename outputfile\n Available Options:\n Extract: -e, -extract\n";
 	const char *EXIT_MESSAGE  = "Exiting\n";
 
 	//command methods
-	void extract(int id);
+	void extract(char* arg);
 	void repack();
 
 	//cli methods
@@ -31,5 +31,5 @@ private:
 	bool isCommand(char* arg);
 	int argToNumber(char* arg);
 	CLI_COMMAND argToCommand(char* arg);
-	void processCommand(CLI_COMMAND command, int id);
+	void processCommand(CLI_COMMAND command, char* arg);
 };
