@@ -126,6 +126,9 @@
     <ClInclude Include="archive\DecimaArchive.h" />
     <ClInclude Include="archive\DecimaArchiveError.h" />
     <ClInclude Include="cli\CLI.h" />
+    <ClInclude Include="fileutils\Fileutils.h" />
+    <ClInclude Include="file\DecimaCore.h" />
+    <ClInclude Include="file\prefetch.h" />
     <ClInclude Include="hash\md5.h" />
     <ClInclude Include="hash\MurmurHash3.h" />
     <ClInclude Include="ooz\Kraken.h" />

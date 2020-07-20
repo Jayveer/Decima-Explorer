@@ -9,16 +9,16 @@ CLI::CLI(int argc, char **argv) {
 CLI::~CLI() {
 }
 
-void CLI::processCommand(CLI_COMMAND command, int id) {
+void CLI::processCommand(CLI_COMMAND command, char* arg) {
 	switch (command) {
 	case EXTRACT:
-		extract(id);
+		extract(arg);
 		break;
 	case REPACK:
 		repack();
 		break;
 	default:
-		extract(id);
+		extract(arg);
 	}
 }
 
@@ -27,20 +27,27 @@ void CLI::run(const char* programName) {
 	printf("Running %s:\n", programName);
 
 	CLI_COMMAND command = argToCommand(argv[1]);
-	int id = argToNumber(argv[3]);
+	//int id = argToNumber(argv[3]);
 
-	processCommand(command, id);
+	processCommand(command, argv[3]);
 }
 
-void CLI::extract(int id) {
+void CLI::extract(char* arg) {
 	DecimaArchive decimaArchive(argv[2]);
 	if (!decimaArchive.open()) return;
-	if (!decimaArchive.extractFile(id, argv[4])) return;
+
+	if (isNumber(arg)) {
+		int id = argToNumber(argv[3]);
+		if (!decimaArchive.extractFile(id, argv[4])) return;
+	} else {
+		if (!decimaArchive.extractFile(argv[3], argv[4])) return;
+	}
+
 	printf("Finished extracting file %s\n", argv[4]);
 }
 
 bool CLI::checkInput() {
-	if (argc != 5 || !isCommand(argv[1]) || !isNumber(argv[3])) {
+	if (argc != 5 || !isCommand(argv[1])) {
 		printUsage();
 		return false;
 	}

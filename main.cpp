@@ -1,3 +1,4 @@
+#include "hash/MurmurHash3.h"
 #include "cli\CLI.h"
 
 int main(int argc, char **argv) {

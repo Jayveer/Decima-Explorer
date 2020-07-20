@@ -9,6 +9,7 @@ typedef enum DecimaArchiveError {
 	DECOMPRESSFAIL,
 	FINDINDEXFAIL,
 	PARSEHEADERFAIL,
+	INVALIDFILENAME,
 	PARSEFILETABLEFAIL,
 	PARSECHUNKTABLEFAIL
 } DecimaArchiveError;
@@ -22,6 +23,7 @@ const std::string headerError = "Failed to parse header information";
 const std::string fileTableError = "Failed to parse file table";
 const std::string chunkTableError = "Failed to parse chunk table";
 const std::string defaultError = "An unknown error occured";
+const std::string filenameError = "Failed to find a file with that name";
 
 void printError(std::string errorText) {
 	std::cout << errorText << std::endl;
@@ -43,6 +45,9 @@ void showError(DecimaArchiveError error) {
 		break;
 	case FINDINDEXFAIL:
 		printError(fileIndexError);
+		break;
+	case INVALIDFILENAME:
+		printError(filenameError);
 		break;
 	case PARSEHEADERFAIL:
 		printError(headerError);

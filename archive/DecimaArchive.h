@@ -3,6 +3,8 @@
 #include "../ooz/Kraken.h"
 #include "../hash/md5.h"
 #include "../hash/MurmurHash3.h"
+#include "../fileutils/Fileutils.h"
+
 #include <string>
 #include <inttypes.h>
 #include <vector>
@@ -62,7 +64,9 @@ private:
 	DecimaFileEntry getFileEntry(int id);
 	void setFilename(std::string filename);
 	int findChunkWithOffset(uint64_t offset);
+	uint64_t getFileHash(std::string filename);
 	DataBuffer extract(DecimaFileEntry fileEntry);
+	uint32_t getFileEntryIndex(std::string filename);
 	void decryptChunkData(int32_t id, DataBuffer* data);
 	DataBuffer getChunkData(DecimaChunkEntry chunkEntry);
 	int calculateChunkTableOffset(uint64_t fileTableCount);
@@ -81,5 +85,6 @@ public:
 	int getVersion();
 	std::string getFilename();
 	int extractFile(uint32_t id, std::string output);
+	int extractFile(std::string filename, std::string output);
 	
 };
