@@ -76,7 +76,9 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <Link />
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -84,7 +86,9 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <Link />
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -94,6 +98,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -108,6 +113,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -116,7 +122,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="archive\DecimaArchive.cpp" />
+    <ClCompile Include="archive\initial\ArchiveInitial.cpp" />
     <ClCompile Include="cli\CLI.cpp" />
+    <ClCompile Include="file\DecimaCore.cpp" />
+    <ClCompile Include="file\prefetch\CorePrefetch.cpp" />
     <ClCompile Include="hash\md5.c" />
     <ClCompile Include="hash\MurmurHash3.cpp" />
     <ClCompile Include="main.cpp" />
@@ -125,10 +134,12 @@
   <ItemGroup>
     <ClInclude Include="archive\DecimaArchive.h" />
     <ClInclude Include="archive\DecimaArchiveError.h" />
+    <ClInclude Include="archive\initial\ArchiveInitial.h" />
+    <ClInclude Include="archive\initial\ArchiveInitialError.h" />
     <ClInclude Include="cli\CLI.h" />
     <ClInclude Include="fileutils\Fileutils.h" />
     <ClInclude Include="file\DecimaCore.h" />
-    <ClInclude Include="file\prefetch.h" />
+    <ClInclude Include="file\prefetch\CorePrefetch.h" />
     <ClInclude Include="hash\md5.h" />
     <ClInclude Include="hash\MurmurHash3.h" />
     <ClInclude Include="ooz\Kraken.h" />

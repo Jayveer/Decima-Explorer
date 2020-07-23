@@ -17,6 +17,10 @@ void DecimaArchive::setFilename(std::string filename) {
 	this->filename = filename;
 }
 
+DecimaArchive::DecimaArchive() {
+
+}
+
 DecimaArchive::DecimaArchive(std::string filename) {
 	setFilename(filename);
 }
@@ -82,20 +86,21 @@ void DecimaArchive::parseChunkTable(FILE* f, uint64_t chunkTableCount) {
 }
 
 DataBuffer DecimaArchive::getChunkData(DecimaChunkEntry chunkEntry) {
-	int chunkOffset = chunkEntry.compressedOffset;
-	int chunkSize = chunkEntry.compressedSize;
+	uint64_t chunkOffset = chunkEntry.compressedOffset;
+	uint64_t chunkSize = chunkEntry.compressedSize;
 	DataBuffer dataBuffer(chunkSize);
 	FILE *f;
-
+	
 	fopen_s(&f, getFilename().c_str(), "rb");
-	fseek(f, chunkOffset, SEEK_SET);
+	_fseeki64(f, chunkOffset, SEEK_SET);
 	fread(&dataBuffer[0], 1, chunkSize, f);
 
 	return dataBuffer;
 }
 
 void DecimaArchive::decompressChunkData(DataBuffer data, uint64_t decompressedSize, unsigned char *output) {
-	Kraken_Decompress(&data[0], data.size(), output, decompressedSize);
+	int res = Kraken_Decompress(&data[0], data.size(), output, decompressedSize);
+	if (res == -1) showError(DECOMPRESSFAIL);
 }
 
 uint32_t DecimaArchive::getFileEntryIndex(int id) {
@@ -230,7 +235,7 @@ void DecimaArchive::dataCipher(uint32_t chunkID, uint8_t* src, int size) {
 	for (int i = 0; i < 4; i++) {
 		iv[i] ^= murmurSalt2[i];
 	}
-	
+
 	md5_byte_t* digest = md5Hash((md5_byte_t*)iv, 16);
 
 	for (int i = 0; i < size; i++) {
@@ -291,4 +296,18 @@ int DecimaArchive::extractFile(std::string filename, std::string output) {
 	DataBuffer data = extract(fileTable[i]);
 	if (!writeDataToFile(data, output)) return 0;
 	return 1;
+}
+
+DataBuffer DecimaArchive::extractFile(std::string filename) {
+	DataBuffer data;
+	if (!hasExtension(filename, "core")) addExtension(filename, "core");
+	uint32_t i = getFileEntryIndex(filename);
+
+	if (i == -1) {
+		showError(INVALIDFILENAME);
+		return data;
+	}
+
+	data =  extract(fileTable[i]);
+	return data;
 }

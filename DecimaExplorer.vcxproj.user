@@ -4,11 +4,11 @@
     <ShowAllFiles>true</ShowAllFiles>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LocalDebuggerCommandArguments>-e Initial.bin 0 c:\test.bin</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>-l</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LocalDebuggerCommandArguments>-e 7017f9bb9d52fc1c4433599203cc51b1.bin "shit.core" shit.core</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>-e 7017f9bb9d52fc1c4433599203cc51b1.bin 17138 failfile.bin</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
 </Project>

@@ -1,6 +1,7 @@
 #pragma once
 
 typedef enum CLI_COMMAND {
+	LIST,
 	EXTRACT,
 	REPACK
 } CLI_COMMAND;
@@ -17,12 +18,13 @@ private:
 	int argc;
 	char **argv;
 
-	const char *USAGE_MESSAGE = "Usage:\t DecimaExplorer.exe [option] inputfile fileid outputfile or\n\t DecimaExplorer.exe [option] inputfile filename outputfile\n Available Options:\n Extract: -e, -extract\n";
+	const char *USAGE_MESSAGE = "Usage:\t DecimaExplorer.exe [-e/-extract] inputfile fileid outputfile \n\t DecimaExplorer.exe [-e/-extract] inputfile filename outputfile\n\t DecimaExplorer.exe [-l/-list] [directory containing initial binary]\nAvailable Options:\n\tList:    -l, -list\n\tExtract: -e, -extract\n";
 	const char *EXIT_MESSAGE  = "Exiting\n";
 
 	//command methods
 	void extract(char* arg);
 	void repack();
+	void list();
 
 	//cli methods
 	void printUsage();
@@ -31,5 +33,6 @@ private:
 	bool isCommand(char* arg);
 	int argToNumber(char* arg);
 	CLI_COMMAND argToCommand(char* arg);
+	int getArgCount(CLI_COMMAND command);
 	void processCommand(CLI_COMMAND command, char* arg);
 };

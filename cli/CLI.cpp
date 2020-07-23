@@ -1,5 +1,6 @@
 #include "CLI.h"
-#include "../archive/DecimaArchive.h"
+#include "../file/prefetch/CorePrefetch.h"
+#include "../archive/initial/ArchiveInitial.h"
 
 CLI::CLI(int argc, char **argv) {
 	this->argc = argc;
@@ -17,6 +18,9 @@ void CLI::processCommand(CLI_COMMAND command, char* arg) {
 	case REPACK:
 		repack();
 		break;
+	case LIST:
+		list();
+		break;
 	default:
 		extract(arg);
 	}
@@ -27,7 +31,6 @@ void CLI::run(const char* programName) {
 	printf("Running %s:\n", programName);
 
 	CLI_COMMAND command = argToCommand(argv[1]);
-	//int id = argToNumber(argv[3]);
 
 	processCommand(command, argv[3]);
 }
@@ -46,12 +49,46 @@ void CLI::extract(char* arg) {
 	printf("Finished extracting file %s\n", argv[4]);
 }
 
+void CLI::list() {
+	ArchiveInitial initial(argv[2]);
+	if (!initial.open()) return;
+
+	CorePrefetch prefetch;
+	DataBuffer data = initial.extractFile(prefetch.getFilename());
+	if (data.empty()) return;
+
+	prefetch.open(data);
+	prefetch.extractFileTable();
+	printf("File list extracted successfully\n");
+}
+
 bool CLI::checkInput() {
-	if (argc != 5 || !isCommand(argv[1])) {
+	if (!isCommand(argv[1])) {
 		printUsage();
 		return false;
 	}
+
+	int checkArgCount = getArgCount(argToCommand(argv[1]));
+
+	if (argc != checkArgCount) {
+		printUsage();
+		return false;
+	}
+
 	return true;
+}
+
+int CLI::getArgCount(CLI_COMMAND command) {
+	switch (command) {
+	case EXTRACT:
+		return 5;
+	case LIST:
+		return 3;
+	case REPACK:
+		return 5;
+	default:
+		return 5;
+	}
 }
 
 int CLI::argToNumber(char* arg) {
@@ -61,9 +98,11 @@ int CLI::argToNumber(char* arg) {
 }
 
 CLI_COMMAND CLI::argToCommand(char* arg) {
-	if (strcmp(arg, "-extract") || strcmp(arg, "-e"))
+	if (!strcmp(arg, "-extract") || !strcmp(arg, "-e"))
 		return EXTRACT;
-	if (arg == "-repack" || arg == "-r")
+	if (!strcmp(arg, "-list")    || !strcmp(arg, "-l"))
+		return LIST;
+	if (!strcmp(arg, "-repack")  || !strcmp(arg, "-r"))
 		return REPACK;
 }
 
