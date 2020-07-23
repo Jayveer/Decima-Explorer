@@ -1,11 +1,31 @@
 #pragma once
+#include <io.h> 
 #include <string>
+#include <iostream>
 #include <Windows.h>
 
 inline
 bool checkDirectoryExists(const std::string& dirName) {
     DWORD fileAttr = GetFileAttributesA(dirName.c_str());
     return (fileAttr & FILE_ATTRIBUTE_DIRECTORY);
+}
+
+inline
+bool checkFileExists(const std::string& filename) {
+    return _access(filename.c_str(), 0) == 0;
+}
+
+inline
+bool hasPathSeparator(const std::string& path) {
+    if (path.size() < 2) return false;
+    std::string output = path.substr(path.size() - 1);
+    bool val = output == "\\";
+    return output == "\\";
+}
+
+inline
+std::string addFileToPath(const std::string& filename, const std::string& path) {
+    return hasPathSeparator(path) ? path + filename : path + "\\" + filename;
 }
 
 inline
@@ -32,3 +52,15 @@ inline
 void createDirectoriesFromPath(const std::string& path) {
     
 }
+
+struct membuf : std::streambuf
+{
+    membuf(char* base, std::ptrdiff_t n) {
+        this->setg(base, base, base + n);
+    }
+
+    virtual pos_type seekoff(off_type off, std::ios_base::seekdir dir, std::ios_base::openmode which = std::ios_base::in) {
+        if (dir == std::ios_base::cur) gbump(off);
+        return gptr() - eback();
+    }
+};

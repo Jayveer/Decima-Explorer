@@ -6,8 +6,9 @@
 #include "../fileutils/Fileutils.h"
 
 #include <string>
-#include <inttypes.h>
 #include <vector>
+#include <fstream>
+#include <inttypes.h>
 
 typedef struct DecimaHeader {
 	uint32_t magic; //0x20304050
@@ -46,6 +47,7 @@ private:
 	std::vector<DecimaChunkEntry> chunkTable;
 
 	std::string filename;
+	std::string directory;
 
 	uint8_t seed = 0x2A;
 	uint32_t murmurSalt[4]  = { 0x0FA3A9443, 0x0F41CAB62, 0x0F376811C, 0x0D2A89E3E };
@@ -56,13 +58,11 @@ private:
 	void parseChunkTable(FILE* f, uint64_t chunkTableCount);
 
 	bool checkMagic();
-	bool isEncrypted();
 	void decryptHeader();
 	void decryptFileTable();
 	void decryptChunkTable();
 	uint32_t getFileEntryIndex(int id);
 	DecimaFileEntry getFileEntry(int id);
-	void setFilename(std::string filename);
 	int findChunkWithOffset(uint64_t offset);
 	uint64_t getFileHash(std::string filename);
 	DataBuffer extract(DecimaFileEntry fileEntry);
@@ -70,6 +70,7 @@ private:
 	void decryptChunkData(int32_t id, DataBuffer* data);
 	DataBuffer getChunkData(DecimaChunkEntry chunkEntry);
 	int calculateChunkTableOffset(uint64_t fileTableCount);
+	
 	void cipher(uint32_t key, uint32_t key2, uint32_t* src);
 	void dataCipher(uint32_t chunkID, uint8_t* src, int size);
 	int writeDataToFile(DataBuffer data, std::string filename);
@@ -77,13 +78,19 @@ private:
 	uint64_t calculateLastContainingChunk(uint64_t fileOffset, int fileSize, int chunkSize);
 	void decompressChunkData(DataBuffer data, uint64_t decompressedSize, unsigned char *output);
 
+protected:
+	DecimaArchive();
+	bool isEncrypted();
+	void setFilename(std::string filename);
+
 public:
 	~DecimaArchive();
 	DecimaArchive(std::string filename);
 
-	int open();
+	virtual int open();
 	int getVersion();
 	std::string getFilename();
+	DataBuffer extractFile(std::string filename);
 	int extractFile(uint32_t id, std::string output);
 	int extractFile(std::string filename, std::string output);
 	

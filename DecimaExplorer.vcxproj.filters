@@ -33,6 +33,15 @@
     <ClCompile Include="hash\md5.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="archive\initial\ArchiveInitial.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="file\DecimaCore.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="file\prefetch\CorePrefetch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ooz\Kraken.h">
@@ -56,13 +65,19 @@
     <ClInclude Include="hash\md5.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="file\prefetch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="file\DecimaCore.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="fileutils\Fileutils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="archive\initial\ArchiveInitial.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="file\prefetch\CorePrefetch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="archive\initial\ArchiveInitialError.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
