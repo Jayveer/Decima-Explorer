@@ -4,11 +4,11 @@
     <ShowAllFiles>true</ShowAllFiles>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LocalDebuggerCommandArguments>-l</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>-l .</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LocalDebuggerCommandArguments>-e 7017f9bb9d52fc1c4433599203cc51b1.bin 17138 failfile.bin</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>-e "G:\Games\PC\steamapps\common\Death Stranding\data\7017f9bb9d52fc1c4433599203cc51b1.bin" ds/entities/dsmaterials output3.bin</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
 </Project>
