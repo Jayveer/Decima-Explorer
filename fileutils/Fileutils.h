@@ -5,7 +5,7 @@
 #include <Windows.h>
 
 inline
-bool checkDirectoryExists(const std::string& dirName) {
+bool isDirectory(const std::string& dirName) {
     DWORD fileAttr = GetFileAttributesA(dirName.c_str());
     return (fileAttr & FILE_ATTRIBUTE_DIRECTORY);
 }

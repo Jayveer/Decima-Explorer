@@ -121,8 +121,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="archive\bin\ArchiveBin.cpp" />
     <ClCompile Include="archive\DecimaArchive.cpp" />
-    <ClCompile Include="archive\initial\ArchiveInitial.cpp" />
+    <ClCompile Include="archive\mpk\ArchiveMoviePack.cpp" />
+    <ClCompile Include="archive\bin\initial\BinInitial.cpp" />
     <ClCompile Include="cli\CLI.cpp" />
     <ClCompile Include="file\DecimaCore.cpp" />
     <ClCompile Include="file\prefetch\CorePrefetch.cpp" />
@@ -132,10 +134,13 @@
     <ClCompile Include="ooz\Kraken.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="archive\bin\ArchiveBin.h" />
+    <ClInclude Include="archive\bin\ArchiveBinError.h" />
     <ClInclude Include="archive\DecimaArchive.h" />
     <ClInclude Include="archive\DecimaArchiveError.h" />
-    <ClInclude Include="archive\initial\ArchiveInitial.h" />
-    <ClInclude Include="archive\initial\ArchiveInitialError.h" />
+    <ClInclude Include="archive\mpk\ArchiveMoviePack.h" />
+    <ClInclude Include="archive\bin\initial\BinInitial.h" />
+    <ClInclude Include="archive\bin\initial\BinInitialError.h" />
     <ClInclude Include="cli\CLI.h" />
     <ClInclude Include="fileutils\Fileutils.h" />
     <ClInclude Include="file\DecimaCore.h" />

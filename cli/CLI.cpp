@@ -1,6 +1,6 @@
 #include "CLI.h"
 #include "../file/prefetch/CorePrefetch.h"
-#include "../archive/initial/ArchiveInitial.h"
+#include "../archive/bin/initial/BinInitial.h"
 
 CLI::CLI(int argc, char **argv) {
 	this->argc = argc;
@@ -36,7 +36,7 @@ void CLI::run(const char* programName) {
 }
 
 void CLI::extract(char* arg) {
-	DecimaArchive decimaArchive(argv[2]);
+	ArchiveBin decimaArchive(argv[2]);
 	if (!decimaArchive.open()) return;
 
 	if (isNumber(arg)) {
@@ -49,8 +49,10 @@ void CLI::extract(char* arg) {
 	printf("Finished extracting file %s\n", argv[4]);
 }
 
+
+
 void CLI::list() {
-	ArchiveInitial initial(argv[2]);
+	BinInitial initial(argv[2]);
 	if (!initial.open()) return;
 
 	CorePrefetch prefetch;

@@ -33,13 +33,19 @@
     <ClCompile Include="hash\md5.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="archive\initial\ArchiveInitial.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="file\DecimaCore.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="file\prefetch\CorePrefetch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="archive\bin\ArchiveBin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="archive\mpk\ArchiveMoviePack.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="archive\bin\initial\BinInitial.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -71,13 +77,22 @@
     <ClInclude Include="fileutils\Fileutils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="archive\initial\ArchiveInitial.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="file\prefetch\CorePrefetch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="archive\initial\ArchiveInitialError.h">
+    <ClInclude Include="archive\bin\ArchiveBin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="archive\mpk\ArchiveMoviePack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="archive\bin\initial\BinInitial.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="archive\bin\initial\BinInitialError.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="archive\bin\ArchiveBinError.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
