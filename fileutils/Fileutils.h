@@ -1,8 +1,42 @@
 #pragma once
 #include <io.h> 
 #include <string>
+#include <vector>
 #include <iostream>
 #include <Windows.h>
+
+
+inline
+std::vector<std::string> getFilesFromDirectory(const std::string& dirName, const std::string& extension) {
+    WIN32_FIND_DATA file_data;
+    std::vector<std::string> fileList;
+    std::string filepath = dirName + "\\*" + extension;
+
+    HANDLE dir = FindFirstFile(filepath.c_str(), &file_data);
+    if (dir == INVALID_HANDLE_VALUE) return fileList;
+
+    do {
+        std::string file_name = file_data.cFileName;
+        std::string full_file_name = dirName + "\\" + file_name;
+        bool isDirectory = (file_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0;
+
+        if (isDirectory) continue;
+        if (file_name[0] == '.') continue;
+        fileList.push_back(full_file_name);
+
+    } while (FindNextFile(dir, &file_data));
+
+    FindClose(dir);
+    return fileList;
+}
+
+inline
+bool hasPathSeparator(const std::string& path) {
+    if (path.size() < 2) return false;
+    std::string output = path.substr(path.size() - 1);
+    bool val = output == "\\";
+    return output == "\\";
+}
 
 inline
 bool isDirectory(const std::string& dirName) {
@@ -13,14 +47,6 @@ bool isDirectory(const std::string& dirName) {
 inline
 bool checkFileExists(const std::string& filename) {
     return _access(filename.c_str(), 0) == 0;
-}
-
-inline
-bool hasPathSeparator(const std::string& path) {
-    if (path.size() < 2) return false;
-    std::string output = path.substr(path.size() - 1);
-    bool val = output == "\\";
-    return output == "\\";
 }
 
 inline
@@ -52,6 +78,7 @@ inline
 void createDirectoriesFromPath(const std::string& path) {
     
 }
+
 
 struct membuf : std::streambuf
 {

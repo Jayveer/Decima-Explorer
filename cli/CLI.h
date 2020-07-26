@@ -32,6 +32,8 @@ private:
 	bool isNumber(char* arg);
 	bool isCommand(char* arg);
 	int argToNumber(char* arg);
+	void fileExtract(char* arg);
+	void directoryExtract(char* arg);
 	CLI_COMMAND argToCommand(char* arg);
 	int getArgCount(CLI_COMMAND command);
 	void processCommand(CLI_COMMAND command, char* arg);

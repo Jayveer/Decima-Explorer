@@ -36,20 +36,42 @@ void CLI::run(const char* programName) {
 }
 
 void CLI::extract(char* arg) {
+	isDirectory(argv[2]) ? directoryExtract(arg) : fileExtract(arg);
+}
+
+void CLI::fileExtract(char* arg) {
 	ArchiveBin decimaArchive(argv[2]);
 	if (!decimaArchive.open()) return;
 
 	if (isNumber(arg)) {
 		int id = argToNumber(argv[3]);
 		if (!decimaArchive.extractFile(id, argv[4])) return;
-	} else {
-		if (!decimaArchive.extractFile(argv[3], argv[4])) return;
+	}
+	else {
+		if (!decimaArchive.extractFile(arg, argv[4])) return;
 	}
 
 	printf("Finished extracting file %s\n", argv[4]);
 }
 
+void CLI::directoryExtract(char* arg) {
+	bool found = 0;
+	std::vector<std::string> files = getFilesFromDirectory(argv[2], ".bin");
 
+	if (isNumber(arg)) {
+		printf("IDs cannot be used with directory extract");
+		return;
+	}
+
+	for (int i = 0; i < files.size(); i++) {
+		ArchiveBin decimaArchive(files[i].c_str());
+		if (!decimaArchive.open()) continue;
+		found = decimaArchive.extractFile(arg, argv[4], 1);
+		if (found) break;
+	}
+
+	found ? printf("Finished extracting file %s\n", argv[4]) : printf("Failed to find file %s\n", argv[4]);
+}
 
 void CLI::list() {
 	BinInitial initial(argv[2]);

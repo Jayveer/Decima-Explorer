@@ -72,5 +72,5 @@ public:
 	int open() override;
 	DataBuffer extractFile(std::string filename);
 	int extractFile(uint32_t id, std::string output);
-	int extractFile(std::string filename, std::string output);
+	int extractFile(std::string filename, std::string output, bool suppressError = 0);
 };
