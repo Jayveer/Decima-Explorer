@@ -232,12 +232,12 @@ int ArchiveBin::extractFile(uint32_t id, std::string output) {
 	return 1;
 }
 
-int ArchiveBin::extractFile(std::string filename, std::string output) {
+int ArchiveBin::extractFile(std::string filename, std::string output, bool suppressError) {
 	if (!hasExtension(filename, "core")) addExtension(filename, "core");
 	uint32_t i = getFileEntryIndex(filename);
 
 	if (i == -1) {
-		showError(INVALIDFILENAME);
+		if (!suppressError) showError(INVALIDFILENAME);
 		return 0;
 	}
 

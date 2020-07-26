@@ -36,4 +36,3 @@ public:
 	~ArchiveMoviePack();
 	int open() override;
 };
-
