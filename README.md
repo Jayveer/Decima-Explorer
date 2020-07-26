@@ -2,7 +2,7 @@
 # Decima Explorer
 
 
-Decima Explorer is a free and open-source program designed to allow you to unpack files from the archive structure used by games using the Decima engine. Currently files must be extracted using their ID as I am unaware of how the file names are mapped.
+Decima Explorer is a free and open-source program designed to allow you to unpack files from the archive structure used by games using the Decima engine.
 
 Support for encrypted files has been added thanks to Ekey, and [Wunkolo](https://github.com/Wunkolo) for researching, implementing and documenting the decryption algorithm. Wunkolo's [implementation can be found here](https://github.com/Wunkolo/DecimaTools). Also added support for extracting a file based on its name, and passing a directory as a file name.
 
