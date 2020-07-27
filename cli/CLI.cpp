@@ -1,6 +1,5 @@
 #include "CLI.h"
-#include "../file/prefetch/CorePrefetch.h"
-#include "../archive/bin/initial/BinInitial.h"
+
 
 CLI::CLI(int argc, char **argv) {
 	this->argc = argc;
@@ -39,19 +38,27 @@ void CLI::extract(char* arg) {
 	isDirectory(argv[2]) ? directoryExtract(arg) : fileExtract(arg);
 }
 
-void CLI::fileExtract(char* arg) {
-	ArchiveBin decimaArchive(argv[2]);
-	if (!decimaArchive.open()) return;
+void CLI::archiveExtract(char* arg, DecimaArchive* archive) {
+	archive->open();
 
 	if (isNumber(arg)) {
 		int id = argToNumber(argv[3]);
-		if (!decimaArchive.extractFile(id, argv[4])) return;
-	}
-	else {
-		if (!decimaArchive.extractFile(arg, argv[4])) return;
+		if (!archive->extractFile(id, argv[4])) return;
+	} else {
+		if (!archive->extractFile(arg, argv[4])) return;
 	}
 
 	printf("Finished extracting file %s\n", argv[4]);
+}
+
+void CLI::fileExtract(char* arg) {
+	if (getFileExtension(argv[2]) == "mpk") {
+		ArchiveMoviePack decimaArchive(argv[2]);
+		archiveExtract(arg, &decimaArchive);
+	} else {
+		ArchiveBin decimaArchive(argv[2]);
+		archiveExtract(arg, &decimaArchive);
+	}
 }
 
 void CLI::directoryExtract(char* arg) {

@@ -1,5 +1,5 @@
 #include "ArchiveBin.h"
-#include "ArchiveBinError.h"
+
 
 ArchiveBin::ArchiveBin(std::string filename) : DecimaArchive(filename, this->extension) {
 
@@ -188,7 +188,7 @@ void ArchiveBin::decryptChunkTable() {
 
 void ArchiveBin::decryptChunkData(int32_t id, DataBuffer* data) {
 	uint32_t* p = (uint32_t*)&chunkTable[id];
-	dataCipher(p, &(*data)[0], data->size());
+	dataDecrypt(p, &(*data)[0], data->size());
 }
 
 int ArchiveBin::open() {

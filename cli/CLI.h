@@ -1,4 +1,7 @@
 #pragma once
+#include "../decima/file/prefetch/CorePrefetch.h"
+#include "../decima/archive/mpk/ArchiveMoviePack.h"
+#include "../decima/archive/bin/initial/BinInitial.h"
 
 typedef enum CLI_COMMAND {
 	LIST,
@@ -37,4 +40,6 @@ private:
 	CLI_COMMAND argToCommand(char* arg);
 	int getArgCount(CLI_COMMAND command);
 	void processCommand(CLI_COMMAND command, char* arg);
+	void archiveExtract(char* arg, DecimaArchive* archive);
+	//void archiveExtract(char* arg, DecimaArchive::DecimaArchive* archive);
 };

@@ -47,9 +47,26 @@ void DecimaArchive::decrypt(uint32_t key, uint32_t* src) {
 	}
 }
 
-void DecimaArchive::dataCipher(uint32_t* key, uint8_t* src, int size) {
+void DecimaArchive::dataDecrypt(uint32_t* key, uint8_t* src, int size) {
 	uint32_t iv[4];
 	MurmurHash3_x64_128(key, 0x10, seed, iv);
+
+	for (int i = 0; i < 4; i++) {
+		iv[i] ^= saltB[i];
+	}
+
+	md5_byte_t* digest = md5Hash((md5_byte_t*)iv, 16);
+
+	for (int i = 0; i < size; i++) {
+		src[i] ^= digest[i % 16];
+	}
+}
+
+void DecimaArchive::movieDecrypt(uint32_t* key, uint8_t* src, int size, int pass) {
+	uint32_t iv[4];
+	MurmurHash3_x64_128(key, 0x10, seed, iv);
+
+	iv[0] = pass;
 
 	for (int i = 0; i < 4; i++) {
 		iv[i] ^= saltB[i];
