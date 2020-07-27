@@ -84,9 +84,9 @@ void ArchiveMoviePack::extract(ArchiveMoviePackFileEntry fileEntry, std::string 
 
 void ArchiveMoviePack::saveStream(FILE* input, FILE* output, uint64_t size, uint32_t* key, uint64_t pass) {
 	uint8_t* data = new uint8_t[size];
-	fread(data, 0x100000, 1, input);
+	fread(data, size, 1, input);
 	if (isEncrypted()) movieDecrypt(key, data, size, pass);
-	fwrite(data, 0x100000, 1, output);
+	fwrite(data, size, 1, output);
 	delete[] data;
 }
 
