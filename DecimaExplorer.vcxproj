@@ -121,30 +121,30 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="archive\bin\ArchiveBin.cpp" />
-    <ClCompile Include="archive\DecimaArchive.cpp" />
-    <ClCompile Include="archive\mpk\ArchiveMoviePack.cpp" />
-    <ClCompile Include="archive\bin\initial\BinInitial.cpp" />
+    <ClCompile Include="decima\archive\bin\ArchiveBin.cpp" />
+    <ClCompile Include="decima\archive\DecimaArchive.cpp" />
+    <ClCompile Include="decima\archive\mpk\ArchiveMoviePack.cpp" />
+    <ClCompile Include="decima\archive\bin\initial\BinInitial.cpp" />
     <ClCompile Include="cli\CLI.cpp" />
-    <ClCompile Include="file\DecimaCore.cpp" />
-    <ClCompile Include="file\prefetch\CorePrefetch.cpp" />
+    <ClCompile Include="decima\file\DecimaCore.cpp" />
+    <ClCompile Include="decima\file\prefetch\CorePrefetch.cpp" />
     <ClCompile Include="hash\md5.c" />
     <ClCompile Include="hash\MurmurHash3.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ooz\Kraken.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="archive\bin\ArchiveBin.h" />
-    <ClInclude Include="archive\bin\ArchiveBinError.h" />
-    <ClInclude Include="archive\DecimaArchive.h" />
-    <ClInclude Include="archive\DecimaArchiveError.h" />
-    <ClInclude Include="archive\mpk\ArchiveMoviePack.h" />
-    <ClInclude Include="archive\bin\initial\BinInitial.h" />
-    <ClInclude Include="archive\bin\initial\BinInitialError.h" />
+    <ClInclude Include="decima\archive\bin\ArchiveBin.h" />
+    <ClInclude Include="decima\archive\bin\ArchiveBinError.h" />
+    <ClInclude Include="decima\archive\DecimaArchive.h" />
+    <ClInclude Include="decima\archive\DecimaArchiveError.h" />
+    <ClInclude Include="decima\archive\mpk\ArchiveMoviePack.h" />
+    <ClInclude Include="decima\archive\bin\initial\BinInitial.h" />
+    <ClInclude Include="decima\archive\bin\initial\BinInitialError.h" />
     <ClInclude Include="cli\CLI.h" />
     <ClInclude Include="fileutils\Fileutils.h" />
-    <ClInclude Include="file\DecimaCore.h" />
-    <ClInclude Include="file\prefetch\CorePrefetch.h" />
+    <ClInclude Include="decima\file\DecimaCore.h" />
+    <ClInclude Include="decima\file\prefetch\CorePrefetch.h" />
     <ClInclude Include="hash\md5.h" />
     <ClInclude Include="hash\MurmurHash3.h" />
     <ClInclude Include="ooz\Kraken.h" />

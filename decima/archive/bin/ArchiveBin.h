@@ -1,5 +1,6 @@
 #pragma once
 #include "../DecimaArchive.h"
+#include "ArchiveBinError.h"
 
 typedef struct BinHeader {
 	uint32_t magic;

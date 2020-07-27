@@ -1,5 +1,5 @@
 #include "BinInitial.h"
-#include "BinInitialError.h"
+
 
 BinInitial::BinInitial(std::string directory) : ArchiveBin(this->filename) {
 	setFilename(addFileToPath(this->filename, directory) + this->extension);

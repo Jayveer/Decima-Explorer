@@ -1,16 +1,10 @@
 #pragma once
-
-#include "../ooz/Kraken.h"
-#include "../hash/md5.h"
-#include "../hash/MurmurHash3.h"
-#include "../fileutils/Fileutils.h"
+#include "../../ooz/Kraken.h"
+#include "../../hash/md5.h"
+#include "../../hash/MurmurHash3.h"
+#include "../../fileutils/Fileutils.h"
 
 #include "DecimaArchiveError.h"
-
-#include <string>
-#include <vector>
-#include <inttypes.h>
-
 
 typedef std::vector<uint8_t> DataBuffer;
 
@@ -29,15 +23,15 @@ protected:
 	void decrypt(uint32_t key, uint32_t* src);
 	void decrypt(uint32_t key, uint32_t key2, uint32_t* src);
 	int writeDataToFile(DataBuffer data, std::string filename);
-	void dataCipher(uint32_t* chunkInfo, uint8_t* src, int size);
-	
+	void dataDecrypt(uint32_t* key, uint8_t* src, int size);
+	void movieDecrypt(uint32_t* key, uint8_t* src, int size, int pass);
 	void setSaltA(uint32_t* salt);
 	void setSaltB(uint32_t* salt);
 	void setFilename(std::string Filename);
 
 	virtual bool checkMagic() = 0;
 	virtual uint32_t getMagic() = 0;
-	virtual void parseHeader(FILE* file) = 0;
+	virtual void parseHeader(FILE* file) = 0;	
 	
 public:
 	~DecimaArchive();
@@ -46,4 +40,6 @@ public:
 	virtual int open() = 0;
 	std::string getFilename();
 	std::string getExtension();
+	virtual int extractFile(uint32_t id, std::string output) = 0;
+	virtual int extractFile(std::string filename, std::string output, bool suppressError = 0) = 0;
 };

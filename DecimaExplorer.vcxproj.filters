@@ -21,9 +21,6 @@
     <ClCompile Include="ooz\Kraken.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="archive\DecimaArchive.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="cli\CLI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -33,19 +30,22 @@
     <ClCompile Include="hash\md5.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="file\DecimaCore.cpp">
+    <ClCompile Include="decima\archive\bin\initial\BinInitial.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="file\prefetch\CorePrefetch.cpp">
+    <ClCompile Include="decima\archive\bin\ArchiveBin.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="archive\bin\ArchiveBin.cpp">
+    <ClCompile Include="decima\archive\mpk\ArchiveMoviePack.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="archive\mpk\ArchiveMoviePack.cpp">
+    <ClCompile Include="decima\archive\DecimaArchive.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="archive\bin\initial\BinInitial.cpp">
+    <ClCompile Include="decima\file\prefetch\CorePrefetch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="decima\file\DecimaCore.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -54,12 +54,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ooz\targetver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="archive\DecimaArchive.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="archive\DecimaArchiveError.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="cli\CLI.h">
@@ -71,28 +65,34 @@
     <ClInclude Include="hash\md5.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="file\DecimaCore.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="fileutils\Fileutils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="file\prefetch\CorePrefetch.h">
+    <ClInclude Include="decima\archive\bin\initial\BinInitial.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="archive\bin\ArchiveBin.h">
+    <ClInclude Include="decima\archive\bin\initial\BinInitialError.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="archive\mpk\ArchiveMoviePack.h">
+    <ClInclude Include="decima\archive\bin\ArchiveBin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="archive\bin\initial\BinInitial.h">
+    <ClInclude Include="decima\archive\bin\ArchiveBinError.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="archive\bin\initial\BinInitialError.h">
+    <ClInclude Include="decima\archive\mpk\ArchiveMoviePack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="archive\bin\ArchiveBinError.h">
+    <ClInclude Include="decima\archive\DecimaArchive.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="decima\archive\DecimaArchiveError.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="decima\file\prefetch\CorePrefetch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="decima\file\DecimaCore.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
