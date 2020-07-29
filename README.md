@@ -2,9 +2,9 @@
 # Decima Explorer
 
 
-Decima Explorer is a free and open-source program designed to allow you to unpack files from the archive structure used by games using the Decima engine. Currently files must be extracted using their ID as I am unaware of how the file names are mapped.
+Decima Explorer is a free and open-source program designed to allow you to unpack data from the archive structures used by games using the Decima engine.
 
-Support for encrypted files has been added thanks to Ekey, and [Wunkolo](https://github.com/Wunkolo) for researching, implementing and documenting the decryption algorithm. Wunkolo's [implementation can be found here](https://github.com/Wunkolo/DecimaTools). Also added support for extracting a file based on its name, passing a directory as a file name, and movile file archives.
+Support for encrypted files has been added thanks to Ekey, and [Wunkolo](https://github.com/Wunkolo) for researching, implementing and documenting the decryption algorithm. Wunkolo's [implementation can be found here](https://github.com/Wunkolo/DecimaTools).
 
 This program uses [Ooz](https://github.com/powzix/ooz) created by [Powzix](https://github.com/powzix) for decompression. It is slightly modified for this programs purposes. Ooz is under GPL licensing.
 
@@ -15,12 +15,11 @@ If anyone has any issue with this project's existence please feel free to reach 
 ### To Do
  - Create GUI variant
  - Implement Repack command
- - Choice of Recreating file path when extracting
  - Clean up the code
 
 ##  Usage
 
-Currently Decima Explorer can only be run from the command line. It has support for movie archive files and binary archive files. Binary archive files can be extracted by their ID or name. If extracting by name it is also possible to enter a directory to search multiple files. A list of game files can also be dumped. Movie archive files can be extracted ID or name if it is known;
+Currently Decima Explorer can only be run from the command line. It has support for movie archive files and binary archive files. Binary archive files can be extracted by their ID or name. If extracting by name it is also possible to enter a directory to search multiple files. A list of game files can also be dumped. Movie archive files can be extracted ID or name if it is known. If the output file isn't specified it will use the 'file to extract' name along with creating its directory structure;
 
 ```
 DecimaExplorer.exe -list "G:\path\to\game\data\files"
@@ -45,7 +44,12 @@ The example above is simlar to the last however the file's name is used to chose
 ```
 DecimaExplorer.exe -extract "G:\path\to\game\data\files" \file\name\to\extract output.bin
 ```
-In this final example a directory is passed in as the file to extract from, this will allow the tool to search multiple files for the given file name. It is not possible to use a directory if extracting by ID.
+Here a directory is passed in as the file to extract from, this will allow the tool to search multiple files for the given file name. It is not possible to use a directory if extracting by ID.
+
+```
+DecimaExplorer.exe -extract "G:\path\to\game\data\files" \file\name\to\extract
+```
+In the most recent update it is possible to omit the output file, in this case the input filename or fileID will be used as the file name. If it is a directory, the directory structure will be created.
 
 ## License
 [GPL](ooz/LICENSE.md)
