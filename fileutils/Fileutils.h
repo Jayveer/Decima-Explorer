@@ -5,7 +5,6 @@
 #include <iostream>
 #include <Windows.h>
 
-
 inline
 std::vector<std::string> getFilesFromDirectory(const std::string& dirName, const std::string& extension) {
     WIN32_FIND_DATA file_data;
@@ -45,6 +44,12 @@ bool isDirectory(const std::string& dirName) {
 }
 
 inline
+bool checkDirectoryExists(const std::string& dirName) {
+    DWORD fileAttr = GetFileAttributesA(dirName.c_str());
+    return fileAttr != INVALID_FILE_ATTRIBUTES;
+}
+
+inline
 bool checkFileExists(const std::string& filename) {
     return _access(filename.c_str(), 0) == 0;
 }
@@ -55,8 +60,8 @@ std::string addFileToPath(const std::string& filename, const std::string& path) 
 }
 
 inline
-void createOutputDirectory(const std::string& dirName) {
-	CreateDirectory(dirName.c_str(), NULL);
+bool createOutputDirectory(const std::string& dirName) {
+	return CreateDirectory(dirName.c_str(), NULL);
 }
 
 inline
@@ -74,11 +79,22 @@ bool hasExtension(std::string dirName, std::string extension) {
     return getFileExtension(dirName) == extension;
 }
 
-inline 
-void createDirectoriesFromPath(const std::string& path) {
-    
+inline
+std::string getFilePathWithoutName(std::string filename) {
+    int slashIndex = filename.find_last_of("\\/");
+    return slashIndex != std::string::npos ? filename.substr(0, slashIndex) : "";
 }
 
+inline
+void createDirectoriesFromPath(const std::string& path) {
+    if (!checkDirectoryExists(path)) {
+        std::size_t slashIndex = path.find_last_of("\\/");
+        if (slashIndex != std::string::npos) {
+            createDirectoriesFromPath(path.substr(0, slashIndex));
+        }
+        createOutputDirectory(path);
+    }
+}
 
 struct membuf : std::streambuf
 {

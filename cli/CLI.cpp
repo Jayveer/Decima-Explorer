@@ -25,10 +25,10 @@ void CLI::processCommand(CLI_COMMAND command, char* arg) {
 	}
 }
 
-void CLI::run(const char* programName) {
+void CLI::run(const char* programName, const char* programVersion) {
+	printf("Running %s v%s:\n", programName, programVersion);
+	printf("Visit https://github.com/Jayveer/Decima-Explorer for updates:\n\n");
 	if (!checkInput()) return;
-	printf("Running %s:\n", programName);
-
 	CLI_COMMAND command = argToCommand(argv[1]);
 
 	processCommand(command, argv[3]);
@@ -41,11 +41,13 @@ void CLI::extract(char* arg) {
 void CLI::archiveExtract(char* arg, DecimaArchive* archive) {
 	archive->open();
 
+	std::string output = setupOutput();
+
 	if (isNumber(arg)) {
 		int id = argToNumber(argv[3]);
-		if (!archive->extractFile(id, argv[4])) return;
+		if (!archive->extractFile(id, output)) return;
 	} else {
-		if (!archive->extractFile(arg, argv[4])) return;
+		if (!archive->extractFile(arg, output)) return;
 	}
 
 	printf("Finished extracting file %s\n", argv[4]);
@@ -61,6 +63,13 @@ void CLI::fileExtract(char* arg) {
 	}
 }
 
+std::string CLI::setupOutput() {
+	std::string output = argc == 5 ? argv[4] : argv[3];
+	std::string path = getFilePathWithoutName(output);
+	if (path != "") createDirectoriesFromPath(path);
+	return output;
+}
+
 void CLI::directoryExtract(char* arg) {
 	bool found = 0;
 	std::vector<std::string> files = getFilesFromDirectory(argv[2], ".bin");
@@ -70,14 +79,16 @@ void CLI::directoryExtract(char* arg) {
 		return;
 	}
 
+	std::string output = setupOutput();
+
 	for (int i = 0; i < files.size(); i++) {
 		ArchiveBin decimaArchive(files[i].c_str());
 		if (!decimaArchive.open()) continue;
-		found = decimaArchive.extractFile(arg, argv[4], 1);
+		found = decimaArchive.extractFile(arg, output, 1);
 		if (found) break;
 	}
 
-	found ? printf("Finished extracting file %s\n", argv[4]) : printf("Failed to find file %s\n", argv[4]);
+	found ? printf("Finished extracting file %s\n", output) : printf("Failed to find file %s\n", output);
 }
 
 void CLI::list() {
@@ -94,14 +105,19 @@ void CLI::list() {
 }
 
 bool CLI::checkInput() {
+	if (argc < 2) {
+		printUsage();
+		return false;
+	}
+
 	if (!isCommand(argv[1])) {
 		printUsage();
 		return false;
 	}
 
-	int checkArgCount = getArgCount(argToCommand(argv[1]));
+	argcRange range = getArgCount(argToCommand(argv[1]));
 
-	if (argc != checkArgCount) {
+	if (argc < range.low || argc > range.high) {
 		printUsage();
 		return false;
 	}
@@ -109,16 +125,16 @@ bool CLI::checkInput() {
 	return true;
 }
 
-int CLI::getArgCount(CLI_COMMAND command) {
+argcRange CLI::getArgCount(CLI_COMMAND command) {
 	switch (command) {
 	case EXTRACT:
-		return 5;
+		return { 4, 5 };
 	case LIST:
-		return 3;
+		return { 3, 3 };
 	case REPACK:
-		return 5;
+		return { 5, 5 };
 	default:
-		return 5;
+		return { 5, 5 };
 	}
 }
 

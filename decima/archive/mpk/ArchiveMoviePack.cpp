@@ -60,8 +60,8 @@ int ArchiveMoviePack::extractFile(std::string filename, std::string output, bool
 
 void ArchiveMoviePack::extract(ArchiveMoviePackFileEntry fileEntry, std::string output) {
 	uint32_t* key = (uint32_t*)&fileEntry;
-	uint64_t numPasses = fileEntry.size / 0x100000;
-	uint64_t remainder = fileEntry.size % 0x100000;
+	uint64_t numPasses = fileEntry.size / MAXSTREAM;
+	uint64_t remainder = fileEntry.size % MAXSTREAM;
 
 	FILE* fo;
 	fopen_s(&fo, output.c_str(), "wb");
@@ -80,7 +80,6 @@ void ArchiveMoviePack::extract(ArchiveMoviePackFileEntry fileEntry, std::string 
 	fclose(f);
 	fclose(fo);
 }
-
 
 void ArchiveMoviePack::saveStream(FILE* input, FILE* output, uint64_t size, uint32_t* key, uint64_t pass) {
 	uint8_t* data = new uint8_t[size];

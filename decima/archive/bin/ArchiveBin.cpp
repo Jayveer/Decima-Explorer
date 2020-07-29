@@ -220,6 +220,8 @@ int ArchiveBin::open() {
 }
 
 int ArchiveBin::extractFile(uint32_t id, std::string output) {
+	if (!hasExtension(output, "core")) addExtension(output, "core");
+
 	uint32_t i = getFileEntryIndex(id);
 
 	if (i == -1) {
@@ -234,6 +236,7 @@ int ArchiveBin::extractFile(uint32_t id, std::string output) {
 
 int ArchiveBin::extractFile(std::string filename, std::string output, bool suppressError) {
 	if (!hasExtension(filename, "core")) addExtension(filename, "core");
+	if (!hasExtension(output, "core")) addExtension(output, "core");
 	uint32_t i = getFileEntryIndex(filename);
 
 	if (i == -1) {
