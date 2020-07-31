@@ -40,4 +40,5 @@ public:
 	~CorePrefetch();
 
 	void extractFileTable();
+	void extractFileTableStreamed(DataBuffer data);
 };

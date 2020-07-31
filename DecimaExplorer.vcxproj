@@ -89,6 +89,9 @@
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link />
+    <Link>
+      <SubSystem>NotSet</SubSystem>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -128,6 +131,7 @@
     <ClCompile Include="cli\CLI.cpp" />
     <ClCompile Include="decima\file\DecimaCore.cpp" />
     <ClCompile Include="decima\file\prefetch\CorePrefetch.cpp" />
+    <ClCompile Include="gui\GUI.cpp" />
     <ClCompile Include="hash\md5.c" />
     <ClCompile Include="hash\MurmurHash3.cpp" />
     <ClCompile Include="main.cpp" />
@@ -145,6 +149,7 @@
     <ClInclude Include="fileutils\Fileutils.h" />
     <ClInclude Include="decima\file\DecimaCore.h" />
     <ClInclude Include="decima\file\prefetch\CorePrefetch.h" />
+    <ClInclude Include="gui\GUI.h" />
     <ClInclude Include="hash\md5.h" />
     <ClInclude Include="hash\MurmurHash3.h" />
     <ClInclude Include="ooz\Kraken.h" />

@@ -22,4 +22,5 @@ void DecimaCore::open(std::string filename) {
 	std::ifstream ifs;
 	ifs.open(filename, std::ifstream::binary);
 	parse(ifs);
+	ifs.close();
 }

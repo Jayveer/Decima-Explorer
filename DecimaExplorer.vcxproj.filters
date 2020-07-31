@@ -48,6 +48,9 @@
     <ClCompile Include="decima\file\DecimaCore.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="gui\GUI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ooz\Kraken.h">
@@ -93,6 +96,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="decima\file\DecimaCore.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gui\GUI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -99,8 +99,9 @@ void CLI::list() {
 	DataBuffer data = initial.extractFile(prefetch.getFilename());
 	if (data.empty()) return;
 
-	prefetch.open(data);
-	prefetch.extractFileTable();
+	//prefetch.open(data);
+	//prefetch.extractFileTable();
+	prefetch.extractFileTableStreamed(data);
 	printf("File list extracted successfully\n");
 }
 
