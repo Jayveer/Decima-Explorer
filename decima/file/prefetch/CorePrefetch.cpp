@@ -5,7 +5,6 @@ CorePrefetch::CorePrefetch() {
 }
 
 CorePrefetch::~CorePrefetch() {
-	
 }
 
 void CorePrefetch::parse(std::istream& f) {
@@ -61,6 +60,27 @@ void CorePrefetch::extractFileTable() {
 
 	for (int i = 0; i < prefetch.strings.size(); i++) {
 		out << prefetch.strings[i].string + "\n";
+	}
+
+	out.close();
+}
+
+void CorePrefetch::extractFileTableStreamed(DataBuffer data) {
+	membuf sbuf((char*)&data[0], data.size());
+	std::istream f(&sbuf);
+
+	parseHeader(f);
+	std::ofstream out("file_list.txt");
+	f.read((char*)&prefetch.numStrings, 4);
+
+	for (int i = 0; i < prefetch.numStrings; i++) {
+		uint32_t size, hash;
+		f.read((char*)&size, 4);
+		f.read((char*)&hash, 4);
+		std::string str;
+		str.resize(size);
+		f.read((char*)str.c_str(), size);
+		out << str + "\n";
 	}
 
 	out.close();

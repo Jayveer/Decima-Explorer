@@ -2,5 +2,6 @@
 .vs/
 Debug/
 Release/
+Release (GUI)/
 x64/
 DecimaExplorer.vcxproj.filters

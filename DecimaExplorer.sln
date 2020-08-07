@@ -1,22 +1,34 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2010
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30320.27
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DecimaExplorer", "DecimaExplorer.vcxproj", "{05B0E20F-1ED1-4EA1-B3BF-9FDFDD7E26B3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug (GUI)|x64 = Debug (GUI)|x64
+		Debug (GUI)|x86 = Debug (GUI)|x86
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
+		Release (GUI)|x64 = Release (GUI)|x64
+		Release (GUI)|x86 = Release (GUI)|x86
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{05B0E20F-1ED1-4EA1-B3BF-9FDFDD7E26B3}.Debug (GUI)|x64.ActiveCfg = Debug (GUI)|x64
+		{05B0E20F-1ED1-4EA1-B3BF-9FDFDD7E26B3}.Debug (GUI)|x64.Build.0 = Debug (GUI)|x64
+		{05B0E20F-1ED1-4EA1-B3BF-9FDFDD7E26B3}.Debug (GUI)|x86.ActiveCfg = Debug (GUI)|Win32
+		{05B0E20F-1ED1-4EA1-B3BF-9FDFDD7E26B3}.Debug (GUI)|x86.Build.0 = Debug (GUI)|Win32
 		{05B0E20F-1ED1-4EA1-B3BF-9FDFDD7E26B3}.Debug|x64.ActiveCfg = Debug|x64
 		{05B0E20F-1ED1-4EA1-B3BF-9FDFDD7E26B3}.Debug|x64.Build.0 = Debug|x64
 		{05B0E20F-1ED1-4EA1-B3BF-9FDFDD7E26B3}.Debug|x86.ActiveCfg = Debug|Win32
 		{05B0E20F-1ED1-4EA1-B3BF-9FDFDD7E26B3}.Debug|x86.Build.0 = Debug|Win32
+		{05B0E20F-1ED1-4EA1-B3BF-9FDFDD7E26B3}.Release (GUI)|x64.ActiveCfg = Release (GUI)|x64
+		{05B0E20F-1ED1-4EA1-B3BF-9FDFDD7E26B3}.Release (GUI)|x64.Build.0 = Release (GUI)|x64
+		{05B0E20F-1ED1-4EA1-B3BF-9FDFDD7E26B3}.Release (GUI)|x86.ActiveCfg = Release (GUI)|Win32
+		{05B0E20F-1ED1-4EA1-B3BF-9FDFDD7E26B3}.Release (GUI)|x86.Build.0 = Release (GUI)|Win32
 		{05B0E20F-1ED1-4EA1-B3BF-9FDFDD7E26B3}.Release|x64.ActiveCfg = Release|x64
 		{05B0E20F-1ED1-4EA1-B3BF-9FDFDD7E26B3}.Release|x64.Build.0 = Release|x64
 		{05B0E20F-1ED1-4EA1-B3BF-9FDFDD7E26B3}.Release|x86.ActiveCfg = Release|Win32

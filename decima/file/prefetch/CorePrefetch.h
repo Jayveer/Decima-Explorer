@@ -38,6 +38,8 @@ private:
 public:
 	CorePrefetch();
 	~CorePrefetch();
-
+	
+	
 	void extractFileTable();
+	void extractFileTableStreamed(DataBuffer data);
 };

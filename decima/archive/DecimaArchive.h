@@ -2,7 +2,7 @@
 #include "../../ooz/Kraken.h"
 #include "../../hash/md5.h"
 #include "../../hash/MurmurHash3.h"
-#include "../../fileutils/Fileutils.h"
+#include "../../utils/Fileutils.h"
 
 #include "DecimaArchiveError.h"
 
