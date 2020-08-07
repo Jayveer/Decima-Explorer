@@ -12,14 +12,18 @@ This program also uses [Murmur3](https://github.com/PeterScott/murmur3) by [Pete
 
 If anyone has any issue with this project's existence please feel free to reach out to me.
 
+Now includes a GUI version, please note it has a lot less features than the command line version.
+
+![picture](https://github.com/Jayveer/Decima-Explorer/blob/master/gui.png?raw=true)
+
 ### To Do
- - Create GUI variant
+ - Refactor a lot of the GUI code and add error feedback
  - Implement Repack command
- - Clean up the code
+ - Clean up the code (this will always be here)
 
 ##  Usage
 
-Currently Decima Explorer can only be run from the command line. It has support for movie archive files and binary archive files. Binary archive files can be extracted by their ID or name. If extracting by name it is also possible to enter a directory to search multiple files. A list of game files can also be dumped. Movie archive files can be extracted ID or name if it is known. If the output file isn't specified it will use the 'file to extract' name along with creating its directory structure;
+There are two flavours of Decima Explorer, one that can be run from the command line and that runs as a Graphical User Interface. The GUI has less features. The command line client has support for movie archive files and binary archive files. Binary archive files can be extracted by their ID or name. If extracting by name it is also possible to enter a directory to search multiple files. A list of game files can also be dumped. Movie archive files can be extracted ID or name if it is known. If the output file isn't specified it will use the 'file to extract' name along with creating its directory structure;
 
 ```
 DecimaExplorer.exe -list "G:\path\to\game\data\files"
@@ -50,6 +54,8 @@ Here a directory is passed in as the file to extract from, this will allow the t
 DecimaExplorer.exe -extract "G:\path\to\game\data\files" \file\name\to\extract
 ```
 In the most recent update it is possible to omit the output file, in this case the input filename or fileID will be used as the file name. If it is a directory, the directory structure will be created.
+
+If running the GUI client, select the game's data directory and a it should populate a list of files available to extract determined by the game's cache loading mechanism.
 
 ## License
 [GPL](ooz/LICENSE.md)
