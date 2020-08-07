@@ -41,17 +41,17 @@ DecimaExplorer.exe -extract input.mpk 0 output.bk2
 The same command can be used on movie files.
 
 ```
-DecimaExplorer.exe -extract input.bin \file\name\to\extract output.bin
+DecimaExplorer.exe -extract input.bin /file/name/to/extract output.bin
 ```
 The example above is simlar to the last however the file's name is used to chose which file to extract. Only the extract and list commands are implemented for now.
 
 ```
-DecimaExplorer.exe -extract "G:\path\to\game\data\files" \file\name\to\extract output.bin
+DecimaExplorer.exe -extract "G:\path\to\game\data\files" /file/name/to/extract output.bin
 ```
 Here a directory is passed in as the file to extract from, this will allow the tool to search multiple files for the given file name. It is not possible to use a directory if extracting by ID.
 
 ```
-DecimaExplorer.exe -extract "G:\path\to\game\data\files" \file\name\to\extract
+DecimaExplorer.exe -extract "G:\path\to\game\data\files" /file/name/to/extract
 ```
 In the most recent update it is possible to omit the output file, in this case the input filename or fileID will be used as the file name. If it is a directory, the directory structure will be created.
 
