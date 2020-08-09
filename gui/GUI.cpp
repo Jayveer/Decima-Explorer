@@ -2,7 +2,6 @@
 
 GUI::GUI(HINSTANCE hInst) {
 	mainWindow.create(hInst, this, NULL, 0xD3D3D3);
-	SetWindowText(mainWindow.getHandle(), "test");
 	browseButton.setCaller(this);
 	browserView.setCaller(this);
 	fileList.setCaller(this);
@@ -42,8 +41,6 @@ void GUI::viewDrawing(HWND hwnd) {}
 
 void GUI::buttonDrawing(HWND hwnd) {}
 
-
-
 void GUI::resetData() {
 	if (sbuf) {
 		delete sbuf;
@@ -59,7 +56,6 @@ void GUI::resetData() {
 	fileList.setHandle(NULL);
 
 	prefetchData.clear();
-	currentPos = 0;
 }
 
 void GUI::directoryChosen(std::string directory) {
@@ -83,21 +79,22 @@ void GUI::directoryChosen(std::string directory) {
 	
 	prefetchStream = new std::istream(sbuf);
 	prefetchStream->seekg(0x1C, SEEK_CUR);
-	prefetchStream->read((char*)&prefetchSize, 4);
-
 	addFilesToRows();
 }
 
 void GUI::saveDirectoryChosen(std::string directory) {
 	int pos = -1;
-
+	ProgressComponent pc;
+	pc.create(mainWindow.getHandle(), { 1280, 35 }, { 0, 647 });
+	pc.setRange(fileList.getNumSelected());
+	pc.setIncrement();
 	do {
 		char file[MAX_PATH];
 		pos = ListView_GetNextItem(fileList.getHandle(), pos, LVNI_SELECTED);
 		if (pos == -1) break;
 		ListView_GetItemText(fileList.getHandle(), pos, 0, file, MAX_PATH);
 		directoryExtract(file, directory);
-
+		pc.increment();
 	} while (pos != -1);
 
 	MessageBox(mainWindow.getHandle(), "Selected files extracted successfully", "Done", MB_OK);
@@ -122,44 +119,41 @@ void GUI::directoryExtract(std::string filename, std::string output) {
 
 }
 
-bool GUI::reachedEnd() {
-	return (prefetchSize - currentPos) <= 0;
-}
-
 void GUI::addFilesToRows() {
-	int left = (prefetchSize - currentPos);
-	int remainder = prefetchSize % 1000;
-	int size = left == remainder ? remainder : 1000;
+	SendMessage(fileList.getHandle(), WM_SETREDRAW, FALSE, 0);
 
-	for (int i = 0; i < size; i++) {
+	uint32_t prefetchSize;
+	prefetchStream->read((char*)&prefetchSize, 4);
+
+	for (int i = 0; i < prefetchSize; i++) {
 		uint32_t size, hash;
 		prefetchStream->read((char*)&size, 4);
 		prefetchStream->read((char*)&hash, 4);
 		std::string str;
 		str.resize(size);
 		prefetchStream->read((char*)str.c_str(), size);
-		fileList.createItem(currentPos, str.c_str());
-		//fileList.createSubItem(currentPos, 1, "TODO");
-		currentPos++;
+		fileList.createItem(i, str.c_str());
 	}
 
-	if (reachedEnd()) {
-		delete prefetchStream;
-		prefetchStream = NULL;
-		delete sbuf;
-		sbuf = NULL;
-	}
+	uint32_t numSizes;
+	prefetchStream->read((char*)&numSizes, 4);
 
+	for (int i = 0; i < numSizes; i++) {
+		uint32_t size;
+		prefetchStream->read((char*)&size, 4);
+		std::string fsize = std::to_string(byteToKiloByte(size)) + " KB";
+		fileList.createSubItem(i, 1, fsize.c_str());
+	}
+	
+	SendMessage(fileList.getHandle(), WM_SETREDRAW, TRUE, 0);
+
+	delete prefetchStream;
+	prefetchStream = NULL;
+	delete sbuf;
+	sbuf = NULL;
 }
 
-void GUI::listScrolled(HWND hwnd) {
-	SCROLLINFO si = { sizeof(si), SIF_ALL };
-	GetScrollInfo(fileList.getHandle(), SB_VERT, &si);
-	bool hitBottom = (si.nPos + si.nPage) == (UINT)si.nMax + 1;
-	if (hitBottom) {
-		if (!reachedEnd()) addFilesToRows();
-	}
-}
+void GUI::listScrolled(HWND hwnd) { }
 
 void GUI::buttonPressed(HWND hwnd) {
 	FileComponent fc;

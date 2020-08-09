@@ -1,12 +1,12 @@
 #pragma once
 #include "component/textfield/TextFieldComponent.h"
+#include "component/progress/ProgressComponent.h"
 #include "component/window/WindowComponent.h"
 #include "component/button/ButtonComponent.h"
 #include "component/image/ImageComponent.h"
 #include "component/view/ViewComponent.h"
 #include "component/file/FileComponent.h"
 #include "component/list/ListComponent.h"
-#include "component/MenuComponent/MenuComponent.h"
 
 class MainWindow : public ProcedureCaller {
 private:

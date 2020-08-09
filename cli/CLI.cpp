@@ -88,7 +88,7 @@ void CLI::directoryExtract(char* arg) {
 		if (found) break;
 	}
 
-	found ? printf("Finished extracting file %s\n", output) : printf("Failed to find file %s\n", output);
+	found ? printf("Finished extracting file %s\n", output.c_str()) : printf("Failed to find file %s\n", output.c_str());
 }
 
 void CLI::list() {

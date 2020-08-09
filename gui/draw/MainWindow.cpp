@@ -92,6 +92,11 @@ LRESULT MainWindow::ProcedureWrapper(HWND inHwnd, UINT message, WPARAM wParam, L
 			if (listview && nm->code == LVN_ENDSCROLL) listview->scrolled();
 		}
 	}break;
+	case WM_KEYDOWN: {
+		if (wParam == 'A' && GetKeyState(VK_CONTROL) < 0) {
+			int dummy = 0;
+		}
+	} break;
 	case WM_CLOSE: {
 		DestroyWindow(inHwnd);
 	} break;
