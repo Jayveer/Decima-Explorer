@@ -20,7 +20,7 @@ public:
 	void selected();
 	INT_PTR drawing(HDC deviceContext);
 	uint32_t getBackgroundColour();
-	int getNumSelected();
+	int64_t getNumSelected();
 	void setCaller(ListCaller* caller);
 	void setBackgroundColour(uint32_t colour);
 	void rightClicked(int mouseX, int mouseY);

@@ -14,8 +14,8 @@ void ProgressComponent::create(HWND parent, Dimensions dimensions, Origin origin
     setHandle(hwnd);
 }
 
-void ProgressComponent::setRange(int maxRange) {
-    SendMessage(getHandle(), PBM_SETRANGE, 0, MAKELPARAM(0, maxRange));
+void ProgressComponent::setRange(int32_t maxRange) {
+    SendMessage(getHandle(), PBM_SETRANGE32, 0, maxRange);
 }
 
 void ProgressComponent::setIncrement() {

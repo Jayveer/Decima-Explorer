@@ -28,19 +28,8 @@ void ListComponent::rightClicked(int mouseX, int mouseY) {
 	caller->listRightClicked(getHandle(), mouseX, mouseY);
 }
 
-int ListComponent::getNumSelected() {
+int64_t ListComponent::getNumSelected() {
 	return ListView_GetSelectedCount(getHandle());
-	/*
-	// Get the first selected item
-		int iPos = ListView_GetNextItem(hListView, -1, LVNI_SELECTED);
-		while (iPos != -1) {
-    // iPos is the index of a selected item
-    // do whatever you want with it
-
-    // Get the next selected item
-    iPos = ListView_GetNextItem(hListView, iPos, LVNI_SELECTED);
-}
-	*/
 }
 
 void ListComponent::selected() {

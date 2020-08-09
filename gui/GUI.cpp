@@ -33,7 +33,6 @@ void GUI::listRightClicked(HWND hwnd, int mouseX, int mouseY) {
 }
 
 void GUI::listSelected(HWND hwnd) {
-	int dummy = fileList.getNumSelected();
 	fileList.getNumSelected() ? extractButton.enable() : extractButton.disable();
 }
 
@@ -83,7 +82,7 @@ void GUI::directoryChosen(std::string directory) {
 }
 
 void GUI::saveDirectoryChosen(std::string directory) {
-	int pos = -1;
+	int64_t pos = -1;
 	ProgressComponent pc;
 	pc.create(mainWindow.getHandle(), { 1280, 35 }, { 0, 647 });
 	pc.setRange(fileList.getNumSelected());
@@ -93,16 +92,16 @@ void GUI::saveDirectoryChosen(std::string directory) {
 		pos = ListView_GetNextItem(fileList.getHandle(), pos, LVNI_SELECTED);
 		if (pos == -1) break;
 		ListView_GetItemText(fileList.getHandle(), pos, 0, file, MAX_PATH);
-		directoryExtract(file, directory);
+		std::thread thread(&GUI::directoryExtract, this, file, std::ref(directory), textbox.getText());
 		pc.increment();
+		thread.join();
 	} while (pos != -1);
 
 	MessageBox(mainWindow.getHandle(), "Selected files extracted successfully", "Done", MB_OK);
 }
 
-void GUI::directoryExtract(std::string filename, std::string output) {
+void GUI::directoryExtract(std::string filename, std::string output, std::string fileDirectory) {
 	bool found = 0;
-	std::string fileDirectory = textbox.getText();
 
 	output += "\\/" + filename;
 	std::string path = getFilePathWithoutName(output);
