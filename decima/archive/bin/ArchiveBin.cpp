@@ -80,6 +80,8 @@ DataBuffer ArchiveBin::getChunkData(BinChunkEntry chunkEntry) {
 	_fseeki64(f, chunkOffset, SEEK_SET);
 	fread(&dataBuffer[0], 1, chunkSize, f);
 
+	fclose(f);
+
 	return dataBuffer;
 }
 

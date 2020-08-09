@@ -1,5 +1,7 @@
 #pragma once
 #include "draw/MainWindow.h"
+
+#include <thread>
 #include "../decima/file/prefetch/CorePrefetch.h"
 #include "../decima/archive/mpk/ArchiveMoviePack.h"
 #include "../decima/archive/bin/initial/BinInitial.h"
@@ -32,7 +34,7 @@ private:
 	void addFilesToRows();
 	void directoryChosen(std::string directory);
 	void saveDirectoryChosen(std::string directory);
-	void directoryExtract(std::string filename, std::string output);
+	void directoryExtract(std::string filename, std::string output, std::string fileDirectory);
 
 	void viewDrawing(HWND hwnd);
 	void listSelected(HWND hwnd);
