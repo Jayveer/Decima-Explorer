@@ -78,10 +78,13 @@
     <ClCompile Include="gui\draw\component\list\ListComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="gui\draw\component\MenuComponent\MenuComponent.cpp">
+    <ClCompile Include="main_gui.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="main_gui.cpp">
+    <ClCompile Include="gui\draw\component\menu\MenuComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gui\draw\component\progress\ProgressComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -161,13 +164,16 @@
     <ClInclude Include="utils\Numutils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gui\draw\component\MenuComponent\MenuComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="gui\GUI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gui\draw\component\menu\MenuComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gui\draw\component\progress\ProgressComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

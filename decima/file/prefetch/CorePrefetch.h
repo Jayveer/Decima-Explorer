@@ -42,4 +42,5 @@ public:
 	
 	void extractFileTable();
 	void extractFileTableStreamed(DataBuffer data);
+	DecimaPrefetch* getPrefetch() { return &this->prefetch; }
 };
