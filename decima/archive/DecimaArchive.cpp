@@ -1,6 +1,5 @@
 #include "DecimaArchive.h"
 
-
 DecimaArchive::DecimaArchive(std::string filename, std::string extension) {
 	setFilename(filename);
 }
@@ -79,7 +78,7 @@ void DecimaArchive::movieDecrypt(uint32_t* key, uint8_t* src, int size, int pass
 	}
 }
 
-int DecimaArchive::writeDataToFile(DataBuffer data, std::string filename) {
+int DecimaArchive::writeDataToFile(const DataBuffer& data, const std::string& filename) {
 	FILE* f;
 	fopen_s(&f, filename.c_str(), "wb");
 
@@ -91,13 +90,6 @@ int DecimaArchive::writeDataToFile(DataBuffer data, std::string filename) {
 	fseek(f, 0, SEEK_END);
 	fwrite(&data[0], 1, data.size(), f);
 	fclose(f);
-}
 
-uint64_t DecimaArchive::getFileHash(std::string filename) {
-	uint64_t hash;
-	uint8_t byte[16];
-	MurmurHash3_x64_128(filename.c_str(), filename.size() + 1, seed, &byte);
-	memcpy(&hash, byte, 8);
-	return hash;
+	return 1;
 }
-

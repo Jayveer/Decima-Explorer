@@ -1,5 +1,5 @@
 #include "ArchiveBin.h"
-
+#include <errno.h>
 
 ArchiveBin::ArchiveBin(std::string filename) : DecimaArchive(filename, this->extension) {
 
@@ -77,6 +77,12 @@ DataBuffer ArchiveBin::getChunkData(BinChunkEntry chunkEntry) {
 	FILE* f;
 
 	fopen_s(&f, getFilename().c_str(), "rb");
+
+	if (!f) {
+		showError(WRITEFAIL);
+		return dataBuffer;
+	}
+
 	_fseeki64(f, chunkOffset, SEEK_SET);
 	fread(&dataBuffer[0], 1, chunkSize, f);
 
@@ -85,7 +91,7 @@ DataBuffer ArchiveBin::getChunkData(BinChunkEntry chunkEntry) {
 	return dataBuffer;
 }
 
-void ArchiveBin::decompressChunkData(DataBuffer data, uint64_t decompressedSize, unsigned char* output) {
+void ArchiveBin::decompressChunkData(const DataBuffer &data, uint64_t decompressedSize, unsigned char* output) {
 	int res = Kraken_Decompress(&data[0], data.size(), output, decompressedSize);
 	if (res == -1) showError(DECOMPRESSFAIL);
 }
@@ -98,7 +104,7 @@ uint32_t ArchiveBin::getFileEntryIndex(int id) {
 	return -1;
 }
 
-uint32_t ArchiveBin::getFileEntryIndex(std::string filename) {
+uint32_t ArchiveBin::getFileEntryIndex(const std::string& filename) {
 	uint64_t hash = getFileHash(filename);
 	for (int i = 0; i < fileTable.size(); i++) {
 		if (fileTable[i].hash == hash)
@@ -122,20 +128,6 @@ int ArchiveBin::findChunkWithOffset(uint64_t offset) {
 	}
 }
 
-int ArchiveBin::writeDataToFile(DataBuffer data, std::string filename) {
-	FILE* f;
-	fopen_s(&f, filename.c_str(), "wb");
-
-	if (!f) {
-		showError(WRITEFAIL);
-		return 0;
-	}
-
-	fseek(f, 0, SEEK_END);
-	fwrite(&data[0], 1, data.size(), f);
-	fclose(f);
-}
-
 DataBuffer ArchiveBin::extract(BinFileEntry fileEntry) {
 	uint64_t fileOffset = fileEntry.offset;
 	uint32_t fileSize = fileEntry.size;
@@ -152,6 +144,7 @@ DataBuffer ArchiveBin::extract(BinFileEntry fileEntry) {
 
 	for (int i = firstChunkRow; i <= lastChunkRow; i++) {
 		DataBuffer chunkData = getChunkData(chunkTable[i]);
+		
 		if (isEncrypted()) decryptChunkData(i, &chunkData);
 		decompressChunkData(chunkData, chunkTable[i].uncompressedSize, &tempBuffer[pos]);
 		pos += chunkTable[i].uncompressedSize;
@@ -195,6 +188,8 @@ void ArchiveBin::decryptChunkData(int32_t id, DataBuffer* data) {
 
 int ArchiveBin::open() {
 	FILE* f;
+	
+
 	fopen_s(&f, getFilename().c_str(), "rb");
 
 	if (!f) {
@@ -205,6 +200,7 @@ int ArchiveBin::open() {
 	parseHeader(f);
 
 	if (!checkMagic()) {
+		fclose(f);
 		showError(INVALIDMAGIC);
 		return 0;
 	}

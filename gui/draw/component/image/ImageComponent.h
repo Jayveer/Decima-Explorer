@@ -13,6 +13,7 @@ private:
 	ImageCaller* caller = {};
 	uint32_t backgroundColour;
 	HBITMAP loadImage(const char* string);
+	HBITMAP loadImageFromData(const unsigned char* imageBuffer);
 public:
 	ImageComponent();
 	~ImageComponent();
@@ -23,4 +24,5 @@ public:
 	void rightClicked(int mouseX, int mouseY);
 	void setBackgroundColour(uint32_t colour);
 	void create(HWND parent, Dimensions dimensions, Origin origin, const char *imageFile);
+	void create(HWND parent, Dimensions dimensions, Origin origin, const unsigned char* imageFile);
 };

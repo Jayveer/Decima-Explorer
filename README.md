@@ -23,7 +23,7 @@ Now includes a GUI version, please note it has a lot less features than the comm
 
 ##  Usage
 
-There are two flavours of Decima Explorer, one that can be run from the command line and that runs as a Graphical User Interface. The GUI has less features. The command line client has support for movie archive files and binary archive files. Binary archive files can be extracted by their ID or name. If extracting by name it is also possible to enter a directory to search multiple files. A list of game files can also be dumped. Movie archive files can be extracted ID or name if it is known. If the output file isn't specified it will use the 'file to extract' name along with creating its directory structure;
+There are two flavours of Decima Explorer, one that can be run from the command line and one that runs as a Graphical User Interface. The GUI has less features. The command line client has support for movie archive files and binary archive files. Binary archive files can be extracted by their ID or name. If extracting by name it is also possible to enter a directory to search multiple files. A list of game files can also be dumped. Movie archive files can be extracted ID or name if it is known. If the output file isn't specified it will use the 'file to extract' name along with creating its directory structure;
 
 ```
 DecimaExplorer.exe -list "G:\path\to\game\data\files"

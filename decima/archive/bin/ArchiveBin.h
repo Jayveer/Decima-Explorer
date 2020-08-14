@@ -53,15 +53,14 @@ private:
 	BinFileEntry getFileEntry(int id);
 	int findChunkWithOffset(uint64_t offset);
 	DataBuffer extract(BinFileEntry fileEntry);
-	uint32_t getFileEntryIndex(std::string filename);
+	uint32_t getFileEntryIndex(const std::string& filename);
 	void decryptChunkData(int32_t id, DataBuffer* data);
 	DataBuffer getChunkData(BinChunkEntry chunkEntry);
 	int calculateChunkTableOffset(uint64_t fileTableCount);
 
-	int writeDataToFile(DataBuffer data, std::string filename);
 	uint64_t calculateFirstContainingChunk(uint64_t fileOffset, int chunkSize);
 	uint64_t calculateLastContainingChunk(uint64_t fileOffset, int fileSize, int chunkSize);
-	void decompressChunkData(DataBuffer data, uint64_t decompressedSize, unsigned char* output);
+	void decompressChunkData(const DataBuffer& data, uint64_t decompressedSize, unsigned char* output);
 
 protected:
 	uint32_t getMagic() override;
@@ -74,4 +73,7 @@ public:
 	DataBuffer extractFile(std::string filename);
 	int extractFile(uint32_t id, std::string output);
 	int extractFile(std::string filename, std::string output, bool suppressError = 0);
+
+	const std::vector<BinFileEntry>& getFileTable() { return fileTable; }
+
 };

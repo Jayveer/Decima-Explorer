@@ -5,7 +5,6 @@ ImageComponent::ImageComponent() {
 }
 
 ImageComponent::~ImageComponent() {
-
 }
 
 void ImageComponent::create(HWND parent, Dimensions dimensions, Origin origin, const char *imageFile) {
@@ -18,9 +17,30 @@ void ImageComponent::create(HWND parent, Dimensions dimensions, Origin origin, c
 	SendMessage(hwnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)image);
 }
 
+void ImageComponent::create(HWND parent, Dimensions dimensions, Origin origin, const unsigned char* imageFile) {
+	setParent(parent);
+	DWORD style = WS_VISIBLE | WS_CHILD | SS_BITMAP;
+	HWND hwnd = CreateWindow("static", NULL, style, origin.x, origin.y, dimensions.width, dimensions.height, parent, NULL, NULL, this);
+	setHandle(hwnd);
+	SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)this);
+	HBITMAP image = loadImageFromData(imageFile);
+	SendMessage(hwnd, STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)image);
+}
+
 HBITMAP ImageComponent::loadImage(const char* imageFile) {
 	HBITMAP image = (HBITMAP)LoadImage(NULL, imageFile, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
 	resources.push_back(image);
+	return image;
+}
+
+HBITMAP ImageComponent::loadImageFromData(const unsigned char* imageBuffer) {
+	BITMAPFILEHEADER& bfh = (BITMAPFILEHEADER&)imageBuffer[0];
+	BITMAPINFO& bi = (BITMAPINFO&)imageBuffer[sizeof(BITMAPFILEHEADER)];
+	BITMAPINFOHEADER& bih = bi.bmiHeader;
+	char* bitmap = (char*)&imageBuffer[bfh.bfOffBits];
+
+	HDC hdcW = GetDC(parent); // window's DC
+	HBITMAP image = CreateDIBitmap(hdcW, &bih, CBM_INIT, bitmap, &bi, DIB_RGB_COLORS);
 	return image;
 }
 

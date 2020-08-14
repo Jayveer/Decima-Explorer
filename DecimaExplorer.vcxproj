@@ -347,6 +347,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug (GUI)|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug (GUI)|x64'">true</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="decima\common\util.h" />
     <ClInclude Include="gui\draw\component\menu\MenuComponent.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -365,6 +366,13 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="gui\res\res.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="utils\Arrayutils.h" />
     <ClInclude Include="utils\Fileutils.h" />
     <ClInclude Include="decima\file\DecimaCore.h" />
     <ClInclude Include="decima\file\prefetch\CorePrefetch.h" />
@@ -426,19 +434,12 @@
     <ClInclude Include="hash\MurmurHash3.h" />
     <ClInclude Include="ooz\Kraken.h" />
     <ClInclude Include="ooz\targetver.h" />
-    <ClInclude Include="resource.h" />
     <ClInclude Include="utils\Numutils.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="LICENSE.md" />
     <None Include="ooz\LICENSE.md" />
     <None Include="README.md" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="DecimaExplorer.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="E:\Art\dex.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

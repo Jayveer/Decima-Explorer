@@ -65,7 +65,7 @@ bool createOutputDirectory(const std::string& dirName) {
 }
 
 inline
-void addExtension(std::string& dirName, std::string extension) {
+void addExtension(std::string& dirName, const std::string& extension) {
     dirName += "." + extension;
 }
 
@@ -75,12 +75,12 @@ std::string getFileExtension(const std::string& dirName) {
 }
 
 inline
-bool hasExtension(std::string dirName, std::string extension) {
+bool hasExtension(const std::string& dirName, const std::string& extension) {
     return getFileExtension(dirName) == extension;
 }
 
 inline
-std::string getFilePathWithoutName(std::string filename) {
+std::string getFilePathWithoutName(const std::string& filename) {
     int slashIndex = filename.find_last_of("\\/");
     return slashIndex != std::string::npos ? filename.substr(0, slashIndex) : "";
 }

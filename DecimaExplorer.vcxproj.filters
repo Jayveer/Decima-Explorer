@@ -164,9 +164,6 @@
     <ClInclude Include="utils\Numutils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="gui\GUI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -176,20 +173,19 @@
     <ClInclude Include="gui\draw\component\progress\ProgressComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="gui\res\res.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\Arrayutils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="decima\common\util.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ooz\LICENSE.md" />
     <None Include="LICENSE.md" />
     <None Include="README.md" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="DecimaExplorer.rc">
-      <Filter>Resource Files</Filter>
-    </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="E:\Art\dex.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
   </ItemGroup>
 </Project>

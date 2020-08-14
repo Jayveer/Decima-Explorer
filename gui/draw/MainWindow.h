@@ -17,6 +17,6 @@ public:
 	~MainWindow();
 
 	HWND getHandle();
-	void create(HINSTANCE hInst, WindowCaller* caller, const char* title, uint32_t bgColour);
+	void create(HINSTANCE hInst, WindowCaller* caller, const char* title, HICON icon, HICON iconSm, uint32_t bgColour);
 	void run(std::string programName, std::string version);
 };
