@@ -15,13 +15,29 @@ void ProgressComponent::create(HWND parent, Dimensions dimensions, Origin origin
 }
 
 void ProgressComponent::setRange(int32_t maxRange) {
+    this->maxRange = maxRange;
     SendMessage(getHandle(), PBM_SETRANGE32, 0, maxRange);
-}
-
-void ProgressComponent::setIncrement() {
     SendMessage(getHandle(), PBM_SETSTEP, (WPARAM)1, 0);
 }
 
+void ProgressComponent::setCustomIncrement(int increment) {
+    SendMessage(getHandle(), PBM_SETSTEP, (WPARAM)increment, 0);
+}
+
 void ProgressComponent::increment() {
+    this->current++;
     SendMessage(getHandle(), PBM_STEPIT, 0, 0);
+}
+
+void ProgressComponent::setValue(int32_t value) {
+    this->current = value;
+    SendMessage(getHandle(), PBM_SETPOS, (WPARAM)value, 0);
+}
+
+bool ProgressComponent::isCompleted() {
+    return current >= maxRange;
+}
+
+void ProgressComponent::completed() {
+
 }

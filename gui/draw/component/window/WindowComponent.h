@@ -1,5 +1,6 @@
 #pragma once
 #include "../component.h"
+#include "../../../res/res.h"
 
 class WindowCaller {
 public:
@@ -15,14 +16,16 @@ private:
 
 public:
 	
-	WindowComponent(HINSTANCE hInst, const  char* name, const char* title, uint32_t colour, ProcedureCaller *pc);
+	WindowComponent(HINSTANCE hInst, const  char* name, const char* title, HICON icon, HICON iconSm, uint32_t colour, ProcedureCaller *pc);
 	WindowComponent(ProcedureCaller* pc);
 	~WindowComponent();
 
-	int create(HINSTANCE hInst, const  char* name, const char* title, uint32_t colour);
+	int create(HINSTANCE hInst, const char* name, const char* title, HICON icon, HICON iconSm, uint32_t colour);
 
 	void run();
 	void created();
 	void setCaller(WindowCaller* caller);
 	void rightClicked(int mouseX, int mouseY);
+	void setBigIcon(HICON icon);
+	void setSmallIcon(HICON icon);
 };

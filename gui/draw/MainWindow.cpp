@@ -18,9 +18,9 @@ HWND MainWindow::getHandle() {
 	return window.getHandle();
 }
 
-void MainWindow::create(HINSTANCE hInst, WindowCaller* caller, const char* title, uint32_t bgColour) {
+void MainWindow::create(HINSTANCE hInst, WindowCaller* caller, const char* title, HICON icon, HICON iconSm, uint32_t bgColour) {
 	window.setCaller(caller);
-	window.create(hInst, "mainWindow", title, bgColour);
+	window.create(hInst, "mainWindow", title, icon, iconSm, bgColour);
 }
 
 ComponentType determineType(HWND hwnd) {

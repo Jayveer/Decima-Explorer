@@ -1,14 +1,13 @@
 #include "WindowComponent.h"
-#include "../../../../resource.h"
 
 WindowComponent::WindowComponent(ProcedureCaller* pc) {
 	setType(WINDOW);
 	this->pc = pc;
 }
 
-WindowComponent::WindowComponent(HINSTANCE hInst, const char* name, const char* title, uint32_t colour, ProcedureCaller *pc) {
+WindowComponent::WindowComponent(HINSTANCE hInst, const char* name, const char* title, HICON icon, HICON iconSm, uint32_t colour, ProcedureCaller *pc) {
 	this->pc = pc;
-	create(hInst, name, title, colour);
+	create(hInst, name, title, icon, iconSm, colour);
 }
 
 WindowComponent::~WindowComponent() {
@@ -26,18 +25,19 @@ void WindowComponent::rightClicked(int mouseX, int mouseY) {
 	this->caller->windowRightClicked(getHandle(), mouseX, mouseY);
 }
 
-int WindowComponent::create(HINSTANCE hInst, const char* name, const char* title, uint32_t colour) {
+int WindowComponent::create(HINSTANCE hInst, const char* name, const char* title, HICON icon, HICON iconSm, uint32_t colour) {
 	HBRUSH bgColour = createBrush(colour);
 
-	WNDCLASS windowClass = {};
+	WNDCLASSEX windowClass = {};
+	windowClass.cbSize = sizeof(WNDCLASSEX);
 	windowClass.hInstance = hInst;
 	windowClass.lpszClassName = name;
 	windowClass.lpfnWndProc = &WindowProcedure;
 	windowClass.hbrBackground = bgColour;
 	windowClass.hCursor = LoadCursor(NULL, IDC_ARROW);
-	windowClass.hIcon = LoadIcon(hInst, MAKEINTRESOURCE(IDI_ICON1));
-
-	if (!RegisterClass(&windowClass)) return 0;
+	windowClass.hIcon = icon;
+	windowClass.hIconSm = iconSm;
+	if (!RegisterClassEx(&windowClass)) return 0;
 
 	DWORD style = WS_SYSMENU | WS_CAPTION | WS_MINIMIZEBOX | WS_VISIBLE;
 	HWND hwnd = CreateWindow(name, title, style, CW_USEDEFAULT, CW_USEDEFAULT, 1280, 720, NULL, NULL, hInst, this);
@@ -52,6 +52,14 @@ void WindowComponent::run() {
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 	}
+}
+
+void WindowComponent::setSmallIcon(HICON icon) {
+	SendMessage(getHandle(), WM_SETICON, ICON_SMALL, (LPARAM)icon);
+}
+
+void WindowComponent::setBigIcon(HICON icon) {
+	SendMessage(getHandle(), WM_SETICON, ICON_BIG, (LPARAM)icon);
 }
 
 LRESULT CALLBACK WindowComponent::WindowProcedure(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {

@@ -2,5 +2,5 @@
 
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdshow) {
 	GUI gui = GUI(hInst);
-	gui.run("Decima Explorer", "1.8");
+	gui.run("Decima Explorer", "1.9");
 }
