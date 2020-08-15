@@ -136,7 +136,7 @@ void GUI::parallelExtract(const std::string& directory, const std::vector<char*>
 	uint32_t excess = selectedStrings.size() % numThreads; 
 	uint16_t add = 0;
 
-	if (!divvy) numThreads = divvy;
+	if (!divvy) numThreads = excess;
 
 	std::vector<std::future<void>> futures;
 
