@@ -12,7 +12,7 @@
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LocalDebuggerCommandArguments>-e "G:\Games\PC\steamapps\common\Death Stranding\data" ds/models/characters/aml_amelie/core/aml_skirt_demo_cs07_s00350/model/animations/neutral</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>-r "G:\fullext" output.bin</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug (GUI)|x64'">

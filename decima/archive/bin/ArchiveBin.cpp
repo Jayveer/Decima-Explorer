@@ -39,6 +39,10 @@ void ArchiveBin::parseHeader(FILE* f) {
 	fread(&header.maxChunkSize, 4, 1, f);
 }
 
+//void ArchiveBin::createHeader() {
+//
+//}
+
 void ArchiveBin::parseFileTable(FILE* f, uint64_t fileTableCount) {
 	for (int i = 0; i < fileTableCount; i++) {
 		BinFileEntry fileEntry;
@@ -215,6 +219,10 @@ int ArchiveBin::open() {
 
 	fclose(f);
 	return 1;
+}
+
+int ArchiveBin::create(const std::string& basePath, const std::vector<std::string>& fileList) {
+	return 0;
 }
 
 int ArchiveBin::extractFile(uint32_t id, std::string output) {

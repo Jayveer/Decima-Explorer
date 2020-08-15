@@ -133,7 +133,7 @@ argcRange CLI::getArgCount(CLI_COMMAND command) {
 	case LIST:
 		return { 3, 3 };
 	case REPACK:
-		return { 5, 5 };
+		return { 4, 4 };
 	default:
 		return { 5, 5 };
 	}
@@ -167,7 +167,11 @@ bool CLI::isCommand(char* arg) {
 }
 
 void CLI::repack() {
-	printf("Sorry reapcking is not implemented yet\n");
+	std::string baseDirectory = argv[2];
+	std::vector<std::string> files; 
+	traverseDirectory(baseDirectory, "*", files);
+	ArchiveBin decimaArchive(argv[3]);
+	decimaArchive.create(baseDirectory, files);
 }
 
 void CLI::printUsage() {
