@@ -2867,6 +2867,18 @@ int arg_compressor = kCompressor_Kraken, arg_level = 4;
 char arg_direction;
 char *verifyfolder;
 
+typedef int WINAPI OodLZ_CompressFunc(int codec, uint8* src_buf, size_t src_len, uint8* dst_buf, int level, void* opts, size_t offs, size_t unused, void* scratch, size_t scratch_size);
+OodLZ_CompressFunc* OodLZ_Compress;
+
+int Kraken_Compress(uint8* src, size_t src_len, byte* dst) {
+	HINSTANCE mod = LoadLibraryA("oo2core_7_win64.dll");
+	char COMPFUNCNAME[] = "XXdleLZ_Compress";
+	COMPFUNCNAME[0] = 'O';
+	COMPFUNCNAME[1] = 'o';
+	OodLZ_Compress = (OodLZ_CompressFunc*)GetProcAddress(mod, COMPFUNCNAME);
+	int dst_len = OodLZ_Compress(arg_compressor, src, src_len, dst, arg_level, 0, 0, 0, 0, 0);
+	return dst_len;
+}
 
 bool Verify(const char *filename, uint8 *output, int outbytes, const char *curfile) {
 	int test_size;

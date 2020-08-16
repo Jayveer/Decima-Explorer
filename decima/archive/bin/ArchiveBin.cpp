@@ -100,6 +100,12 @@ void ArchiveBin::decompressChunkData(const DataBuffer &data, uint64_t decompress
 	if (res == -1) showError(DECOMPRESSFAIL);
 }
 
+int ArchiveBin::compressChunkData(const DataBuffer& data, uint64_t decompressedSize, unsigned char* output) {
+	int res = Kraken_Compress((uint8*)&data[0], decompressedSize, output);
+	if (res == -1) showError(DECOMPRESSFAIL);
+	return res;
+}
+
 uint32_t ArchiveBin::getFileEntryIndex(int id) {
 	for (int i = 0; i < fileTable.size(); i++) {
 		if (fileTable[i].entryNum == id)
@@ -221,7 +227,54 @@ int ArchiveBin::open() {
 	return 1;
 }
 
+std::vector<DataBuffer> compress(const std::string& filename) {
+	std::vector<DataBuffer> chunkedFile;
+
+	FILE* f;
+	fopen_s(&f, filename.c_str(), "rb");
+
+	if (!f) return chunkedFile;
+
+	_fseeki64(f, 0, SEEK_END);
+	uint64_t filesize = ftell(f);
+	_fseeki64(f, 0, SEEK_SET);
+
+	int nchunks = (filesize / 0x40000);
+	int remainder = filesize % 0x40000;
+	if (remainder) nchunks++;
+
+	for (int i = 0; i < nchunks; i++) {
+		DataBuffer fileChunk;
+		int size = i == nchunks - 1 ? remainder : 0x40000;
+		fileChunk.resize(size);
+
+		fread(&fileChunk[0], size, 1, f);
+
+		DataBuffer chunk;
+		chunk.resize(0x40000);
+		int compressedSize = Kraken_Compress(&fileChunk[0], size, &chunk[0]);
+		chunk.resize(compressedSize);
+		chunkedFile.push_back(chunk);
+	}
+	
+	return chunkedFile;
+}
+
+BinChunkEntry createChunkEntry(const std::vector<DataBuffer>& chunks) {
+	for (int i = 0; i < chunks.size(); i++) {
+		BinChunkEntry chunk;
+		chunk.compressedSize = chunks[i].size();
+		chunk.key = 0;
+		chunk.key2 = 0;
+	}
+}
+
 int ArchiveBin::create(const std::string& basePath, const std::vector<std::string>& fileList) {
+	std::string filePath = basePath + "\\" + fileList[0];
+	std::vector<DataBuffer> chunks = compress(filePath);
+	
+
+
 	return 0;
 }
 

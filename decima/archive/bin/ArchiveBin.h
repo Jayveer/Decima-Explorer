@@ -60,6 +60,7 @@ private:
 
 	uint64_t calculateFirstContainingChunk(uint64_t fileOffset, int chunkSize);
 	uint64_t calculateLastContainingChunk(uint64_t fileOffset, int fileSize, int chunkSize);
+	int compressChunkData(const DataBuffer& data, uint64_t decompressedSize, unsigned char* output);
 	void decompressChunkData(const DataBuffer& data, uint64_t decompressedSize, unsigned char* output);
 
 protected:
