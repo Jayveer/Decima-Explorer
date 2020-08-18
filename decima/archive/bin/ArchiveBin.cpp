@@ -219,7 +219,6 @@ DataBuffer ArchiveBin::extract(BinFileEntry fileEntry) {
 
 	for (int i = firstChunkRow; i <= lastChunkRow; i++) {
 		DataBuffer chunkData = getChunkData(chunkTable[i]);
-		
 		if (isEncrypted()) decryptChunkData(i, &chunkData);
 		decompressChunkData(chunkData, chunkTable[i].uncompressedSize, &tempBuffer[pos]);
 		pos += chunkTable[i].uncompressedSize;
@@ -227,9 +226,9 @@ DataBuffer ArchiveBin::extract(BinFileEntry fileEntry) {
 
 	uint64_t filePosition = fileOffset % header.maxChunkSize;
 
-	DataBuffer file(header.maxChunkSize);
+	DataBuffer file(fileSize);
 
-	memcpy(&file[0], &tempBuffer[filePosition], header.maxChunkSize);
+	memcpy(&file[0], &tempBuffer[filePosition], fileSize);
 
 	return file;
 
