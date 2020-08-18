@@ -4,7 +4,7 @@
 #include "../../hash/MurmurHash3.h"
 
 
-const uint8_t seed = 0x2A;
+const uint8_t seed = 42;
 
 inline
 uint64_t getFileHash(const std::string& filename) {

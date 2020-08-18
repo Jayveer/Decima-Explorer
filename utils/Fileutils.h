@@ -4,6 +4,53 @@
 #include <vector>
 #include <iostream>
 #include <Windows.h>
+#include <stack>
+
+inline
+bool traverseDirectory(std::string basePath, const std::string& mask, std::vector<std::string>& files) {
+    HANDLE hFind = INVALID_HANDLE_VALUE;
+    WIN32_FIND_DATA ffd;
+    std::string spec;
+    std::string path;
+    std::stack<std::string> directories;
+
+    directories.push("");
+    files.clear();
+
+    basePath += "\\";
+    while (!directories.empty()) {
+        path = directories.top();
+        spec = basePath + path + mask;
+        directories.pop();
+
+        hFind = FindFirstFile(spec.c_str(), &ffd);
+        if (hFind == INVALID_HANDLE_VALUE) {
+            return false;
+        }
+
+        do {
+            if (strcmp(ffd.cFileName, ".") != 0 &&
+                strcmp(ffd.cFileName, "..") != 0) {
+                if (ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+                    directories.push(path + ffd.cFileName + "/");
+                }
+                else {
+                    files.push_back(path + ffd.cFileName);
+                }
+            }
+        } while (FindNextFile(hFind, &ffd) != 0);
+
+        if (GetLastError() != ERROR_NO_MORE_FILES) {
+            FindClose(hFind);
+            return false;
+        }
+
+        FindClose(hFind);
+        hFind = INVALID_HANDLE_VALUE;
+    }
+
+    return true;
+}
 
 inline
 std::vector<std::string> getFilesFromDirectory(const std::string& dirName, const std::string& extension) {
@@ -94,6 +141,15 @@ void createDirectoriesFromPath(const std::string& path) {
         }
         createOutputDirectory(path);
     }
+}
+
+inline
+uint32_t getFilesize(FILE* f) {
+    fseek(f, 0, SEEK_END);
+    uint32_t filesize = ftell(f);
+    fseek(f, 0, SEEK_SET);
+
+    return filesize;
 }
 
 struct membuf : std::streambuf

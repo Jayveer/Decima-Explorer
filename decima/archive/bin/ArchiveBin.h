@@ -45,22 +45,37 @@ private:
 	void parseFileTable(FILE* f, uint64_t fileTableCount);
 	void parseChunkTable(FILE* f, uint64_t chunkTableCount);
 
+	void writeFileTable();
+	void writeHeader(FILE* f);
+	void writeFileTable(FILE* f);
+	void writeChunkTable(FILE* f);
+	void writeChunkData(FILE* f, const std::vector<DataBuffer>& chunks);
+
 	bool checkMagic() override;
 	void decryptHeader();
 	void decryptFileTable();
 	void decryptChunkTable();
-	uint32_t getFileEntryIndex(int id);
 	BinFileEntry getFileEntry(int id);
+	uint32_t getFileEntryIndex(int id);
 	int findChunkWithOffset(uint64_t offset);
+	int nukeHash(const std::string& filename);
 	DataBuffer extract(BinFileEntry fileEntry);
-	uint32_t getFileEntryIndex(const std::string& filename);
-	void decryptChunkData(int32_t id, DataBuffer* data);
 	DataBuffer getChunkData(BinChunkEntry chunkEntry);
-	int calculateChunkTableOffset(uint64_t fileTableCount);
+	void decryptChunkData(int32_t id, DataBuffer* data);
+	uint32_t getFileEntryIndex(const std::string& filename);
 
+	uint64_t calculateDataOffset();
+	uint64_t calculateFileTableSize();
+	uint64_t calculateChunkTableSize();
+	uint64_t calculateChunkTableOffset();
+	uint64_t calculateDataOffset(uint64_t numChunks);
+	uint64_t calculateChunkTableSize(uint64_t numChunks);
+	std::vector<DataBuffer> createChunkEntries(DataBuffer& buffer);
 	uint64_t calculateFirstContainingChunk(uint64_t fileOffset, int chunkSize);
 	uint64_t calculateLastContainingChunk(uint64_t fileOffset, int fileSize, int chunkSize);
+	int compressChunkData(const DataBuffer& data, uint64_t decompressedSize, unsigned char* output);
 	void decompressChunkData(const DataBuffer& data, uint64_t decompressedSize, unsigned char* output);
+	DataBuffer createFileEntries(const std::string& basePath, const std::vector<std::string>& fileList);
 
 protected:
 	uint32_t getMagic() override;
@@ -72,7 +87,9 @@ public:
 	int open() override;
 	DataBuffer extractFile(std::string filename);
 	int extractFile(uint32_t id, std::string output);
+	void nukeHashes(const std::vector<std::string>& fileList);
 	int extractFile(std::string filename, std::string output, bool suppressError = 0);
+	int create(const std::string& basePath, const std::vector<std::string>& fileList);
 
 	const std::vector<BinFileEntry>& getFileTable() { return fileTable; }
 

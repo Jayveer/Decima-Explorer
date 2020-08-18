@@ -18,12 +18,14 @@ Now includes a GUI version, please note it has a lot less features than the comm
 
 ### To Do
  - Refactor a lot of the GUI code and add error feedback
- - Implement Repack command
+ - Research on how to inject files from custom archives
  - Clean up the code (this will always be here)
 
 ##  Usage
 
-There are two flavours of Decima Explorer, one that can be run from the command line and one that runs as a Graphical User Interface. The GUI has less features. The command line client has support for movie archive files and binary archive files. Binary archive files can be extracted by their ID or name. If extracting by name it is also possible to enter a directory to search multiple files. A list of game files can also be dumped. Movie archive files can be extracted ID or name if it is known. If the output file isn't specified it will use the 'file to extract' name along with creating its directory structure;
+There are two flavours of Decima Explorer, one that can be run from the command line and one that runs as a Graphical User Interface. The GUI has less features although supports multithreaded bulk extraction.. The command line client has support for movie archive files and binary archive files. Binary archive files can be extracted by their ID or name. If extracting by name it is also possible to enter a directory to search multiple files. A list of game files can also be dumped. Movie archive files can be extracted ID or name if it is known. If the output file isn't specified it will use the 'file to extract' name along with creating its directory structure;
+
+A repack command has been added to the Command line Interface which will currently take a root directory containing a tree structure of files and generate a Decima Archive binary file from the files. I have not found a way to make a game favour files from my archive yet so I am still researching the best way to inject or replace core files.
 
 ```
 DecimaExplorer.exe -list "G:\path\to\game\data\files"
@@ -53,7 +55,12 @@ Here a directory is passed in as the file to extract from, this will allow the t
 ```
 DecimaExplorer.exe -extract "G:\path\to\game\data\files" /file/name/to/extract
 ```
-In the most recent update it is possible to omit the output file, in this case the input filename or fileID will be used as the file name. If it is a directory, the directory structure will be created.
+It is possible to omit the output file, in this case the input filename or fileID will be used as the file name. If it is a directory, the directory structure will be created.
+
+```
+DecimaExplorer.exe -repack "G:\path\to\files\to\pack" output.bin
+```
+In the most recent update a repack command has been added which will take a base directory containing multiple directories of files and output a binary archive file.
 
 If running the GUI client, select the game's data directory and a it should populate a list of files available to extract determined by the game's cache loading mechanism.
 

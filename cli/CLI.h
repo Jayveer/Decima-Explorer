@@ -55,4 +55,5 @@ private:
 	argcRange getArgCount(CLI_COMMAND command);
 	void processCommand(CLI_COMMAND command, char* arg);
 	void archiveExtract(char* arg, DecimaArchive* archive);
+	void removeHashes(const std::vector<std::string>& fileList, const char* dataFolder);
 };
