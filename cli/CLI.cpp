@@ -99,8 +99,6 @@ void CLI::list() {
 	DataBuffer data = initial.extractFile(prefetch.getFilename());
 	if (data.empty()) return;
 
-	//prefetch.open(data);
-	//prefetch.extractFileTable();
 	prefetch.extractFileTableStreamed(data);
 	printf("File list extracted successfully\n");
 }
@@ -133,7 +131,7 @@ argcRange CLI::getArgCount(CLI_COMMAND command) {
 	case LIST:
 		return { 3, 3 };
 	case REPACK:
-		return { 4, 4 };
+		return { 5, 5 };
 	default:
 		return { 5, 5 };
 	}
@@ -166,9 +164,21 @@ bool CLI::isCommand(char* arg) {
 	return arg[0] == 0x2D;
 }
 
+void CLI::removeHashes(const std::vector<std::string>& fileList, const char *dataFolder) {
+	std::vector<std::string> dataFiles = getFilesFromDirectory(dataFolder, ".bin");
+
+	for (int i = 0; i < dataFiles.size(); i++) {
+		ArchiveBin decimaArchive(dataFiles[i].c_str());
+		if (!decimaArchive.open()) continue;
+		decimaArchive.nukeHashes(fileList);
+	}
+	
+}
+
 void CLI::repack() {
 	std::string baseDirectory = argv[2];
 	std::vector<std::string> files; 
+
 	traverseDirectory(baseDirectory, "*", files);
 	ArchiveBin decimaArchive(argv[3]);
 	decimaArchive.create(baseDirectory, files);

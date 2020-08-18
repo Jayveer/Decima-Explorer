@@ -143,6 +143,15 @@ void createDirectoriesFromPath(const std::string& path) {
     }
 }
 
+inline
+uint32_t getFilesize(FILE* f) {
+    fseek(f, 0, SEEK_END);
+    uint32_t filesize = ftell(f);
+    fseek(f, 0, SEEK_SET);
+
+    return filesize;
+}
+
 struct membuf : std::streambuf
 {
     membuf(char* base, std::ptrdiff_t n) {
