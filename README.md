@@ -25,7 +25,7 @@ Now includes a GUI version, please note it has a lot less features than the comm
 
 There are two flavours of Decima Explorer, one that can be run from the command line and one that runs as a Graphical User Interface. The GUI has less features although supports multithreaded bulk extraction.. The command line client has support for movie archive files and binary archive files. Binary archive files can be extracted by their ID or name. If extracting by name it is also possible to enter a directory to search multiple files. A list of game files can also be dumped. Movie archive files can be extracted ID or name if it is known. If the output file isn't specified it will use the 'file to extract' name along with creating its directory structure;
 
-A repack command has been added to the Command line Interface which will currently take a root directory containing a tree structure of files and generate a Decima Archive binary file from the files. I have not found a way to make a game favour files from my archive yet so I am still researching the best way to inject or replace core files.
+A repack command has been added to the Command line Interface which will currently take a root directory containing a tree structure of files and generate a Decima Archive binary file from the files. I have not found a way to make a game favour files from my archive yet so I am still researching the best way to inject or replace core files. The repack command requires oo2core_7_win64.dll to be present alongside the exe.
 
 ```
 DecimaExplorer.exe -list "G:\path\to\game\data\files"
