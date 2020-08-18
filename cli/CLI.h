@@ -30,9 +30,11 @@ private:
 								"\t DecimaExplorer.exe [-e/-extract] inputfile filename outputfile\n"
 								"\t DecimaExplorer.exe [-e/-extract] [directory containing data files] filename outputfile\n"
 								"\t DecimaExplorer.exe [-e/-extract] [directory containing data files] filename\n"
+								"\t DecimaExplorer.exe [-r/-repack] [directory containing directories of core files] outputfile\n"
 								"\t DecimaExplorer.exe [-l/-list] [directory containing data files]\n"
 								"Available Options:\n"
 								"\tList:    -l, -list\n"
+								"\tRepack:	-r, -repack\n"
 								"\tExtract: -e, -extract\n";
 
 	const char *EXIT_MESSAGE  = "Exiting\n";
