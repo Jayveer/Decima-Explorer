@@ -152,6 +152,40 @@ uint32_t getFilesize(FILE* f) {
     return filesize;
 }
 
+inline
+void shiftData(const std::string& filename, uint64_t insertionPoint, uint64_t insertionNum) {
+    FILE* f;
+    fopen_s(&f, filename.c_str(), "r+b");
+
+    fseek(f, 0, SEEK_END);
+    uint64_t fileSize = _ftelli64(f);
+
+    uint64_t dataSize = fileSize - insertionPoint;
+
+    uint64_t partitionSize = 51200000;
+    uint64_t numPartitions = dataSize / partitionSize;
+    uint64_t remainder = dataSize % partitionSize;
+    if (remainder) numPartitions++;
+
+    uint64_t pos = fileSize;
+
+    for (int i = 0; i < numPartitions; i++) {
+        bool firstPartition = i == 0;
+        uint64_t size = partitionSize;
+
+        if (firstPartition && remainder) size = remainder;
+        pos -= size;
+
+        std::vector<uint8_t> buffer(size);
+        _fseeki64(f, pos, SEEK_SET);
+        fread(&buffer[0], size, 1, f);
+        _fseeki64(f, pos + insertionNum, SEEK_SET);
+        fwrite(&buffer[0], size, 1, f);
+    }
+
+    fclose(f);
+}
+
 struct membuf : std::streambuf
 {
     membuf(char* base, std::ptrdiff_t n) {

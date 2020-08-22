@@ -1,4 +1,6 @@
 #pragma once
+#include <unordered_map>
+
 #include "../decima/file/prefetch/CorePrefetch.h"
 #include "../decima/archive/mpk/ArchiveMoviePack.h"
 #include "../decima/archive/bin/initial/BinInitial.h"
@@ -6,6 +8,7 @@
 typedef enum CLI_COMMAND {
 	LIST,
 	EXTRACT,
+	PACK,
 	REPACK
 } CLI_COMMAND;
 
@@ -41,6 +44,7 @@ private:
 
 	//command methods
 	void extract(char* arg);
+	void pack();
 	void repack();
 	void list();
 

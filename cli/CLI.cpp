@@ -17,6 +17,9 @@ void CLI::processCommand(CLI_COMMAND command, char* arg) {
 	case REPACK:
 		repack();
 		break;
+	case PACK:
+		pack();
+		break;
 	case LIST:
 		list();
 		break;
@@ -99,8 +102,31 @@ void CLI::list() {
 	DataBuffer data = initial.extractFile(prefetch.getFilename());
 	if (data.empty()) return;
 
-	prefetch.extractFileTableStreamed(data);
-	printf("File list extracted successfully\n");
+	prefetch.open(data);
+	std::unordered_map<uint64_t, const char*> hashMap;
+
+	uint64_t numStrings = prefetch.getPrefetch()->numStrings;
+
+	for (int i = 0; i < numStrings; i++) {
+		uint64_t hash = getFileHash(prefetch.getPrefetch()->strings[i].string + ".core");
+		hashMap[hash] = prefetch.getPrefetch()->strings[i].string.c_str();
+	}
+
+	ArchiveBin arc(argv[3]);
+	arc.open();
+
+	for (int i = 0; i < arc.getFileTable().size(); i++) {
+		uint64_t hash = arc.getFileTable()[i].hash;
+
+		if (hashMap[hash] != NULL) {
+			const char* test = hashMap[hash];
+			std::cout << i << ": " << test <<  "\n";
+		}
+	}
+	int dummy = 0;
+
+	//prefetch.extractFileTableStreamed(data);
+	//printf("File list extracted successfully\n");
 }
 
 bool CLI::checkInput() {
@@ -129,8 +155,10 @@ argcRange CLI::getArgCount(CLI_COMMAND command) {
 	case EXTRACT:
 		return { 4, 5 };
 	case LIST:
-		return { 3, 3 };
+		return { 3, 4 };
 	case REPACK:
+		return { 4, 4 };
+	case PACK:
 		return { 4, 4 };
 	default:
 		return { 5, 5 };
@@ -150,6 +178,8 @@ CLI_COMMAND CLI::argToCommand(char* arg) {
 		return LIST;
 	if (!strcmp(arg, "-repack")  || !strcmp(arg, "-r"))
 		return REPACK;
+	if (!strcmp(arg, "-pack") || !strcmp(arg, "-p"))
+		return PACK;
 }
 
 bool CLI::isNumber(char* arg) {
@@ -172,10 +202,19 @@ void CLI::removeHashes(const std::vector<std::string>& fileList, const char *dat
 		if (!decimaArchive.open()) continue;
 		decimaArchive.nukeHashes(fileList);
 	}
-	
 }
 
 void CLI::repack() {
+	std::string baseDirectory = argv[3];
+	std::vector<std::string> files;
+
+	traverseDirectory(baseDirectory, "*", files);
+	ArchiveBin decimaArchive(argv[2]);
+	if (!decimaArchive.open()) return;
+	decimaArchive.update(baseDirectory, files);
+}
+
+void CLI::pack() {
 	std::string baseDirectory = argv[2];
 	std::vector<std::string> files; 
 

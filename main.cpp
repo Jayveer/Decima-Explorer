@@ -2,5 +2,5 @@
 
 int main(int argc, char **argv) {
 	CLI cli = CLI(argc, argv);
-	cli.run("Decima Explorer", "2.0");
+	cli.run("Decima Explorer", "2.1");
 }

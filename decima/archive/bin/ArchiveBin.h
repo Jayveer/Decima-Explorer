@@ -45,7 +45,13 @@ private:
 	void parseFileTable(FILE* f, uint64_t fileTableCount);
 	void parseChunkTable(FILE* f, uint64_t chunkTableCount);
 
-	void writeFileTable();
+	void updateHeader();
+	void updateFileTable();
+	void updateChunkTable();
+
+	void addChunkData(std::vector<DataBuffer>& chunks);
+	void addChunkTable(const std::vector<DataBuffer>& chunks);
+
 	void writeHeader(FILE* f);
 	void writeFileTable(FILE* f);
 	void writeChunkTable(FILE* f);
@@ -64,18 +70,20 @@ private:
 	void decryptChunkData(int32_t id, DataBuffer* data);
 	uint32_t getFileEntryIndex(const std::string& filename);
 
+
 	uint64_t calculateDataOffset();
+	uint64_t getUncompressedSizeEnd();
 	uint64_t calculateFileTableSize();
 	uint64_t calculateChunkTableSize();
 	uint64_t calculateChunkTableOffset();
 	uint64_t calculateDataOffset(uint64_t numChunks);
 	uint64_t calculateChunkTableSize(uint64_t numChunks);
-	std::vector<DataBuffer> createChunkEntries(DataBuffer& buffer);
 	uint64_t calculateFirstContainingChunk(uint64_t fileOffset, int chunkSize);
+	std::vector<DataBuffer> createChunkEntries(DataBuffer& buffer, bool isUpdate);
 	uint64_t calculateLastContainingChunk(uint64_t fileOffset, int fileSize, int chunkSize);
-	int compressChunkData(const DataBuffer& data, uint64_t decompressedSize, unsigned char* output);
+	int compressChunkData(unsigned char* input, uint64_t decompressedSize, DataBuffer& output);
 	void decompressChunkData(const DataBuffer& data, uint64_t decompressedSize, unsigned char* output);
-	DataBuffer createFileEntries(const std::string& basePath, const std::vector<std::string>& fileList);
+	DataBuffer createFileEntries(const std::string& basePath, const std::vector<std::string>& fileList, bool isUpdate);
 
 protected:
 	uint32_t getMagic() override;
@@ -90,7 +98,7 @@ public:
 	void nukeHashes(const std::vector<std::string>& fileList);
 	int extractFile(std::string filename, std::string output, bool suppressError = 0);
 	int create(const std::string& basePath, const std::vector<std::string>& fileList);
-
+	int update(const std::string& basePath, const std::vector<std::string>& fileList);
 	const std::vector<BinFileEntry>& getFileTable() { return fileTable; }
 
 };
