@@ -215,6 +215,7 @@ int ArchiveBin::compressChunkData(unsigned char* input, uint64_t decompressedSiz
 
 	if (compressedSize == -1) {
 		showError(COMPRESSFAIL);
+		delete[] chunkHeap;
 		return -1;
 	}
 
