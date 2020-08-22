@@ -2,7 +2,7 @@
 # Decima Explorer
 
 
-Decima Explorer is a free and open-source program designed to allow you to unpack data from the archive structures used by games using the Decima engine.
+Decima Explorer is a free and open-source program designed to allow you to unpack, data from the archive structures used by games using the Decima engine. It also allows you to create your own decima archive binary or repack an existing one.
 
 Support for encrypted files has been added thanks to Ekey, and [Wunkolo](https://github.com/Wunkolo) for researching, implementing and documenting the decryption algorithm. Wunkolo's [implementation can be found here](https://github.com/Wunkolo/DecimaTools).
 
@@ -16,16 +16,25 @@ Now includes a GUI version, please note it has a lot less features than the comm
 
 ![picture](https://github.com/Jayveer/Decima-Explorer/blob/master/gui.png?raw=true)
 
+Both a repack and pack command have been added to the Command line Interface. Please note there are some caveats to repacking;
+- You should back up an original copy the file you are repacking or you will have to redownload it if there is a problem.
+- Repacking will increase the original file size based on how many files you are adding.
+- Repacking can take a while as it has to insert data in the middle of the binary. 
+- If the file you are repacking doesn't exist in the archive you are repacking it will not add it.
+- If you are using this to blindly swap core files around you may not have much luck without more of an understanding on how the core files themselves work, in this case you will probably see the game fail to load in places.
+
+
 ### To Do
  - Refactor a lot of the GUI code and add error feedback
- - Research on how to inject files from custom archives
+ - Add separate GUI for packing and repacking.
+ - Create common interface for shared GUI and CLI methods
  - Clean up the code (this will always be here)
 
 ##  Usage
 
 There are two flavours of Decima Explorer, one that can be run from the command line and one that runs as a Graphical User Interface. The GUI has less features although supports multithreaded bulk extraction.. The command line client has support for movie archive files and binary archive files. Binary archive files can be extracted by their ID or name. If extracting by name it is also possible to enter a directory to search multiple files. A list of game files can also be dumped. Movie archive files can be extracted ID or name if it is known. If the output file isn't specified it will use the 'file to extract' name along with creating its directory structure;
 
-A repack command has been added to the Command line Interface which will currently take a root directory containing a tree structure of files and generate a Decima Archive binary file from the files. I have not found a way to make a game favour files from my archive yet so I am still researching the best way to inject or replace core files. The repack command requires oo2core_7_win64.dll to be present alongside the exe.
+ The repack and pack command will currently take a root directory containing a tree structure of files and repack an existing given Decima Archive or pack a new Decima Archive binary file from the files.
 
 ```
 DecimaExplorer.exe -list "G:\path\to\game\data\files"
@@ -58,9 +67,14 @@ DecimaExplorer.exe -extract "G:\path\to\game\data\files" /file/name/to/extract
 It is possible to omit the output file, in this case the input filename or fileID will be used as the file name. If it is a directory, the directory structure will be created.
 
 ```
-DecimaExplorer.exe -repack "G:\path\to\files\to\pack" output.bin
+DecimaExplorer.exe -pack "G:\path\to\files\to\pack" output.bin
 ```
-In the most recent update a repack command has been added which will take a base directory containing multiple directories of files and output a binary archive file.
+You can also create a Decima archive file, this command  will take a base directory containing multiple directories of files and output a binary archive file.
+
+```
+DecimaExplorer.exe -repack "G:\path\to\existing\archive.bin" "G:\path\to\files\to\repack"
+```
+In the most recent update a repack command has been added, the first argument is the binary archive file you wish to repack and the second is a base directory containing multiple directories of files.
 
 If running the GUI client, select the game's data directory and a it should populate a list of files available to extract determined by the game's cache loading mechanism.
 

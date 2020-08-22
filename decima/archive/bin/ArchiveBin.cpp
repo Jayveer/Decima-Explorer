@@ -59,17 +59,6 @@ void ArchiveBin::parseHeader(FILE* f) {
 	fread(&header.maxChunkSize, 4, 1, f);
 }
 
-void ArchiveBin::writeHeader(FILE* f) {
-	fwrite(&header.magic, 4, 1, f);
-	fwrite(&header.key, 4, 1, f);
-	fwrite(&header.fileSize, 8, 1, f);
-	fwrite(&header.dataSize, 8, 1, f);
-	fwrite(&header.fileTableCount, 8, 1, f);
-	fwrite(&header.chunkTableCount, 4, 1, f);
-	fwrite(&header.maxChunkSize, 4, 1, f);
-}
-
-
 void ArchiveBin::parseFileTable(FILE* f, uint64_t fileTableCount) {
 	for (int i = 0; i < fileTableCount; i++) {
 		BinFileEntry fileEntry;
@@ -82,27 +71,6 @@ void ArchiveBin::parseFileTable(FILE* f, uint64_t fileTableCount) {
 		fread(&fileEntry.key2, 4, 1, f);
 
 		fileTable.push_back(fileEntry);
-	}
-}
-
-void ArchiveBin::writeFileTable() {
-	FILE* f;
-	fopen_s(&f, getFilename().c_str() , "r+b");
-	fseek(f, 0x28, SEEK_SET);
-	if (isEncrypted()) decryptFileTable(); //encrypt
-	writeFileTable(f);
-	if (isEncrypted()) decryptFileTable(); //decrypt again
-	fclose(f);
-}
-
-void ArchiveBin::writeFileTable(FILE* f) {
-	for (int i = 0; i < fileTable.size(); i++) {
-		fwrite(&fileTable[i].entryNum, 4, 1, f);
-		fwrite(&fileTable[i].key, 4, 1, f);
-		fwrite(&fileTable[i].hash, 8, 1, f);
-		fwrite(&fileTable[i].offset, 8, 1, f);
-		fwrite(&fileTable[i].size, 4, 1, f);
-		fwrite(&fileTable[i].key2, 4, 1, f);
 	}
 }
 
@@ -122,6 +90,27 @@ void ArchiveBin::parseChunkTable(FILE* f, uint64_t chunkTableCount) {
 	}
 }
 
+void ArchiveBin::writeHeader(FILE* f) {
+	fwrite(&header.magic, 4, 1, f);
+	fwrite(&header.key, 4, 1, f);
+	fwrite(&header.fileSize, 8, 1, f);
+	fwrite(&header.dataSize, 8, 1, f);
+	fwrite(&header.fileTableCount, 8, 1, f);
+	fwrite(&header.chunkTableCount, 4, 1, f);
+	fwrite(&header.maxChunkSize, 4, 1, f);
+}
+
+void ArchiveBin::writeFileTable(FILE* f) {
+	for (int i = 0; i < fileTable.size(); i++) {
+		fwrite(&fileTable[i].entryNum, 4, 1, f);
+		fwrite(&fileTable[i].key, 4, 1, f);
+		fwrite(&fileTable[i].hash, 8, 1, f);
+		fwrite(&fileTable[i].offset, 8, 1, f);
+		fwrite(&fileTable[i].size, 4, 1, f);
+		fwrite(&fileTable[i].key2, 4, 1, f);
+	}
+}
+
 void ArchiveBin::writeChunkTable(FILE* f) {
 	for (int i = 0; i < chunkTable.size(); i++) {
 		fwrite(&chunkTable[i].uncompressedOffset, 8, 1, f);
@@ -137,6 +126,66 @@ void ArchiveBin::writeChunkData(FILE* f, const std::vector<DataBuffer>& chunks) 
 	for (int i = 0; i < chunks.size(); i++) {
 		fwrite(&chunks[i][0], chunks[i].size(), 1, f);
 	}
+}
+
+void ArchiveBin::addChunkData(std::vector<DataBuffer>& chunks) {
+	FILE* f;
+	fopen_s(&f, getFilename().c_str(), "ab");
+	
+	for (int i = 0; i < chunks.size(); i++) {
+		uint64_t chunkIdx = chunkTable.size() - chunks.size() + i;
+		if (isEncrypted()) decryptChunkData(chunkIdx, &chunks[i]);
+	}
+
+	writeChunkData(f, chunks);
+
+	for (int i = 0; i < chunks.size(); i++) {
+		uint64_t chunkIdx = chunkTable.size() - chunks.size() + i;
+		if (isEncrypted()) decryptChunkData(chunkIdx, &chunks[i]);
+	}
+
+	fclose(f);
+}
+
+void ArchiveBin::updateHeader() {
+	FILE* f;
+	fopen_s(&f, getFilename().c_str(), "r+b");
+	if (isEncrypted()) decryptHeader();
+	writeHeader(f);
+	if (isEncrypted()) decryptHeader();
+	fclose(f);
+}
+
+void ArchiveBin::updateFileTable() {
+	FILE* f;
+	fopen_s(&f, getFilename().c_str(), "r+b");
+	fseek(f, 0x28, SEEK_SET);
+	if (isEncrypted()) decryptFileTable();
+	writeFileTable(f);
+	if (isEncrypted()) decryptFileTable();
+	fclose(f);
+}
+
+void ArchiveBin::updateChunkTable() {
+	FILE* f;
+	fopen_s(&f, getFilename().c_str(), "r+b");
+	fseek(f, calculateChunkTableOffset(), SEEK_SET);
+	if (isEncrypted()) decryptChunkTable();
+	writeChunkTable(f);
+	if (isEncrypted()) decryptChunkTable();
+	fclose(f);
+}
+
+void ArchiveBin::addChunkTable(const std::vector<DataBuffer>& chunks) {
+	uint64_t increasedSize = chunks.size() * 0x20;
+	for (int i = 0; i < chunkTable.size(); i++) {
+		chunkTable[i].compressedOffset += increasedSize;
+	}
+
+	uint64_t dataOffset = calculateDataOffset() - increasedSize;
+	shiftData(getFilename(), dataOffset, increasedSize);
+
+	updateChunkTable();
 }
 
 DataBuffer ArchiveBin::getChunkData(BinChunkEntry chunkEntry) {
@@ -160,15 +209,24 @@ DataBuffer ArchiveBin::getChunkData(BinChunkEntry chunkEntry) {
 	return dataBuffer;
 }
 
+int ArchiveBin::compressChunkData(unsigned char* input, uint64_t decompressedSize, DataBuffer& output) {
+	char* chunkHeap = new char[(uint64_t)header.maxChunkSize + 65536];
+	int compressedSize = Kraken_Compress(input, decompressedSize, (byte*)chunkHeap);
+
+	if (compressedSize == -1) {
+		showError(COMPRESSFAIL);
+		return -1;
+	}
+
+	output.resize(compressedSize);
+	memcpy(&output[0], chunkHeap, compressedSize);
+	delete[] chunkHeap;
+	return compressedSize;
+}
+
 void ArchiveBin::decompressChunkData(const DataBuffer &data, uint64_t decompressedSize, unsigned char* output) {
 	int res = Kraken_Decompress(&data[0], data.size(), output, decompressedSize);
 	if (res == -1) showError(DECOMPRESSFAIL);
-}
-
-int ArchiveBin::compressChunkData(const DataBuffer& data, uint64_t decompressedSize, unsigned char* output) {
-	int res = Kraken_Compress((uint8*)&data[0], decompressedSize, output);
-	if (res == -1) showError(DECOMPRESSFAIL);
-	return res;
 }
 
 uint32_t ArchiveBin::getFileEntryIndex(int id) {
@@ -219,6 +277,7 @@ DataBuffer ArchiveBin::extract(BinFileEntry fileEntry) {
 
 	for (int i = firstChunkRow; i <= lastChunkRow; i++) {
 		DataBuffer chunkData = getChunkData(chunkTable[i]);
+		uint8_t* data = &chunkData[0];
 		if (isEncrypted()) decryptChunkData(i, &chunkData);
 		decompressChunkData(chunkData, chunkTable[i].uncompressedSize, &tempBuffer[pos]);
 		pos += chunkTable[i].uncompressedSize;
@@ -297,9 +356,18 @@ int ArchiveBin::open() {
 	return 1;
 }
 
-DataBuffer ArchiveBin::createFileEntries(const std::string& basePath, const std::vector<std::string>& fileList) {
+void updateFileEntry(uint32_t id, int64_t offset = -1, int64_t size = -1, int64_t hash = -1, int32_t key = -1, int32_t key2 = -1) {
+
+}
+
+void createFileEntry(uint32_t id, int64_t offset, int64_t size, int64_t hash, int32_t key, int32_t key2) {
+
+}
+
+
+DataBuffer ArchiveBin::createFileEntries(const std::string& basePath, const std::vector<std::string>& fileList, bool isUpdate = 0) {
 	DataBuffer buffer;
-	int pos = 0;
+	uint64_t pos = isUpdate ? header.dataSize : 0;
 
 	for (int i = 0; i < fileList.size(); i++) {
 		FILE* f;
@@ -308,20 +376,32 @@ DataBuffer ArchiveBin::createFileEntries(const std::string& basePath, const std:
 
 		if (!f) continue;
 
-		BinFileEntry fileEntry;
-		fileEntry.entryNum = i;
-		fileEntry.hash = getFileHash(fileList[i].c_str());
-		fileEntry.key = 0;
-		fileEntry.key2 = 0;
-		fileEntry.offset = pos;
-		fileEntry.size = getFilesize(f);
+		uint32_t filesize = getFilesize(f);
 
-		buffer.resize(buffer.size() + fileEntry.size);
-		fread(&buffer[pos], fileEntry.size, 1, f);
+		if (isUpdate) {
+			uint32_t idx = getFileEntryIndex(fileList[i].c_str());
+			if (idx == -1) continue;
+			std::cout << fileList[i] << " will be updated\n";
+			fileTable[idx].offset = pos;
+			fileTable[idx].size = filesize;
+		} else {
+			BinFileEntry fileEntry;
+			fileEntry.entryNum = i;
+			fileEntry.hash = getFileHash(fileList[i].c_str());
+			fileEntry.key = 0;
+			fileEntry.key2 = 0;
+			fileEntry.offset = pos;
+			fileEntry.size = filesize;
+			fileTable.push_back(fileEntry);
+		}
+
+		int writePos = isUpdate ? pos - header.dataSize : pos;
+
+		buffer.resize(buffer.size() + filesize);
+		fread(&buffer[writePos], filesize, 1, f);
 		fclose(f);
 
-		pos += fileEntry.size;
-		fileTable.push_back(fileEntry);
+		pos += filesize;
 	}
 
 	header.fileTableCount = fileTable.size();
@@ -329,37 +409,44 @@ DataBuffer ArchiveBin::createFileEntries(const std::string& basePath, const std:
 	return buffer;
 }
 
+uint64_t ArchiveBin::getUncompressedSizeEnd() {
+	uint32_t lastChunkIdx = chunkTable.size() - 1;
+	uint64_t lastCompressedSize = chunkTable[lastChunkIdx].uncompressedSize;
+	uint64_t lastCompressedOffset = chunkTable[lastChunkIdx].uncompressedOffset;
+	return lastCompressedOffset + lastCompressedSize;
+}
 
-
-std::vector<DataBuffer> ArchiveBin::createChunkEntries(DataBuffer& buffer) {
+std::vector<DataBuffer> ArchiveBin::createChunkEntries(DataBuffer& buffer, bool isUpdate = 0) {
 	std::vector<DataBuffer> chunkedFile;
 	
-	int numChunks = (header.dataSize / header.maxChunkSize);
-	int remainder = header.dataSize % header.maxChunkSize;
+	int numChunks = (buffer.size() / header.maxChunkSize);
+	int remainder = buffer.size() % header.maxChunkSize;
 	if (remainder) numChunks++;
 
-	header.chunkTableCount = numChunks;
+	header.chunkTableCount = isUpdate ? header.chunkTableCount + numChunks : numChunks;
 
-	int pos = 0;
-	int compPos = 0;
+	uint64_t uncompressedEnd = isUpdate ? getUncompressedSizeEnd() : 0;
+	uint64_t pos = isUpdate ? uncompressedEnd : 0;
+	uint64_t compPos = isUpdate ? header.fileSize : calculateDataOffset(numChunks);
+
 	for (int i = 0; i < numChunks; i++) {
-		uint64_t size = i == numChunks - 1 ? remainder : 0x40000;
+		uint64_t size = header.maxChunkSize;
+		bool isLastChunk = i == numChunks - 1;
 
+		if (isLastChunk && remainder) size = remainder;
+		
 		DataBuffer chunk;
-		char* chunkHeap = new char[size + 65536];
-
-		int compressedSize = Kraken_Compress(&buffer[pos], size, (byte *)chunkHeap);
-		chunk.resize(compressedSize);
-		memcpy(&chunk[0], chunkHeap, compressedSize);
-		delete[] chunkHeap;
+		int readPos = isUpdate ? pos - uncompressedEnd : pos;
+		int compressedSize = compressChunkData(&buffer[readPos], size, chunk);
+		if (compressedSize == -1) continue;
 
 		BinChunkEntry chunkEntry;
 		chunkEntry.uncompressedOffset = pos;
 		chunkEntry.uncompressedSize = size;
-		chunkEntry.key = 0;
-		chunkEntry.compressedOffset = calculateDataOffset(numChunks) + compPos;
+		chunkEntry.key = 0x02F927DA;
+		chunkEntry.compressedOffset = compPos;
 		chunkEntry.compressedSize = compressedSize;
-		chunkEntry.key2 = 0;
+		chunkEntry.key2 = 0x02F927DA;
 
 		pos += size;
 		compPos += compressedSize;
@@ -367,7 +454,7 @@ std::vector<DataBuffer> ArchiveBin::createChunkEntries(DataBuffer& buffer) {
 		chunkTable.push_back(chunkEntry);
 	}
 	
-	header.fileSize = calculateDataOffset(numChunks) + compPos;
+	header.fileSize = compPos;
 	return chunkedFile;
 }
 
@@ -378,7 +465,7 @@ void ArchiveBin::nukeHashes(const std::vector<std::string>& fileList) {
 		if (nukeHash(fileList[i])) wasChanged = true;
 	}
 
-	if (wasChanged) writeFileTable();
+	if (wasChanged) updateFileTable();
 }
 
 int ArchiveBin::nukeHash(const std::string& filename) {
@@ -407,6 +494,22 @@ int ArchiveBin::create(const std::string& basePath, const std::vector<std::strin
 
 	fclose(f);
 	return 0;
+}
+
+int ArchiveBin::update(const std::string& basePath, const std::vector<std::string>& fileList) {
+	DataBuffer buffer = createFileEntries(basePath, fileList, 1);
+	std::vector<DataBuffer> chunks = createChunkEntries(buffer, 1);
+
+	std::cout << "repacking...\n";
+
+	updateHeader();
+	updateFileTable();
+	addChunkTable(chunks);
+	addChunkData(chunks); 
+
+	std::cout << "finished repacking\n";
+
+	return 1;
 }
 
 int ArchiveBin::extractFile(uint32_t id, std::string output) {

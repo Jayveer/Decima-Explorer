@@ -2,12 +2,14 @@
 
 typedef enum ArchiveBinError {
 	INVALIDMAGIC,
+	COMPRESSFAIL,
 	DECOMPRESSFAIL,
 	PARSEFILETABLEFAIL,
 	PARSECHUNKTABLEFAIL
 } ArchiveBinError;
 
 const std::string fileMagicError	= "Input file is of an unrecognized format";
+const std::string compressError		= "Failed to compress data, please make sure you have oo2core_7_win64.dll in the same directory as Decima Explorer";
 const std::string decompressError	= "Failed to decompress data";
 const std::string fileTableError	= "Failed to parse file table";
 const std::string chunkTableError	= "Failed to parse chunk table";
@@ -17,6 +19,9 @@ void showError(ArchiveBinError error) {
 	switch (error) {
 	case INVALIDMAGIC:
 		printError(fileMagicError);
+		break;
+	case COMPRESSFAIL:
+		printError(compressError);
 		break;
 	case DECOMPRESSFAIL:
 		printError(decompressError);
