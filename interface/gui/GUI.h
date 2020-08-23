@@ -5,11 +5,11 @@
 #include <future>
 #include <unordered_map>
 
-#include "../decima/file/prefetch/CorePrefetch.h"
-#include "../decima/archive/mpk/ArchiveMoviePack.h"
-#include "../decima/archive/bin/initial/BinInitial.h"
-#include "../utils/Arrayutils.h"
-#include "../utils/NumUtils.h"
+#include "../../decima/file/prefetch/CorePrefetch.h"
+#include "../../decima/archive/mpk/ArchiveMoviePack.h"
+#include "../../decima/archive/bin/initial/BinInitial.h"
+#include "../../utils/Arrayutils.h"
+#include "../../utils/NumUtils.h"
 
 #pragma comment(linker,"\"/manifestdependency:type='win32' \
 name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \

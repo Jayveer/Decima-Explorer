@@ -1,4 +1,4 @@
-#include "cli/CLI.h"
+#include "interface/cli/CLI.h"
 
 int main(int argc, char **argv) {
 	CLI cli = CLI(argc, argv);
