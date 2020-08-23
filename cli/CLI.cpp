@@ -97,36 +97,12 @@ void CLI::directoryExtract(char* arg) {
 void CLI::list() {
 	BinInitial initial(argv[2]);
 	if (!initial.open()) return;
-
 	CorePrefetch prefetch;
 	DataBuffer data = initial.extractFile(prefetch.getFilename());
 	if (data.empty()) return;
 
-	prefetch.open(data);
-	std::unordered_map<uint64_t, const char*> hashMap;
-
-	uint64_t numStrings = prefetch.getPrefetch()->numStrings;
-
-	for (int i = 0; i < numStrings; i++) {
-		uint64_t hash = getFileHash(prefetch.getPrefetch()->strings[i].string + ".core");
-		hashMap[hash] = prefetch.getPrefetch()->strings[i].string.c_str();
-	}
-
-	ArchiveBin arc(argv[3]);
-	arc.open();
-
-	for (int i = 0; i < arc.getFileTable().size(); i++) {
-		uint64_t hash = arc.getFileTable()[i].hash;
-
-		if (hashMap[hash] != NULL) {
-			const char* test = hashMap[hash];
-			std::cout << i << ": " << test <<  "\n";
-		}
-	}
-	int dummy = 0;
-
-	//prefetch.extractFileTableStreamed(data);
-	//printf("File list extracted successfully\n");
+	prefetch.extractFileTableStreamed(data);
+	printf("File list extracted successfully\n");
 }
 
 bool CLI::checkInput() {
