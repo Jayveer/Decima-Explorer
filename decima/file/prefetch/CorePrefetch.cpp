@@ -5,6 +5,9 @@ CorePrefetch::CorePrefetch() {
 }
 
 CorePrefetch::~CorePrefetch() {
+	//for (int i = 0; i < prefetch.numStrings; i++) {
+		//delete[] prefetch.strings[i].string;
+	//}
 }
 
 void CorePrefetch::parse(std::istream& f) {
@@ -27,7 +30,10 @@ void CorePrefetch::parseStrings(std::istream& f) {
 		DecimaPrefetchString stringInfo;
 		f.read((char*)&stringInfo.size, 4);
 		f.read((char*)&stringInfo.hash, 4);
-
+		//char *str = new char[stringInfo.size + 1];
+		//f.read(str, stringInfo.size);
+		//str[stringInfo.size] = '\0';
+		//stringInfo.string = str;
 		stringInfo.string.resize(stringInfo.size);
 		f.read((char*)stringInfo.string.c_str(), stringInfo.size);
 
@@ -56,10 +62,14 @@ void CorePrefetch::parseIndex(std::istream& f) {
 }
 
 void CorePrefetch::extractFileTable() {
-	std::ofstream out("file_list.txt");
+	std::ofstream out("file_list.txt", std::ios::binary);
+	uint16_t newLine = 0x0A0D;
 
 	for (int i = 0; i < prefetch.strings.size(); i++) {
-		out << prefetch.strings[i].string + "\n";
+		const char* str = prefetch.strings[i].string.c_str();
+		uint32_t size = prefetch.strings[i].string.size();
+		out.write(str, size);
+		out.write((char *)&newLine, 2);
 	}
 
 	out.close();

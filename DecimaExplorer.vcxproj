@@ -336,12 +336,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="decima\archive\bin\ArchiveBin.h" />
-    <ClInclude Include="decima\archive\bin\ArchiveBinError.h" />
     <ClInclude Include="decima\archive\DecimaArchive.h" />
-    <ClInclude Include="decima\archive\DecimaArchiveError.h" />
     <ClInclude Include="decima\archive\mpk\ArchiveMoviePack.h" />
     <ClInclude Include="decima\archive\bin\initial\BinInitial.h" />
-    <ClInclude Include="decima\archive\bin\initial\BinInitialError.h" />
     <ClInclude Include="interface\cli\CLI.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release (GUI)|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release (GUI)|x64'">true</ExcludedFromBuild>
@@ -436,6 +433,7 @@
     <ClInclude Include="hash\MurmurHash3.h" />
     <ClInclude Include="ooz\Kraken.h" />
     <ClInclude Include="ooz\targetver.h" />
+    <ClInclude Include="utils\Msgutils.h" />
     <ClInclude Include="utils\Numutils.h" />
   </ItemGroup>
   <ItemGroup>

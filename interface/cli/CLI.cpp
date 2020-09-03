@@ -12,121 +12,71 @@ CLI::~CLI() {
 void CLI::processCommand(CLI_COMMAND command, char* arg) {
 	switch (command) {
 	case EXTRACT:
-		extract(arg);
+		cliExtract();
 		break;
 	case REPACK:
-		repack();
+		cliRepack();
 		break;
 	case PACK:
-		pack();
+		cliPack();
 		break;
 	case LIST:
 		list();
 		break;
 	default:
-		extract(arg);
+		cliExtract();
 	}
 }
 
-void CLI::run(const char* programName, const char* programVersion) {
-	printf("Running %s v%s:\n", programName, programVersion);
-	printf("Visit https://github.com/Jayveer/Decima-Explorer for updates:\n\n");
+void CLI::run(std::string programName, std::string version) {
+	std::string startup = "Running " + programName + " v" + version + ":";
+	std::string update = "Visit https://github.com/Jayveer/Decima-Explorer for updates:\n";
+	showMessage(startup.c_str());
+	showMessage(update.c_str());
 	if (!checkInput()) return;
-	CLI_COMMAND command = argToCommand(argv[1]);
 
+	CLI_COMMAND command = argToCommand(argv[1]);
 	processCommand(command, argv[3]);
 }
 
-void CLI::extract(char* arg) {
-	isDirectory(argv[2]) ? directoryExtract(arg) : fileExtract(arg);
+void CLI::cliExtract() {
+	isDirectory(argv[2]) ? dirExtract() : fileExtract();
 }
 
-void CLI::archiveExtract(char* arg, DecimaArchive* archive) {
-	archive->open();
-
-	std::string output = setupOutput();
-
-	if (isNumber(arg)) {
-		int id = argToNumber(argv[3]);
-		if (!archive->extractFile(id, output)) return;
-	} else {
-		if (!archive->extractFile(arg, output)) return;
-	}
-
-	printf("Finished extracting file %s\n", argv[4]);
-}
-
-void CLI::fileExtract(char* arg) {
-	if (getFileExtension(argv[2]) == "mpk") {
-		ArchiveMoviePack decimaArchive(argv[2]);
-		archiveExtract(arg, &decimaArchive);
-	} else {
-		ArchiveBin decimaArchive(argv[2]);
-		archiveExtract(arg, &decimaArchive);
-	}
-}
-
-std::string CLI::setupOutput() {
+void CLI::fileExtract() {
 	std::string output = argc == 5 ? argv[4] : argv[3];
-	std::string path = getFilePathWithoutName(output);
-	if (path != "") createDirectoriesFromPath(path);
-	return output;
+	setupOutput(output);
+
+	if (isNumber(argv[3])) {
+		int id = argToNumber(argv[3]);
+		int ret = extract(argv[2], id, output.c_str());
+		if (!ret) return;
+	} else {
+		int ret = extract(argv[2], argv[3], output.c_str());
+		if (!ret) return;
+	}
+
+	std::string message = "finished extracting file " + output;
+	showMessage(message.c_str());
 }
 
-void CLI::directoryExtract(char* arg) {
-	bool found = 0;
-	std::vector<std::string> files = getFilesFromDirectory(argv[2], ".bin");
+void CLI::dirExtract() {
+	buildFileMap(argv[2]);
 
-	if (isNumber(arg)) {
-		printf("IDs cannot be used with directory extract");
+	if (isNumber(argv[3])) {
+		showError("IDs cannot be used with directory extract");
 		return;
 	}
 
-	std::string output = setupOutput();
-
-	for (int i = 0; i < files.size(); i++) {
-		ArchiveBin decimaArchive(files[i].c_str());
-		if (!decimaArchive.open()) continue;
-		found = decimaArchive.extractFile(arg, output, 1);
-		if (found) break;
-	}
-
-	found ? printf("Finished extracting file %s\n", output.c_str()) : printf("Failed to find file %s\n", output.c_str());
+	std::string output = argc == 5 ? argv[4] : argv[3];
+	directoryExtract(argv[3], output);
+	showMessage("extraction finished");
 }
 
 void CLI::list() {
-	BinInitial initial(argv[2]);
-	if (!initial.open()) return;
-
-	CorePrefetch prefetch;
-	DataBuffer data = initial.extractFile(prefetch.getFilename());
-	if (data.empty()) return;
-
-	prefetch.open(data);
-	std::unordered_map<uint64_t, const char*> hashMap;
-
-	uint64_t numStrings = prefetch.getPrefetch()->numStrings;
-
-	for (int i = 0; i < numStrings; i++) {
-		uint64_t hash = getFileHash(prefetch.getPrefetch()->strings[i].string + ".core");
-		hashMap[hash] = prefetch.getPrefetch()->strings[i].string.c_str();
-	}
-
-	ArchiveBin arc(argv[3]);
-	arc.open();
-
-	for (int i = 0; i < arc.getFileTable().size(); i++) {
-		uint64_t hash = arc.getFileTable()[i].hash;
-
-		if (hashMap[hash] != NULL) {
-			const char* test = hashMap[hash];
-			std::cout << i << ": " << test <<  "\n";
-		}
-	}
-	int dummy = 0;
-
-	//prefetch.extractFileTableStreamed(data);
-	//printf("File list extracted successfully\n");
+	initPrefetch(argv[2]);
+	prefetchFile.extractFileTable();
+	showMessage("File table extracted to file_list.txt");
 }
 
 bool CLI::checkInput() {
@@ -155,7 +105,7 @@ argcRange CLI::getArgCount(CLI_COMMAND command) {
 	case EXTRACT:
 		return { 4, 5 };
 	case LIST:
-		return { 3, 4 };
+		return { 3, 3 };
 	case REPACK:
 		return { 4, 4 };
 	case PACK:
@@ -194,39 +144,35 @@ bool CLI::isCommand(char* arg) {
 	return arg[0] == 0x2D;
 }
 
-void CLI::removeHashes(const std::vector<std::string>& fileList, const char *dataFolder) {
-	std::vector<std::string> dataFiles = getFilesFromDirectory(dataFolder, ".bin");
-
-	for (int i = 0; i < dataFiles.size(); i++) {
-		ArchiveBin decimaArchive(dataFiles[i].c_str());
-		if (!decimaArchive.open()) continue;
-		decimaArchive.nukeHashes(fileList);
-	}
+void CLI::cliRepack() {
+	std::vector<std::string> files = getFiles(argv[3]);
+	repack(files, argv[2], argv[3]);
 }
 
-void CLI::repack() {
-	std::string baseDirectory = argv[3];
-	std::vector<std::string> files;
-
-	traverseDirectory(baseDirectory, "*", files);
-	ArchiveBin decimaArchive(argv[2]);
-	if (!decimaArchive.open()) return;
-	decimaArchive.update(baseDirectory, files);
-}
-
-void CLI::pack() {
-	std::string baseDirectory = argv[2];
-	std::vector<std::string> files; 
-
-	traverseDirectory(baseDirectory, "*", files);
-	ArchiveBin decimaArchive(argv[3]);
-	decimaArchive.create(baseDirectory, files);
+void CLI::cliPack() {
+	std::vector<std::string> files = getFiles(argv[2]);
+	pack(files, argv[2], argv[3]);
 }
 
 void CLI::printUsage() {
-	printf("%s", this->USAGE_MESSAGE);
+	showMessage(this->USAGE_MESSAGE);
 }
 
 void CLI::exit() {
 	printf(this->EXIT_MESSAGE);
+}
+
+void CLI::update() {};
+void CLI::intervalUpdate() {};
+
+void CLI::showError(const char* message) {
+	std::cout << "Error: " << message << std::endl;
+}
+
+void CLI::showWarning(const char* message) {
+	std::cout << "Warning: " << message << std::endl;
+}
+
+void CLI::showMessage(const char* message) {
+	std::cout << message << std::endl;
 }

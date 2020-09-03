@@ -107,22 +107,13 @@
     <ClInclude Include="decima\archive\bin\initial\BinInitial.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="decima\archive\bin\initial\BinInitialError.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="decima\archive\bin\ArchiveBin.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="decima\archive\bin\ArchiveBinError.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="decima\archive\mpk\ArchiveMoviePack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="decima\archive\DecimaArchive.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="decima\archive\DecimaArchiveError.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="decima\file\prefetch\CorePrefetch.h">
@@ -186,6 +177,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="interface\Interface.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\Msgutils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

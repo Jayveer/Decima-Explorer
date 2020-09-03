@@ -11,6 +11,7 @@ typedef struct DecimaPrefetchHeader {
 typedef struct DecimaPrefetchString {
 	uint32_t size;
 	uint32_t hash;
+	//const char* string;
 	std::string string;
 };
 
@@ -37,8 +38,7 @@ private:
 	void parseStrings(std::istream& f);
 public:
 	CorePrefetch();
-	~CorePrefetch();
-	
+	~CorePrefetch();	
 	
 	void extractFileTable();
 	void extractFileTableStreamed(DataBuffer data);

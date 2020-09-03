@@ -1,5 +1,4 @@
 #include "ArchiveBin.h"
-#include <errno.h>
 
 ArchiveBin::ArchiveBin(std::string filename) : DecimaArchive(filename, this->extension) {
 
@@ -197,7 +196,7 @@ DataBuffer ArchiveBin::getChunkData(BinChunkEntry chunkEntry) {
 	fopen_s(&f, getFilename().c_str(), "rb");
 
 	if (!f) {
-		showError(WRITEFAIL);
+		this->messageHandler->showError(FILEWRITEERROR);
 		return dataBuffer;
 	}
 
@@ -214,7 +213,7 @@ int ArchiveBin::compressChunkData(unsigned char* input, uint64_t decompressedSiz
 	int compressedSize = Kraken_Compress(input, decompressedSize, (byte*)chunkHeap);
 
 	if (compressedSize == -1) {
-		showError(COMPRESSFAIL);
+		this->messageHandler->showError(COMPRESSFAILERROR);
 		delete[] chunkHeap;
 		return -1;
 	}
@@ -227,7 +226,7 @@ int ArchiveBin::compressChunkData(unsigned char* input, uint64_t decompressedSiz
 
 void ArchiveBin::decompressChunkData(const DataBuffer &data, uint64_t decompressedSize, unsigned char* output) {
 	int res = Kraken_Decompress(&data[0], data.size(), output, decompressedSize);
-	if (res == -1) showError(DECOMPRESSFAIL);
+	if (res == -1) this->messageHandler->showError(DECOMPRESSFAILERROR);
 }
 
 uint32_t ArchiveBin::getFileEntryIndex(int id) {
@@ -333,7 +332,7 @@ int ArchiveBin::open() {
 	fopen_s(&f, getFilename().c_str(), "rb");
 
 	if (!f) {
-		showError(OPENFAIL);
+		this->messageHandler->showError(FILEOPENERROR);
 		return 0;
 	}
 
@@ -341,7 +340,7 @@ int ArchiveBin::open() {
 
 	if (!checkMagic()) {
 		fclose(f);
-		showError(INVALIDMAGIC);
+		this->messageHandler->showError(INVALIDMAGICERROR);
 		return 0;
 	}
 
@@ -381,8 +380,11 @@ DataBuffer ArchiveBin::createFileEntries(const std::string& basePath, const std:
 
 		if (isUpdate) {
 			uint32_t idx = getFileEntryIndex(fileList[i].c_str());
-			if (idx == -1) continue;
-			std::cout << fileList[i] << " will be updated\n";
+			if (idx == -1) {
+				std::string updateMessage = fileList[i] + " is not present in this archive and will be ignored.";
+				messageHandler->showMessage(updateMessage.c_str());
+				continue;
+			}
 			fileTable[idx].offset = pos;
 			fileTable[idx].size = filesize;
 		} else {
@@ -444,10 +446,10 @@ std::vector<DataBuffer> ArchiveBin::createChunkEntries(DataBuffer& buffer, bool 
 		BinChunkEntry chunkEntry;
 		chunkEntry.uncompressedOffset = pos;
 		chunkEntry.uncompressedSize = size;
-		chunkEntry.key = 0x02F927DA;
+		chunkEntry.key = 0;
 		chunkEntry.compressedOffset = compPos;
 		chunkEntry.compressedSize = compressedSize;
-		chunkEntry.key2 = 0x02F927DA;
+		chunkEntry.key2 = 0;
 
 		pos += size;
 		compPos += compressedSize;
@@ -500,16 +502,10 @@ int ArchiveBin::create(const std::string& basePath, const std::vector<std::strin
 int ArchiveBin::update(const std::string& basePath, const std::vector<std::string>& fileList) {
 	DataBuffer buffer = createFileEntries(basePath, fileList, 1);
 	std::vector<DataBuffer> chunks = createChunkEntries(buffer, 1);
-
-	std::cout << "repacking...\n";
-
 	updateHeader();
 	updateFileTable();
 	addChunkTable(chunks);
-	addChunkData(chunks); 
-
-	std::cout << "finished repacking\n";
-
+	addChunkData(chunks);
 	return 1;
 }
 
@@ -519,7 +515,7 @@ int ArchiveBin::extractFile(uint32_t id, std::string output) {
 	uint32_t i = getFileEntryIndex(id);
 
 	if (i == -1) {
-		showError(FINDINDEXFAIL);
+		this->messageHandler->showError(FILEINDEXERROR);
 		return 0;
 	}
 
@@ -534,7 +530,7 @@ int ArchiveBin::extractFile(std::string filename, std::string output, bool suppr
 	uint32_t i = getFileEntryIndex(filename);
 
 	if (i == -1) {
-		if (!suppressError) showError(INVALIDFILENAME);
+		if (!suppressError) this->messageHandler->showError(FILENAMEERROR);
 		return 0;
 	}
 
@@ -549,7 +545,7 @@ DataBuffer ArchiveBin::extractFile(std::string filename) {
 	uint32_t i = getFileEntryIndex(filename);
 
 	if (i == -1) {
-		showError(INVALIDFILENAME);
+		this->messageHandler->showError(FILENAMEERROR);
 		return data;
 	}
 

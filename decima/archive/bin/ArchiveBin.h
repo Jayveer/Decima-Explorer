@@ -1,6 +1,6 @@
 #pragma once
+
 #include "../DecimaArchive.h"
-#include "ArchiveBinError.h"
 
 typedef struct BinHeader {
 	uint32_t magic;
@@ -88,6 +88,12 @@ private:
 protected:
 	uint32_t getMagic() override;
 	std::string extension = ".bin";
+
+	const char* INVALIDMAGICERROR = "Input file is of an unrecognized format";
+	const char* COMPRESSFAILERROR = "Failed to compress data, please make sure you have oo2core_7_win64.dll in the same directory as Decima Explorer";
+	const char* DECOMPRESSFAILERROR = "Failed to decompress data";
+	const char* PARSEFILETABLEFAILERROR = "Failed to parse file table";
+	const char* PARSECHUNKTABLEFAILERROR = "Failed to parse chunk table";
 public:
 	~ArchiveBin();
 	ArchiveBin(std::string filename);

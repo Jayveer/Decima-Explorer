@@ -1,9 +1,6 @@
 #pragma once
-#include <unordered_map>
 
-#include "../../decima/file/prefetch/CorePrefetch.h"
-#include "../../decima/archive/mpk/ArchiveMoviePack.h"
-#include "../../decima/archive/bin/initial/BinInitial.h"
+#include "../Interface.h"
 
 typedef enum CLI_COMMAND {
 	LIST,
@@ -17,12 +14,12 @@ struct argcRange {
 	uint8_t high;
 };
 
-class CLI {
+class CLI : public Interface {
 public:
 	CLI(int argc, char **argv);
 	~CLI();
 
-	void run(const char* programName, const char* version);
+	void run (std::string programName, std::string version);
 	void exit();
 private:
 
@@ -33,33 +30,40 @@ private:
 								"\t DecimaExplorer.exe [-e/-extract] inputfile filename outputfile\n"
 								"\t DecimaExplorer.exe [-e/-extract] [directory containing data files] filename outputfile\n"
 								"\t DecimaExplorer.exe [-e/-extract] [directory containing data files] filename\n"
-								"\t DecimaExplorer.exe [-r/-repack] [directory containing directories of core files] outputfile\n"
+								"\t DecimaExplorer.exe [-r/-repack] [bin file to repack] [directory containing directories of core files]\n"
+								"\t DecimaExplorer.exe [-p/-pack] [directory containing directories of core files] outputfile\n"
 								"\t DecimaExplorer.exe [-l/-list] [directory containing data files]\n"
 								"Available Options:\n"
-								"\tList:    -l, -list\n"
-								"\tRepack:	-r, -repack\n"
-								"\tExtract: -e, -extract\n";
+								"\tList:    \t-l, -list\n"
+								"\tPack:	\t-p, -pack\n"
+								"\tRepack:	\t-r, -repack\n"
+								"\tExtract: \t-e, -extract\n";
 
 	const char *EXIT_MESSAGE  = "Exiting\n";
 
 	//command methods
-	void extract(char* arg);
-	void pack();
-	void repack();
 	void list();
+	void cliPack();
+	void cliRepack();
+	void cliExtract();
+
+	void update();
+	void intervalUpdate();
+
+	void showError(const char* message);
+	void showMessage(const char* message);
+	void showWarning(const char* message);
 
 	//cli methods
+	void dirExtract();
 	void printUsage();
 	bool checkInput();
+	void fileExtract();
 	bool isNumber(char* arg);
 	bool isCommand(char* arg);
-	std::string setupOutput();
 	int argToNumber(char* arg);
-	void fileExtract(char* arg);
-	void directoryExtract(char* arg);
 	CLI_COMMAND argToCommand(char* arg);
 	argcRange getArgCount(CLI_COMMAND command);
 	void processCommand(CLI_COMMAND command, char* arg);
-	void archiveExtract(char* arg, DecimaArchive* archive);
 	void removeHashes(const std::vector<std::string>& fileList, const char* dataFolder);
 };

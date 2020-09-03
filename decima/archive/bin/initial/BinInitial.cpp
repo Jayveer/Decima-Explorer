@@ -16,7 +16,7 @@ int BinInitial::open() {
 	if (!check) {
 		check = checkFileExists(getFileHash());
 		if (!check) {
-			showError(NOTFOUND);
+			this->messageHandler->showError(NOTFOUNDERROR);
 			return 0;
 		}
 		setFilename(getFileHash());

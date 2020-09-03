@@ -3,7 +3,8 @@
 
 class ViewCaller {
 public:
-	virtual void viewDrawing(HWND hwnd) = 0;
+	virtual void viewClicked(HWND hwnd) = 0;
+	virtual void viewDrawing(HWND hwnd, HDC deviceContext) = 0;
 };
 
 
@@ -15,9 +16,11 @@ public:
 	ViewComponent();
 	~ViewComponent();
 
-	INT_PTR drawing();
+	void clicked();
+	INT_PTR drawing(HDC deviceContext);
 	uint32_t getBackgroundColour();
 	void setCaller(ViewCaller* caller);
 	void setBackgroundColour(uint32_t colour);
-	void create(HWND parent, Dimensions dimensions, Origin origin);
+	void setFont(int size, int weight, const char* fontface);
+	void create(HWND parent, Dimensions dimensions, Origin origin, DWORD extraStyle = 0);
 };
