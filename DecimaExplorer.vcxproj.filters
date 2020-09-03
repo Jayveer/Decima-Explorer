@@ -21,9 +21,6 @@
     <ClCompile Include="ooz\Kraken.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cli\CLI.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="hash\MurmurHash3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -48,43 +45,49 @@
     <ClCompile Include="decima\file\DecimaCore.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="gui\GUI.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gui\draw\component\button\ButtonComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gui\draw\component\file\FileComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gui\draw\component\image\ImageComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gui\draw\component\textfield\TextfieldComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gui\draw\component\view\ViewComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gui\draw\component\window\WindowComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gui\draw\component\Component.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gui\draw\MainWindow.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gui\draw\component\list\ListComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="main_gui.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="gui\draw\component\menu\MenuComponent.cpp">
+    <ClCompile Include="interface\gui\draw\component\button\ButtonComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="gui\draw\component\progress\ProgressComponent.cpp">
+    <ClCompile Include="interface\gui\draw\component\file\FileComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="interface\gui\draw\component\image\ImageComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="interface\gui\draw\component\list\ListComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="interface\gui\draw\component\menu\MenuComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="interface\gui\draw\component\progress\ProgressComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="interface\gui\draw\component\textfield\TextfieldComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="interface\gui\draw\component\view\ViewComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="interface\gui\draw\component\window\WindowComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="interface\gui\draw\component\Component.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="interface\gui\draw\MainWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="interface\gui\GUI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="interface\cli\CLI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="interface\Interface.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -93,9 +96,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ooz\targetver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cli\CLI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="hash\MurmurHash3.h">
@@ -107,13 +107,7 @@
     <ClInclude Include="decima\archive\bin\initial\BinInitial.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="decima\archive\bin\initial\BinInitialError.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="decima\archive\bin\ArchiveBin.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="decima\archive\bin\ArchiveBinError.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="decima\archive\mpk\ArchiveMoviePack.h">
@@ -122,40 +116,10 @@
     <ClInclude Include="decima\archive\DecimaArchive.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="decima\archive\DecimaArchiveError.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="decima\file\prefetch\CorePrefetch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="decima\file\DecimaCore.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gui\draw\component\button\ButtonComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gui\draw\component\file\FileComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gui\draw\component\image\ImageComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gui\draw\component\textfield\TextFieldComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gui\draw\component\view\ViewComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gui\draw\component\window\WindowComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gui\draw\component\Component.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gui\draw\MainWindow.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gui\draw\component\list\ListComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="utils\Fileutils.h">
@@ -164,22 +128,58 @@
     <ClInclude Include="utils\Numutils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="gui\GUI.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gui\draw\component\menu\MenuComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gui\draw\component\progress\ProgressComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gui\res\res.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="utils\Arrayutils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="decima\common\util.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="interface\gui\draw\component\button\ButtonComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="interface\gui\draw\component\file\FileComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="interface\gui\draw\component\image\ImageComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="interface\gui\draw\component\list\ListComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="interface\gui\draw\component\menu\MenuComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="interface\gui\draw\component\progress\ProgressComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="interface\gui\draw\component\textfield\TextFieldComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="interface\gui\draw\component\view\ViewComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="interface\gui\draw\component\window\WindowComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="interface\gui\draw\component\Component.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="interface\gui\draw\MainWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="interface\gui\res\res.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="interface\gui\GUI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="interface\cli\CLI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="interface\Interface.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\Msgutils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

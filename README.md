@@ -32,9 +32,15 @@ Both a repack and pack command have been added to the Command line Interface. Pl
 
 ##  Usage
 
-There are two flavours of Decima Explorer, one that can be run from the command line and one that runs as a Graphical User Interface. The GUI has less features although supports multithreaded bulk extraction.. The command line client has support for movie archive files and binary archive files. Binary archive files can be extracted by their ID or name. If extracting by name it is also possible to enter a directory to search multiple files. A list of game files can also be dumped. Movie archive files can be extracted ID or name if it is known. If the output file isn't specified it will use the 'file to extract' name along with creating its directory structure;
+There are two flavours of Decima Explorer, one that can be run from the command line and one that runs as a Graphical User Interface.
 
- The repack and pack command will currently take a root directory containing a tree structure of files and repack an existing given Decima Archive or pack a new Decima Archive binary file from the files.
+### GUI
+
+With the GUI version you can select the initial data directory of the game and it will populate a file list based on the games cache prefetch. You can use the keyboard shortcut Ctrl+F to filter this list for the items you are interested in. You can select all the items with Ctrl+A or by Ctrl or shift clicking. With the items you wish to extract selected you can press the extract button and choose a directory in which to extract, when extracting multiple files with the GUI extraction will be multithreaded and should use all available cores. It is currently not possible to extract .mpk archives with the GUI. A GUI for packing and repacking will be available shortly. 
+
+### CLI
+
+With the CLI version there are various commands that can be used, they are list, extract, pack and repack. List will dump all the strings from the game's cache prefetch. Extract can extract either with a directory as the input or by file. When extracting by file you can use the file ID to extract as well, this is useful as it doesn't require knowing the filename to extract a particular entry. This currently supports both .bin and .mpk archives. Repack can be used to repack core files to their original .bin file. A root directory should be chosen so that the path from the root directory will match the hashed file name. For example if you extract a file and keep its original filename and directory structure to C:\Files, you can repack by using C:\Files as the base path. Pack uses a base directory the same way as Repack but instread of an existing Bin as the input, it allows you to specify an output bin file to create. Below are example instructions that can be used on the command line;
 
 ```
 DecimaExplorer.exe -list "G:\path\to\game\data\files"
@@ -74,9 +80,7 @@ You can also create a Decima archive file, this command  will take a base direct
 ```
 DecimaExplorer.exe -repack "G:\path\to\existing\archive.bin" "G:\path\to\files\to\repack"
 ```
-In the most recent update a repack command has been added, the first argument is the binary archive file you wish to repack and the second is a base directory containing multiple directories of files.
-
-If running the GUI client, select the game's data directory and a it should populate a list of files available to extract determined by the game's cache loading mechanism.
+You can also repack an existing decima archive file. The first argument is the binary archive file you wish to repack and the second is a base directory containing multiple directories of files.
 
 ## License
 [GPL](ooz/LICENSE.md)

@@ -7,6 +7,10 @@ DecimaArchive::DecimaArchive(std::string filename, std::string extension) {
 DecimaArchive::~DecimaArchive() {
 }
 
+void DecimaArchive::setMessageHandler(MessageHandler* messageHandler) {
+	this->messageHandler = messageHandler;
+}
+
 bool DecimaArchive::isEncrypted() {
 	return getMagic() & 0x0F000000;
 }
@@ -83,7 +87,7 @@ int DecimaArchive::writeDataToFile(const DataBuffer& data, const std::string& fi
 	fopen_s(&f, filename.c_str(), "wb");
 
 	if (!f) {
-		showError(WRITEFAIL);
+		this->messageHandler->showError(FILEWRITEERROR);
 		return 0;
 	}
 

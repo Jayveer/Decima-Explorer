@@ -127,6 +127,11 @@ bool hasExtension(const std::string& dirName, const std::string& extension) {
 }
 
 inline
+bool hasExtension(const std::string& dirName) {
+    return getFileExtension(dirName) != "";
+}
+
+inline
 std::string getFilePathWithoutName(const std::string& filename) {
     int slashIndex = filename.find_last_of("\\/");
     return slashIndex != std::string::npos ? filename.substr(0, slashIndex) : "";

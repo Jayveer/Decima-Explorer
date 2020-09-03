@@ -4,7 +4,7 @@
 class ButtonCaller {
 public:
 	virtual void buttonPressed(HWND hwnd) = 0;
-	virtual void buttonDrawing(HWND hwnd) = 0;
+	virtual void buttonDrawing(HWND hwnd, HDC deviceContext) = 0;
 };
 
 class ButtonComponent : public Component {
@@ -23,8 +23,8 @@ public:
 	void setCaller(ButtonCaller *caller);
 	void setBackgroundColour(uint32_t colour);
 	void setFont(int size, int weight, const char* fontface);
-	void create(HWND parent, const char *name, Dimensions dimensions, Origin origin);
+	void create(HWND parent, const char *name, Dimensions dimensions, Origin origin, DWORD extraStyle = 0);
 
-	INT_PTR drawing();
+	INT_PTR drawing(HDC deviceContext);
 	uint32_t getBackgroundColour();
 };

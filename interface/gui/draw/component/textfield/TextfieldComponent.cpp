@@ -25,9 +25,18 @@ void TextfieldComponent::setBackgroundColour(uint32_t colour) {
 	this->backgroundColour = colour;
 }
 
-void TextfieldComponent::create(HWND parent, Dimensions dimensions, Origin origin) {
+void TextfieldComponent::changed() {
+	this->caller->textfieldChanged(getHandle());
+}
+
+void TextfieldComponent::setTextBackGroundColour() {
+	HDC deviceContext = GetDC(getHandle());
+	SetBkColor(deviceContext, RGB(0, 0, 0));
+}
+
+void TextfieldComponent::create(HWND parent, Dimensions dimensions, Origin origin, DWORD extraStyle) {
 	setParent(parent);
-	DWORD style = WS_CHILD | WS_VISIBLE | WS_BORDER | ES_CENTER | WS_EX_CLIENTEDGE | ES_READONLY;
+	DWORD style = WS_CHILD | WS_VISIBLE | extraStyle;
 	HWND hwnd = CreateWindow("edit", text.c_str(), style, origin.x, origin.y, dimensions.width, dimensions.height, parent, NULL, NULL, this);
 	setHandle(hwnd);
 	SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)this);
@@ -36,6 +45,10 @@ void TextfieldComponent::create(HWND parent, Dimensions dimensions, Origin origi
 void TextfieldComponent::setText(std::string text) {
 	this->text = text;
 	SendMessage(getHandle(), WM_SETTEXT, NULL, (LPARAM)this->text.c_str());
+}
+
+void TextfieldComponent::setPlacheolderText(std::wstring text) {
+	SendMessage(getHandle(), EM_SETCUEBANNER, (WPARAM)FALSE, (LPARAM)text.c_str());
 }
 
 std::string TextfieldComponent::getText() {

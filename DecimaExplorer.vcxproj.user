@@ -12,7 +12,7 @@
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LocalDebuggerCommandArguments>-r "G:\Games\PC\steamapps\common\Death Stranding\data\7017f9bb9d52fc1c4433599203cc51b1.bin" "G:\files"</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>-p "G:\fullext" pack.bin</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug (GUI)|x64'">

@@ -41,7 +41,7 @@ LRESULT MainWindow::ProcedureWrapper(HWND inHwnd, UINT message, WPARAM wParam, L
 		HWND childHwnd = (HWND)lParam;
 		if (determineType(childHwnd) == VIEW) {
 			ViewComponent* view = (ViewComponent*)GetWindowLongPtr(childHwnd, GWLP_USERDATA);
-			if (view) return (INT_PTR)view->drawing();
+			if (view) return (INT_PTR)view->drawing(HDC(wParam));
 		}
 
 		if (determineType(childHwnd) == TEXTFIELD) {
@@ -54,7 +54,7 @@ LRESULT MainWindow::ProcedureWrapper(HWND inHwnd, UINT message, WPARAM wParam, L
 		HWND childHwnd = (HWND)lParam;
 		if (determineType(childHwnd) == BUTTON) {
 			ButtonComponent* button = (ButtonComponent*)GetWindowLongPtr(childHwnd, GWLP_USERDATA);
-			if (button) return (INT_PTR)button->drawing();
+			if (button) return (INT_PTR)button->drawing(HDC(wParam));
 		}
 	} break;
 	case WM_CTLCOLOREDIT: {
@@ -82,21 +82,27 @@ LRESULT MainWindow::ProcedureWrapper(HWND inHwnd, UINT message, WPARAM wParam, L
 			ButtonComponent* button = (ButtonComponent*)GetWindowLongPtr(childHwnd, GWLP_USERDATA);
 			if (button) button->clicked();
 		}
+		if (determineType(childHwnd) == TEXTFIELD) {
+			TextfieldComponent* textfield = (TextfieldComponent*)GetWindowLongPtr(childHwnd, GWLP_USERDATA);
+			if (textfield && HIWORD(wParam) == EN_CHANGE) textfield->changed();
+		}
+		if (determineType(childHwnd) == VIEW) {
+			ViewComponent* view = (ViewComponent*)GetWindowLongPtr(childHwnd, GWLP_USERDATA);
+			if (view) view->clicked();
+		}
 	} break;
 	case WM_NOTIFY: {
 		NMHDR* nm = (NMHDR*)lParam;
 		HWND childHwnd = nm->hwndFrom;
 		if (determineType(childHwnd) == LISTVIEW) {
 			ListComponent* listview = (ListComponent*)GetWindowLongPtr(childHwnd, GWLP_USERDATA);
-			if (listview && nm->code == LVN_ITEMCHANGED) listview->selected();
 			if (listview && nm->code == LVN_ENDSCROLL) listview->scrolled();
+			if (listview && nm->code == LVN_ITEMCHANGED) listview->selected();
+			if (listview && nm->code == LVN_GETDISPINFO) listview->populating((NMLVDISPINFO*)lParam); 
+			if (listview && nm->code == LVN_COLUMNCLICK) listview->columnClicked(((NMLISTVIEW*)lParam)->iSubItem);
+			if (listview && nm->code == LVN_KEYDOWN) listview->keyPressed(((NMLVKEYDOWN*)lParam));
 		}
 	}break;
-	case WM_KEYDOWN: {
-		if (wParam == 'A' && GetKeyState(VK_CONTROL) < 0) {
-			int dummy = 0;
-		}
-	} break;
 	case WM_CLOSE: {
 		DestroyWindow(inHwnd);
 	} break;

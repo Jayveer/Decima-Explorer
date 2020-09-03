@@ -4,9 +4,9 @@
 #include "../../ooz/Kraken.h"
 #include "../../hash/md5.h"
 
+#include "../../utils/Msgutils.h"
 #include "../../utils/Fileutils.h"
 #include "../common/util.h"
-#include "DecimaArchiveError.h"
 
 typedef std::vector<uint8_t> DataBuffer;
 
@@ -19,6 +19,8 @@ private:
 	uint32_t saltB[4] = { 0x06C084A37, 0x07E159D95, 0x03D5AF7E8, 0x018AA7D3F };
 
 protected:
+	MessageHandler* messageHandler;
+
 	bool isEncrypted();
 	void decrypt(uint32_t key, uint32_t* src);
 	void decrypt(uint32_t key, uint32_t key2, uint32_t* src);
@@ -33,6 +35,12 @@ protected:
 	virtual uint32_t getMagic() = 0;
 	virtual void parseHeader(FILE* file) = 0;	
 	
+	const char* DEFAULTERROR = "An unknown error occured";
+	const char* PARSEHEADERERROR = "Failed to parse header information";
+	const char* FILEOPENERROR = "Failed to open input file";
+	const char* FILEINDEXERROR = "Failed to find index";
+	const char* FILEWRITEERROR = "Failed to open file for writing";
+	const char* FILENAMEERROR = "Failed to find a file with that name";
 public:
 	~DecimaArchive();
 	DecimaArchive(std::string filename, std::string extension);
@@ -40,6 +48,7 @@ public:
 	virtual int open() = 0;
 	std::string getFilename();
 	std::string getExtension();
+	void setMessageHandler(MessageHandler* messageHandler);
 	virtual int extractFile(uint32_t id, std::string output) = 0;
 	virtual int extractFile(std::string filename, std::string output, bool suppressError = 0) = 0;
 };
