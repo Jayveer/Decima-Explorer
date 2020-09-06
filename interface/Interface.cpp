@@ -96,7 +96,6 @@ void Interface::batchExtract(const std::vector<char*>& filenames, std::string ou
 	int step = batchSize < 10 ? 1 : batchSize / 10;
 
 	for (int i = batchOffset; i < batchSize + batchOffset; i++) {
-		//std::string newOutput = output == "" ? filenames[i] : output + "\\/" + filenames[i];
 		std::string newOutput = addFileToPath(filenames[i], output);
 		directoryExtract(filenames[i], newOutput);
 		if ((i - batchOffset) % step == 0) updateProgress(step);

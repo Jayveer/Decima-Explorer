@@ -3,8 +3,8 @@
 #include <shlobj_core.h>
 #include <shobjidl_core.h>
 struct FileFilter {
-	const char* name;
-	const char* ext;
+	const wchar_t* name;
+	const wchar_t* ext;
 };
 
 class FileCaller {
@@ -17,9 +17,10 @@ private:
 	std::string filename;
 	FileCaller* caller = {};
 public:
+	DWORD defaultOptions = 0x1808;
 	FileComponent();
 	~FileComponent();
 	std::string getFilename();
 	void setCaller(FileCaller* caller);
-	void create(HWND parent);
+	void create(HWND parent, DWORD options = 0x1808, const std::vector<FileFilter>& filter = {});
 };

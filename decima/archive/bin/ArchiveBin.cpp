@@ -185,6 +185,8 @@ void ArchiveBin::addChunkTable(const std::vector<DataBuffer>& chunks) {
 	shiftData(getFilename(), dataOffset, increasedSize);
 
 	updateChunkTable();
+	header.fileSize = header.fileSize + increasedSize;
+	updateHeader();
 }
 
 DataBuffer ArchiveBin::getChunkData(BinChunkEntry chunkEntry) {
@@ -456,7 +458,7 @@ std::vector<DataBuffer> ArchiveBin::createChunkEntries(DataBuffer& buffer, bool 
 		chunkedFile.push_back(chunk);
 		chunkTable.push_back(chunkEntry);
 	}
-	
+
 	header.fileSize = compPos;
 	return chunkedFile;
 }
@@ -501,6 +503,7 @@ int ArchiveBin::create(const std::string& basePath, const std::vector<std::strin
 
 int ArchiveBin::update(const std::string& basePath, const std::vector<std::string>& fileList) {
 	DataBuffer buffer = createFileEntries(basePath, fileList, 1);
+	if (buffer.empty()) return 0;
 	std::vector<DataBuffer> chunks = createChunkEntries(buffer, 1);
 	updateHeader();
 	updateFileTable();
