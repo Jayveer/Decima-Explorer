@@ -35,12 +35,21 @@ void GUI::addFileInfo(const char* name, uint32_t size) {
 	fileInfo.push_back(fi);
 }
 
+#if PACKER
+void GUI::populateFileInfo(const std::string& filter) {
+	for (int i = 0; i < files.size(); i++) {
+		if (files[i].find(filter) == std::string::npos) continue;
+		addFileInfo(files[i].c_str(), 0);
+	}
+}
+#else
 void GUI::populateFileInfo(const std::string& filter) {
 	for (int i = 0; i < prefetchFile.getPrefetch()->numStrings; i++) {
 		if(prefetchFile.getPrefetch()->strings[i].string.find(filter) == std::string::npos) continue;
 		addFileInfo(prefetchFile.getPrefetch()->strings[i].string.c_str(), prefetchFile.getPrefetch()->filesizes[i]);
 	}
 }
+#endif
 
 void GUI::filterList(const std::string& filter) {
 	fileInfo.clear();
@@ -100,7 +109,8 @@ void GUI::listRightClicked(HWND hwnd, int mouseX, int mouseY) {
 	if (hwnd == fileList.getHandle()) {
 		if (fileList.getNumSelected()) {
 			HMENU m_hMenu = CreatePopupMenu();
-			InsertMenu(m_hMenu, 0, MF_BYCOMMAND | MF_STRING | MF_ENABLED, 1, "Extract Selected");
+			const char* text = isPacker ? "Pack Selected" : "Extract Selected";
+			InsertMenu(m_hMenu, 0, MF_BYCOMMAND | MF_STRING | MF_ENABLED, 1, text);
 			int clicked = TrackPopupMenu(m_hMenu, TPM_TOPALIGN | TPM_LEFTALIGN | TPM_RETURNCMD, mouseX, mouseY, 0, hwnd, NULL);
 			if (clicked) buttonPressed(extractButton.getHandle());
 		}
@@ -154,12 +164,17 @@ void GUI::resetData() {
 void GUI::directoryChosen(std::string directory) {
 	browseTextbox.setText(directory);
 	resetData();
-	if (!initPrefetch(directory.c_str())) return;
+	if (isPacker) {
+		files = getFiles(directory);
+	} else {
+		if (!initPrefetch(directory.c_str())) return;
+	}
 	populateFileInfo();
 	initFileList(mainWindow.getHandle());
 	initExtractButton(mainWindow.getHandle());
 	extractButton.disable();
-	fileList.setItemCount(prefetchFile.getPrefetch()->numStrings);
+	int count = isPacker ? files.size() : prefetchFile.getPrefetch()->numStrings;
+	fileList.setItemCount(count);
 }
 
 void GUI::checkQueue() {
@@ -180,6 +195,38 @@ void GUI::checkQueue() {
 	}
 }
 
+#if PACKER
+std::vector<std::string> GUI::getSelectedStrings() {
+	int64_t pos = -1;
+	std::vector<std::string> selectedStrings;
+
+	do {
+		pos = ListView_GetNextItem(fileList.getHandle(), pos, LVNI_SELECTED);
+		if (pos == -1) break;
+		selectedStrings.push_back(files[pos]);
+	} while (pos != -1);
+
+	return selectedStrings;
+}
+
+void GUI::saveDirectoryChosen(std::string directory) {
+	std::vector<std::string> selectedStrings = getSelectedStrings();
+	extractProgress.create(mainWindow.getHandle(), { 1280, 35 }, { 0, 647 }, PBS_MARQUEE);
+	extractProgress.setMarquee();
+	disableElements();
+
+	std::future<void> future = checkFileExists(directory) ?
+		std::async(&GUI::repack, this, std::ref(selectedStrings), std::ref(directory), browseTextbox.getText()):
+		std::async(&GUI::pack,   this, std::ref(selectedStrings), browseTextbox.getText(), std::ref(directory));
+
+	while (!future._Is_ready()) checkQueue();
+	enableElements();
+
+	deinitExtractProgress();
+	showMessage("Packing Finished");
+}
+
+#else
 std::vector<char*> GUI::getSelectedStrings() {
 	int64_t pos = -1;
 	std::vector<char*> selectedStrings;
@@ -198,7 +245,7 @@ std::vector<char*> GUI::getSelectedStrings() {
 void GUI::saveDirectoryChosen(std::string directory) {
 	std::vector<char*> selectedStrings = getSelectedStrings();
 	if (fileMap.empty()) buildFileMap(browseTextbox.getText().c_str());
-	initExtractProgress(mainWindow.getHandle());
+	initExtractProgress(mainWindow.getHandle(), selectedStrings.size());
 	disableElements();
 	parallelExtract(directory, selectedStrings);
 	deletePointerBuffer(selectedStrings);
@@ -206,6 +253,7 @@ void GUI::saveDirectoryChosen(std::string directory) {
 	deinitExtractProgress();
 	showMessage("Extraction Finished");
 }
+#endif
 
 HICON GUI::fetchIcon(const unsigned char* buffer, int bufferSize, int iconSize, int width, int height) {
 	unsigned char* icon = new unsigned char[iconSize];
@@ -225,13 +273,37 @@ void GUI::enableElements() {
 	browseButton.enable();
 }
 
+
+#if PACKER
 void GUI::buttonPressed(HWND hwnd) {
 	FileComponent fc;
-	fc.create(mainWindow.getHandle());
+
+	if (hwnd == browseButton.getHandle()) {
+		DWORD options = fc.defaultOptions | FOS_PICKFOLDERS;
+		fc.create(mainWindow.getHandle(), options);
+	}
+
+	if (hwnd == extractButton.getHandle()) {
+		std::vector<FileFilter> filter = { {L"Decima Binary(*.bin)", L"*.bin"} };
+		DWORD options = fc.defaultOptions & ~(FOS_FILEMUSTEXIST);
+		fc.create(mainWindow.getHandle(), options, filter);
+	}
+
 	std::string directory = fc.getFilename();
 	if (directory == "") return;
 	hwnd == browseButton.getHandle() ? directoryChosen(directory) : saveDirectoryChosen(directory);
 }
+
+#else
+void GUI::buttonPressed(HWND hwnd) {
+	FileComponent fc;
+	DWORD options = fc.defaultOptions | FOS_PICKFOLDERS;
+	fc.create(mainWindow.getHandle(), options);
+	std::string directory = fc.getFilename();
+	if (directory == "") return;
+	hwnd == browseButton.getHandle() ? directoryChosen(directory) : saveDirectoryChosen(directory);
+}
+#endif
 
 void GUI::openFilter() {
 	initFilter(mainWindow.getHandle());
@@ -252,9 +324,9 @@ void GUI::deinitExtractProgress() {
 	extractProgress.setHandle(NULL);
 }
 
-void GUI::initExtractProgress(HWND parent) {
+void GUI::initExtractProgress(HWND parent, int32_t size) {
 	extractProgress.create(parent, { 1280, 35 }, { 0, 647 });
-	extractProgress.setRange(fileList.getNumSelected());
+	extractProgress.setRange(size);
 }
 
 void GUI::deinitFileList() {
@@ -271,7 +343,8 @@ void GUI::initFileList(HWND parent) {
 void GUI::initBrowseButton(HWND parent) {
 	browseButton.create(parent, "Browse", { 98, 20 }, { 1150, 187 });
 	browseButton.setFont(15, FW_MEDIUM, "MS Shell Dlg 2");
-	browseButton.setBackgroundColour(0xD7C8C1);
+	uint32_t colour = isPacker ? 0xE8E8E8 : 0xD7C8C1;
+	browseButton.setBackgroundColour(colour);
 }
 
 void GUI::deinitExtractButton() {
@@ -280,7 +353,8 @@ void GUI::deinitExtractButton() {
 }
 
 void GUI::initExtractButton(HWND parent) {
-	extractButton.create(parent, "Extract", { 98, 20 }, { 1150, 654 });
+	const char *text = isPacker ? "Pack" : "Extract";
+	extractButton.create(parent, text, { 98, 20 }, { 1150, 654 });
 	extractButton.setFont(15, FW_MEDIUM, "MS Shell Dlg 2");
 	extractButton.setBackgroundColour(0xd3d3d3);
 }
@@ -290,14 +364,25 @@ void GUI::initFooterView(HWND parent) {
 	footerView.setBackgroundColour(0xd3d3d3);
 }
 
+#if PACKER
 void GUI::initBrowserView(HWND parent) {
-	unsigned char *bitmap = new unsigned char[DEX_BG_LIGHT_UNCOMPRESSED_SIZE];
-	int res = Kraken_Decompress(DEX_BG_LIGHT , DEX_BG_LIGHT_COMPRESSED_SIZE, bitmap, DEX_BG_LIGHT_UNCOMPRESSED_SIZE);
+	unsigned char* bitmap = new unsigned char[DEX_BG_DARK_UNCOMPRESSED_SIZE];
+	int res = Kraken_Decompress(DEX_BG_DARK, DEX_BG_DARK_COMPRESSED_SIZE, bitmap, DEX_BG_DARK_UNCOMPRESSED_SIZE);
+	header.create(parent, { 1280, 177 }, { 0, 0 }, bitmap);
+	delete[] bitmap;
+	browserView.create(parent, { 1280, 40 }, { 0, 177 });
+	browserView.setBackgroundColour(0xe8e8e8);
+}
+#else
+void GUI::initBrowserView(HWND parent) {
+	unsigned char* bitmap = new unsigned char[DEX_BG_LIGHT_UNCOMPRESSED_SIZE];
+	int res = Kraken_Decompress(DEX_BG_LIGHT, DEX_BG_LIGHT_COMPRESSED_SIZE, bitmap, DEX_BG_LIGHT_UNCOMPRESSED_SIZE);
 	header.create(parent, { 1280, 177 }, { 0, 0 }, bitmap);
 	delete[] bitmap;
 	browserView.create(parent, { 1280, 40 }, { 0, 177 });
 	browserView.setBackgroundColour(0xD7C8C1);
 }
+#endif
 
 void GUI::deinitFilter() {
 	filterTextbox.setText("");

@@ -9,10 +9,14 @@ Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug (GUI)|x64 = Debug (GUI)|x64
 		Debug (GUI)|x86 = Debug (GUI)|x86
+		Debug (GUI-Repack)|x64 = Debug (GUI-Repack)|x64
+		Debug (GUI-Repack)|x86 = Debug (GUI-Repack)|x86
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
 		Release (GUI)|x64 = Release (GUI)|x64
 		Release (GUI)|x86 = Release (GUI)|x86
+		Release (GUI-Repack)|x64 = Release (GUI-Repack)|x64
+		Release (GUI-Repack)|x86 = Release (GUI-Repack)|x86
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
 	EndGlobalSection
@@ -21,6 +25,10 @@ Global
 		{05B0E20F-1ED1-4EA1-B3BF-9FDFDD7E26B3}.Debug (GUI)|x64.Build.0 = Debug (GUI)|x64
 		{05B0E20F-1ED1-4EA1-B3BF-9FDFDD7E26B3}.Debug (GUI)|x86.ActiveCfg = Debug (GUI)|Win32
 		{05B0E20F-1ED1-4EA1-B3BF-9FDFDD7E26B3}.Debug (GUI)|x86.Build.0 = Debug (GUI)|Win32
+		{05B0E20F-1ED1-4EA1-B3BF-9FDFDD7E26B3}.Debug (GUI-Repack)|x64.ActiveCfg = Debug (GUI-Repack)|x64
+		{05B0E20F-1ED1-4EA1-B3BF-9FDFDD7E26B3}.Debug (GUI-Repack)|x64.Build.0 = Debug (GUI-Repack)|x64
+		{05B0E20F-1ED1-4EA1-B3BF-9FDFDD7E26B3}.Debug (GUI-Repack)|x86.ActiveCfg = Debug (GUI-Repack)|Win32
+		{05B0E20F-1ED1-4EA1-B3BF-9FDFDD7E26B3}.Debug (GUI-Repack)|x86.Build.0 = Debug (GUI-Repack)|Win32
 		{05B0E20F-1ED1-4EA1-B3BF-9FDFDD7E26B3}.Debug|x64.ActiveCfg = Debug|x64
 		{05B0E20F-1ED1-4EA1-B3BF-9FDFDD7E26B3}.Debug|x64.Build.0 = Debug|x64
 		{05B0E20F-1ED1-4EA1-B3BF-9FDFDD7E26B3}.Debug|x86.ActiveCfg = Debug|Win32
@@ -29,6 +37,10 @@ Global
 		{05B0E20F-1ED1-4EA1-B3BF-9FDFDD7E26B3}.Release (GUI)|x64.Build.0 = Release (GUI)|x64
 		{05B0E20F-1ED1-4EA1-B3BF-9FDFDD7E26B3}.Release (GUI)|x86.ActiveCfg = Release (GUI)|Win32
 		{05B0E20F-1ED1-4EA1-B3BF-9FDFDD7E26B3}.Release (GUI)|x86.Build.0 = Release (GUI)|Win32
+		{05B0E20F-1ED1-4EA1-B3BF-9FDFDD7E26B3}.Release (GUI-Repack)|x64.ActiveCfg = Release (GUI-Repack)|x64
+		{05B0E20F-1ED1-4EA1-B3BF-9FDFDD7E26B3}.Release (GUI-Repack)|x64.Build.0 = Release (GUI-Repack)|x64
+		{05B0E20F-1ED1-4EA1-B3BF-9FDFDD7E26B3}.Release (GUI-Repack)|x86.ActiveCfg = Release (GUI-Repack)|Win32
+		{05B0E20F-1ED1-4EA1-B3BF-9FDFDD7E26B3}.Release (GUI-Repack)|x86.Build.0 = Release (GUI-Repack)|Win32
 		{05B0E20F-1ED1-4EA1-B3BF-9FDFDD7E26B3}.Release|x64.ActiveCfg = Release|x64
 		{05B0E20F-1ED1-4EA1-B3BF-9FDFDD7E26B3}.Release|x64.Build.0 = Release|x64
 		{05B0E20F-1ED1-4EA1-B3BF-9FDFDD7E26B3}.Release|x86.ActiveCfg = Release|Win32

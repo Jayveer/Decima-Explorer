@@ -36,6 +36,7 @@ bool traverseDirectory(std::string basePath, const std::string& mask, std::vecto
                 }
                 else {
                     files.push_back(path + ffd.cFileName);
+                   // filesizes.push_back(ffd.nFileSizeHigh);
                 }
             }
         } while (FindNextFile(hFind, &ffd) != 0);

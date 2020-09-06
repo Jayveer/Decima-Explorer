@@ -8,8 +8,8 @@ ProgressComponent::~ProgressComponent() {
 
 }
 
-void ProgressComponent::create(HWND parent, Dimensions dimensions, Origin origin) {
-    DWORD style = WS_CHILD | WS_VISIBLE;
+void ProgressComponent::create(HWND parent, Dimensions dimensions, Origin origin, DWORD extraStyle) {
+    DWORD style = WS_CHILD | WS_VISIBLE | extraStyle;
     HWND hwnd = CreateWindow(PROGRESS_CLASS, "Loading file", style, origin.x, origin.y, dimensions.width, dimensions.height, parent, NULL, NULL, this);
     setHandle(hwnd);
 }
@@ -27,6 +27,10 @@ void ProgressComponent::setCustomIncrement(int increment) {
 void ProgressComponent::increment() {
     this->current++;
     SendMessage(getHandle(), PBM_STEPIT, 0, 0);
+}
+
+void ProgressComponent::setMarquee() {
+    LRESULT lResult = SendMessage(getHandle(), PBM_SETMARQUEE, (WPARAM)TRUE, (LPARAM)NULL);
 }
 
 void ProgressComponent::setValue(int32_t value) {

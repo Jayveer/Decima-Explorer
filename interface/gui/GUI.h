@@ -2,18 +2,6 @@
 #include "../Interface.h"
 #include "draw/MainWindow.h"
 
-
-/*
-#include <thread>
-#include <future>
-#include <unordered_map>
-
-#include "../../decima/file/prefetch/CorePrefetch.h"
-#include "../../decima/archive/mpk/ArchiveMoviePack.h"
-#include "../../decima/archive/bin/initial/BinInitial.h"
-#include "../../utils/Arrayutils.h"
-#include "../../utils/NumUtils.h"
-*/
 #pragma comment(linker,"\"/manifestdependency:type='win32' \
 name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
 processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
@@ -43,11 +31,24 @@ private:
 
 	ProgressComponent extractProgress;
 
+#ifdef PACKER
+	bool isPacker = true;
+#else
+	bool isPacker = false;
+#endif
+
 	int32_t progressNum;
 	bool redrawList = true;
 	std::vector<FileInfo> fileInfo;
+	std::vector<std::string> files;
 
 	const char* aboutText = "Decima Explorer is a free and open source program. If you paid for this program demand your money back from the seller.\n\n Created by Jayveer\n https://github.com/Jayveer/Decima-Explorer \n\nSpecial Thanks for work on decryption.\n Ekey https://github.com/Ekey \n Wunkolo https://github.com/wunkolo \n\nLibraries:\n Ooz By Powzix https://github.com/powzix/ooz \n Murmur3 by Peter Scott https://github.com/PeterScott/murmur3 \n MD5 by Aladdin Enterprises";
+
+#if PACKER
+	std::vector<std::string> getSelectedStrings();
+#else
+	std::vector<char*> getSelectedStrings();
+#endif
 
 	void resetData();
 	void openFilter();
@@ -62,8 +63,8 @@ private:
 	void initBrowserView(HWND parent);
 	void initBrowseButton(HWND parent);
 	void initExtractButton(HWND parent);
-	void initExtractProgress(HWND parent);
 	void initCloseFilterButton(HWND parent);
+	void initExtractProgress(HWND parent, int32_t size);
 
 	void deinitFilter();
 	void deinitFileList();
@@ -77,7 +78,6 @@ private:
 
 	void checkQueue();
 	void addFilesToRows();
-	std::vector<char*> getSelectedStrings();
 	void filterList(const std::string& filter);
 	void directoryChosen(std::string directory);
 	void saveDirectoryChosen(std::string directory);

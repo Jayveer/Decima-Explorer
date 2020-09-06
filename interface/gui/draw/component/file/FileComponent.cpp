@@ -9,20 +9,23 @@ FileComponent::~FileComponent() {
 void FileComponent::setCaller(FileCaller* caller) {
 }
 
-void FileComponent::create(HWND parent) {
+//	std::vector<FileFilter> filter;
+//filter.push_back({ L"Word Document (*.doc)", L"*.doc" });
+
+void FileComponent::create(HWND parent, DWORD options, const std::vector<FileFilter>& filter) {
 	bool ok = 0;
 	char str[MAX_PATH];
 	IFileOpenDialog* pFileOpen;
 	HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);	
 	hr = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL, IID_IFileOpenDialog, reinterpret_cast<void**>(&pFileOpen));
-	
+
+	if (!filter.empty())
+		pFileOpen->SetFileTypes(filter.size(), (COMDLG_FILTERSPEC*)&filter[0]);
+
 	if (SUCCEEDED(hr)) {
 
 		if (SUCCEEDED(hr)) {
-			FILEOPENDIALOGOPTIONS opt{};
-			pFileOpen->GetOptions(&opt);
-			pFileOpen->SetOptions(opt | FOS_PICKFOLDERS);
-
+			pFileOpen->SetOptions(options);
 
 			hr = pFileOpen->Show(NULL);
 
