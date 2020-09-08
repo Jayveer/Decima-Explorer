@@ -2870,14 +2870,43 @@ char *verifyfolder;
 typedef int WINAPI OodLZ_CompressFunc(int codec, uint8* src_buf, size_t src_len, uint8* dst_buf, int level, void* opts, size_t offs, size_t unused, void* scratch, size_t scratch_size);
 OodLZ_CompressFunc* OodLZ_Compress;
 
+typedef int WINAPI OodLZ_DecompressFunc(uint8* src_buf, int src_len, uint8* dst, size_t dst_size, int fuzz, int crc, int verbose, uint8* dst_base, size_t e, void* cb, void* cb_ctx, void* scratch, size_t scratch_size, int threadPhase);
+OodLZ_DecompressFunc* OodLZ_Decompress;
+
+HINSTANCE pickDll() {
+	HINSTANCE mod = NULL;
+	int version = 9;
+	char DLL[] = "oo2core_1_win64.dll";
+	while (version >= 0) {
+		DLL[8] = version + '0';
+		mod = LoadLibraryA(DLL);
+		if (mod) break;
+		version--;
+	}
+
+	return mod;
+}
+
 int Kraken_Compress(uint8* src, size_t src_len, byte* dst) {
-	HINSTANCE mod = LoadLibraryA("oo2core_7_win64.dll");
+	HINSTANCE mod = pickDll();
+	if (!mod) return -1;
 	char COMPFUNCNAME[] = "XXdleLZ_Compress";
 	COMPFUNCNAME[0] = 'O';
 	COMPFUNCNAME[1] = 'o';
 	OodLZ_Compress = (OodLZ_CompressFunc*)GetProcAddress(mod, COMPFUNCNAME);
 	int dst_len = OodLZ_Compress(arg_compressor, src, src_len, dst, arg_level, 0, 0, 0, 0, 0);
 	return dst_len;
+}
+
+int Kraken_Decompress_DLL(uint8* src, size_t src_len, byte* dst, size_t dst_len) {
+	HINSTANCE mod = pickDll();
+	if (!mod) return -1;
+	char DECFUNCNAME[] = "XXdleLZ_Decompress";
+	DECFUNCNAME[0] = 'O';
+	DECFUNCNAME[1] = 'o';
+	OodLZ_Decompress = (OodLZ_DecompressFunc*)GetProcAddress(mod, DECFUNCNAME);
+	int outbytes = OodLZ_Decompress(src, src_len, dst, dst_len, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	return outbytes;
 }
 
 bool Verify(const char *filename, uint8 *output, int outbytes, const char *curfile) {

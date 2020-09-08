@@ -82,7 +82,7 @@ private:
 	std::vector<DataBuffer> createChunkEntries(DataBuffer& buffer, bool isUpdate);
 	uint64_t calculateLastContainingChunk(uint64_t fileOffset, int fileSize, int chunkSize);
 	int compressChunkData(unsigned char* input, uint64_t decompressedSize, DataBuffer& output);
-	void decompressChunkData(const DataBuffer& data, uint64_t decompressedSize, unsigned char* output);
+	void decompressChunkData(DataBuffer& data, uint64_t decompressedSize, unsigned char* output);
 	DataBuffer createFileEntries(const std::string& basePath, const std::vector<std::string>& fileList, bool isUpdate);
 
 protected:
@@ -90,8 +90,8 @@ protected:
 	std::string extension = ".bin";
 
 	const char* INVALIDMAGICERROR = "Input file is of an unrecognized format";
-	const char* COMPRESSFAILERROR = "Failed to compress data, please make sure you have oo2core_7_win64.dll in the same directory as Decima Explorer";
-	const char* DECOMPRESSFAILERROR = "Failed to decompress data";
+	const char* COMPRESSFAILERROR = "Failed to compress data, please make sure you have a version of oo2core DLL in the same directory as Decima Explorer";
+	const char* DECOMPRESSFAILERROR = "Failed to decompress data, try adding a version of oo2core DLL in the same directory as Decima Explorer for this file";
 	const char* PARSEFILETABLEFAILERROR = "Failed to parse file table";
 	const char* PARSECHUNKTABLEFAILERROR = "Failed to parse chunk table";
 public:
