@@ -226,9 +226,12 @@ int ArchiveBin::compressChunkData(unsigned char* input, uint64_t decompressedSiz
 	return compressedSize;
 }
 
-void ArchiveBin::decompressChunkData(const DataBuffer &data, uint64_t decompressedSize, unsigned char* output) {
+void ArchiveBin::decompressChunkData(DataBuffer &data, uint64_t decompressedSize, unsigned char* output) {
 	int res = Kraken_Decompress(&data[0], data.size(), output, decompressedSize);
-	if (res == -1) this->messageHandler->showError(DECOMPRESSFAILERROR);
+	if (res == -1) {
+		res = Kraken_Decompress_DLL(&data[0], data.size(), output, decompressedSize);
+		if (res == -1) this->messageHandler->showError(DECOMPRESSFAILERROR);
+	}
 }
 
 uint32_t ArchiveBin::getFileEntryIndex(int id) {
