@@ -12,8 +12,6 @@ This program also uses [Murmur3](https://github.com/PeterScott/murmur3) by [Pete
 
 If anyone has any issue with this project's existence please feel free to reach out to me.
 
-Now includes a GUI version, please note it has a lot less features than the command line version.
-
 ![picture](https://github.com/Jayveer/Decima-Explorer/blob/master/gui.png?raw=true)
 
 Decima Explorer supports both repacking and packing. Please note there are some caveats to repacking;
@@ -21,6 +19,7 @@ Decima Explorer supports both repacking and packing. Please note there are some 
 - Repacking will increase the original file size based on how many files you are adding.
 - Repacking can take a while as it has to insert data in the middle of the binary. 
 - If the file you are repacking doesn't exist in the archive you are repacking it will not add it.
+- repacking requires a version of oodle dll to be placed alongside Decima Explorer.
 - If you are using this to blindly swap core files around you may not have much luck without more of an understanding on how the core files themselves work, in this case you will probably see the game fail to load in places.
 
 ### To Do
@@ -28,11 +27,11 @@ Decima Explorer supports both repacking and packing. Please note there are some 
 
 ##  Usage
 
-There are two flavours of Decima Explorer, one that can be run from the command line and one that runs as a Graphical User Interface.
+There are two flavours of Decima Explorer, one that can be run from the command line and one that runs as a Graphical User Interface. If the Ooz library fails to decompress a file you will need to use a version of the oodle dll. Repacking will require the oodle dll.
 
 ### GUI
 
-With the GUI version you can select the initial data directory of the game and it will populate a file list based on the games cache prefetch. You can use the keyboard shortcut Ctrl+F to filter this list for the items you are interested in. You can select all the items with Ctrl+A or by Ctrl or shift clicking. With the items you wish to extract selected you can press the extract button and choose a directory in which to extract, when extracting multiple files with the GUI extraction will be multithreaded and should use all available cores. It is currently not possible to extract .mpk archives with the GUI. A GUI for packing and repacking will be available shortly. 
+With the GUI version you can select the initial data directory of the game and it will populate a file list based on the games cache prefetch. You can use the keyboard shortcut Ctrl+F to filter this list for the items you are interested in. You can select all the items with Ctrl+A or by Ctrl or shift clicking. With the items you wish to extract selected you can press the extract button and choose a directory in which to extract, when extracting multiple files with the GUI extraction will be multithreaded and should use all available cores. It is currently not possible to extract .mpk archives with the GUI.
 
 There is also a separate GUI for packing and repacking files. I decided to separate this for now for a cleaner UX. When repacking you must first select a folder that contains the complete path for a file, this is because the directory is used when hashing. You can then select and output, if it is a bin file that already exists it will attempt to repack that file. If it is a file that doesnt exist it will pack the files into a new bin file.
 
