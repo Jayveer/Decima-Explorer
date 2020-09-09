@@ -101,6 +101,7 @@ public:
 	int open() override;
 	DataBuffer extractFile(std::string filename);
 	int extractFile(uint32_t id, std::string output);
+	void swapEntries(const std::vector<Swapper>& swapMap);
 	void nukeHashes(const std::vector<std::string>& fileList);
 	int extractFile(std::string filename, std::string output, bool suppressError = 0);
 	int create(const std::string& basePath, const std::vector<std::string>& fileList);

@@ -79,6 +79,16 @@ DecimaExplorer.exe -repack "G:\path\to\existing\archive.bin" "G:\path\to\files\t
 ```
 You can also repack an existing decima archive file. The first argument is the binary archive file you wish to repack and the second is a base directory containing multiple directories of files.
 
+```
+DecimaExplorer.exe -swap "G:\path\to\game\data\files" "G:\path\to\swap.txt"
+```
+Finally there is a swap command which allows you to swap two hashes so that the game will pick up a different core file instead of the one it is pointing at. In most cases this will cause a crash but it's here if anyone finds a use for it. The swap text file will look like this;
+```
+file/to/swap/first -> file/to/swap/second
+another/file/to/swap/first -> another/file/to/swap/second
+```
+the above would simple be saved as a .txt file.
+
 ## License
 [GPL](ooz/LICENSE.md)
 [Ooz](https://github.com/powzix/ooz) created by [Powzix](https://github.com/powzix) uses the GPL License. Everything under the Ooz directory falls under GPL licensing.

@@ -10,6 +10,11 @@
 
 typedef std::vector<uint8_t> DataBuffer;
 
+typedef struct Swapper {
+	std::string firstFile;
+	std::string secondFile;
+};
+
 class DecimaArchive {
 private:	
 	std::string filename;

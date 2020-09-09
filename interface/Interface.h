@@ -2,6 +2,7 @@
 #include <mutex>
 #include <thread>
 #include <future>
+#include <regex>
 #include <unordered_map>
 
 #include "../decima/file/prefetch/CorePrefetch.h"
@@ -36,6 +37,7 @@ protected:
 	int initPrefetch(const char* binFile);
 	void setupOutput(const std::string& output);
 	void buildFileMap(const char* fileDirectory);
+	void swap(const char* dataDir, const char* swapFile);
 	const char* getContainingBinFile(const char* filename);
 	std::vector<std::string> getFiles(const std::string& directory);
 	void directoryExtract(const char* filename, std::string output);

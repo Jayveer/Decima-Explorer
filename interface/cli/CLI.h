@@ -6,7 +6,8 @@ typedef enum CLI_COMMAND {
 	LIST,
 	EXTRACT,
 	PACK,
-	REPACK
+	REPACK,
+	SWAP,
 } CLI_COMMAND;
 
 struct argcRange {
@@ -32,10 +33,12 @@ private:
 								"\t DecimaExplorer.exe [-e/-extract] [directory containing data files] filename\n"
 								"\t DecimaExplorer.exe [-r/-repack] [bin file to repack] [directory containing directories of core files]\n"
 								"\t DecimaExplorer.exe [-p/-pack] [directory containing directories of core files] outputfile\n"
+								"\t DecimaExplorer.exe [-s/-swap] [directory containing data files] [swap text file]\n"
 								"\t DecimaExplorer.exe [-l/-list] [directory containing data files]\n"
 								"Available Options:\n"
 								"\tList:    \t-l, -list\n"
 								"\tPack:	\t-p, -pack\n"
+								"\tSwap:	\t-s, -swap\n"
 								"\tRepack:	\t-r, -repack\n"
 								"\tExtract: \t-e, -extract\n";
 
@@ -43,6 +46,7 @@ private:
 
 	//command methods
 	void list();
+	void cliSwap();
 	void cliPack();
 	void cliRepack();
 	void cliExtract();

@@ -281,6 +281,7 @@ DataBuffer ArchiveBin::extract(BinFileEntry fileEntry) {
 	DataBuffer tempBuffer(maxNeededSize);
 
 	for (int i = firstChunkRow; i <= lastChunkRow; i++) {
+		if (i >= chunkTable.size()) continue;
 		DataBuffer chunkData = getChunkData(chunkTable[i]);
 		uint8_t* data = &chunkData[0];
 		if (isEncrypted()) decryptChunkData(i, &chunkData);
@@ -466,6 +467,36 @@ std::vector<DataBuffer> ArchiveBin::createChunkEntries(DataBuffer& buffer, bool 
 	return chunkedFile;
 }
 
+void ArchiveBin::swapEntries(const std::vector<Swapper>& swapMap) {
+	bool wasChanged = false;
+
+	for (int i = 0; i < swapMap.size(); i++) {
+		std::string firstFile = swapMap[i].firstFile;
+		std::string secondFile = swapMap[i].secondFile;
+
+		if (!hasExtension(firstFile)) addExtension(firstFile, "core");
+		if (!hasExtension(secondFile)) addExtension(secondFile, "core");
+
+		uint64_t firstFileHash = getFileHash(firstFile);
+		uint64_t secondFileHash = getFileHash(secondFile);
+
+		uint32_t firstIndex = getFileEntryIndex(firstFile);
+		uint32_t secondIndex = getFileEntryIndex(secondFile);
+
+		if (firstIndex == -1 || secondIndex == -1) continue;
+
+		fileTable[firstIndex].hash = secondFileHash;
+		fileTable[secondIndex].hash = firstFileHash;
+
+		std::string message = "swapping " + swapMap[i].firstFile + " for " + swapMap[i].secondFile + " in bin file " + getFilename();
+		messageHandler->showMessage(message.c_str());
+
+		wasChanged = true;
+	}
+
+	if (wasChanged) updateFileTable();
+}
+
 void ArchiveBin::nukeHashes(const std::vector<std::string>& fileList) {
 	bool wasChanged = false;
 
@@ -516,7 +547,7 @@ int ArchiveBin::update(const std::string& basePath, const std::vector<std::strin
 }
 
 int ArchiveBin::extractFile(uint32_t id, std::string output) {
-	if (!hasExtension(output, "core")) addExtension(output, "core");
+	if (!hasExtension(output)) addExtension(output, "core");
 
 	uint32_t i = getFileEntryIndex(id);
 
@@ -531,8 +562,8 @@ int ArchiveBin::extractFile(uint32_t id, std::string output) {
 }
 
 int ArchiveBin::extractFile(std::string filename, std::string output, bool suppressError) {
-	if (!hasExtension(filename, "core")) addExtension(filename, "core");
-	if (!hasExtension(output, "core")) addExtension(output, "core");
+	if (!hasExtension(filename)) addExtension(filename, "core");
+	if (!hasExtension(output)) addExtension(output, "core");
 	uint32_t i = getFileEntryIndex(filename);
 
 	if (i == -1) {
@@ -547,7 +578,7 @@ int ArchiveBin::extractFile(std::string filename, std::string output, bool suppr
 
 DataBuffer ArchiveBin::extractFile(std::string filename) {
 	DataBuffer data;
-	if (!hasExtension(filename, "core")) addExtension(filename, "core");
+	if (!hasExtension(filename)) addExtension(filename, "core");
 	uint32_t i = getFileEntryIndex(filename);
 
 	if (i == -1) {
