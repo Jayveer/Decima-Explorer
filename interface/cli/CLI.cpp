@@ -23,6 +23,8 @@ void CLI::processCommand(CLI_COMMAND command, char* arg) {
 	case LIST:
 		list();
 		break;
+	case SWAP:
+		cliSwap();
 	default:
 		cliExtract();
 	}
@@ -110,6 +112,8 @@ argcRange CLI::getArgCount(CLI_COMMAND command) {
 		return { 4, 4 };
 	case PACK:
 		return { 4, 4 };
+	case SWAP:
+		return { 4, 4 };
 	default:
 		return { 5, 5 };
 	}
@@ -130,6 +134,8 @@ CLI_COMMAND CLI::argToCommand(char* arg) {
 		return REPACK;
 	if (!strcmp(arg, "-pack") || !strcmp(arg, "-p"))
 		return PACK;
+	if (!strcmp(arg, "-swap") || !strcmp(arg, "-s"))
+		return SWAP;
 }
 
 bool CLI::isNumber(char* arg) {
@@ -152,6 +158,10 @@ void CLI::cliRepack() {
 void CLI::cliPack() {
 	std::vector<std::string> files = getFiles(argv[2]);
 	pack(files, argv[2], argv[3]);
+}
+
+void CLI::cliSwap() {
+	swap(argv[2], argv[3]);
 }
 
 void CLI::printUsage() {

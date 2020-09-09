@@ -39,7 +39,7 @@ void Interface::buildFileMap(const char* fileDirectory) {
 
 const char* Interface::getContainingBinFile(const char* filename) {
 	std::string fname = filename;
-	if (!hasExtension(fname, "core")) addExtension(fname, "core");
+	if (!hasExtension(fname)) addExtension(fname, "core");
 	uint64_t hash = getFileHash(fname);
 	return fileMap[hash];
 }
@@ -173,4 +173,30 @@ void Interface::pack(const std::vector<std::string> files, const std::string& di
 	ArchiveBin decimaArchive(filename);
 	decimaArchive.setMessageHandler(this);
 	decimaArchive.create(directory, files);
+}
+
+void Interface::swap(const char* dataDir, const char* swapFile) {
+	std::vector<Swapper> swapMap;
+	std::ifstream file(swapFile);
+	std::string str;
+	while (std::getline(file, str)) {
+		Swapper map;
+		const char* regex = "([^\\s]+)(\\s+)?->(\\s+)?([^\\s]+)";
+		std::regex re(regex);
+		std::smatch match;
+
+		if (std::regex_search(str, match, re)) {
+			map.firstFile = match[1];
+			map.secondFile = match[4];
+			swapMap.push_back(map);
+		}
+	}
+
+	std::vector<std::string> files = getFilesFromDirectory(dataDir, ".bin");
+	for (int i = 0; i < files.size(); i++) {
+		ArchiveBin decimaArchive(files[i]);
+		decimaArchive.setMessageHandler(this);
+		decimaArchive.open();
+		decimaArchive.swapEntries(swapMap);
+	}
 }

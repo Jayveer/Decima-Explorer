@@ -129,7 +129,7 @@ bool hasExtension(const std::string& dirName, const std::string& extension) {
 
 inline
 bool hasExtension(const std::string& dirName) {
-    return getFileExtension(dirName) != "";
+    return getFileExtension(dirName) != dirName;
 }
 
 inline

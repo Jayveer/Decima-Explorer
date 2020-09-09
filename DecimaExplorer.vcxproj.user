@@ -11,12 +11,8 @@
     <LocalDebuggerCommandArguments>-l .</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug (GUI-Repack)|Win32'">
-    <LocalDebuggerCommandArguments>-l .</LocalDebuggerCommandArguments>
-    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LocalDebuggerCommandArguments>-r "G:\Games\PC\steamapps\common\Death Stranding\data\7017f9bb9d52fc1c4433599203cc51b1.bin" "G:\fullext"</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>-e "G:\Games\PC\steamapps\common\Horizon Zero Dawn\Packed_DX12" models/characters/humans/heads/female/hannah/textures/hannah_head_set.core.stream</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug (GUI)|x64'">
@@ -24,15 +20,7 @@
     </LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug (GUI-Repack)|x64'">
-    <LocalDebuggerCommandArguments />
-    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release (GUI)|Win32'">
-    <LocalDebuggerCommandArguments>-extract "G:\Games\PC\steamapps\common\Death Stranding\data" \ds\models\item\ludk_ludenskeyring\core\ludk_main_big\model\parts\mesh_main_lx</LocalDebuggerCommandArguments>
-    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release (GUI-Repack)|Win32'">
     <LocalDebuggerCommandArguments>-extract "G:\Games\PC\steamapps\common\Death Stranding\data" \ds\models\item\ludk_ludenskeyring\core\ludk_main_big\model\parts\mesh_main_lx</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
