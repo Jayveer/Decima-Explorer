@@ -140,7 +140,7 @@ int Interface::extract(const char* archiveFile, int id, const char* output) {
 	DecimaArchive* archive = archiveFactory(archiveFile);
 	archive->setMessageHandler(this);
 	if (!archive->open()) {
-		destroyArchive(archive);
+		destroyArchive(archive, archiveFile);
 		return 0;
 	}
 	archive->extractFile(id, output);
