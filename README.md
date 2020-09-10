@@ -82,12 +82,12 @@ You can also repack an existing decima archive file. The first argument is the b
 ```
 DecimaExplorer.exe -swap "G:\path\to\game\data\files" "G:\path\to\swap.txt"
 ```
-Finally there is a swap command which allows you to swap two hashes so that the game will pick up a different core file instead of the one it is pointing at. In most cases this will cause a crash but it's here if anyone finds a use for it. The swap text file will look like this;
+Lastly, there is a swap command which allows you to swap two hashes so that the game will pick up a different core file instead of the one it is pointing at. In most cases this will cause a crash but it's here if anyone finds a use for it. The swap text file will look like this;
 ```
 file/to/swap/first -> file/to/swap/second
 another/file/to/swap/first -> another/file/to/swap/second
 ```
-the above would simple be saved as a .txt file.
+the above would simply be saved as a .txt file.
 
 ## License
 [GPL](ooz/LICENSE.md)
