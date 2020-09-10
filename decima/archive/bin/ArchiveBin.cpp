@@ -259,24 +259,19 @@ BinFileEntry ArchiveBin::getFileEntry(int id) {
 }
 
 int ArchiveBin::findChunkWithOffset(uint64_t offset) {
-	int i = 0;
-	for (; i < chunkTable.size(); i++) {
-		if (chunkTable[i].uncompressedOffset == offset)
+	for (int i = 0; i < chunkTable.size(); i++) {
+		if ((uint64_t)i + 1 >= chunkTable.size()) return i;
+		if ((chunkTable[i].uncompressedOffset <= offset) && (chunkTable[(uint64_t)i + 1].uncompressedOffset >= offset)) {
 			return i;
+		}
 	}
-
-	return i;
 }
 
 DataBuffer ArchiveBin::extract(BinFileEntry fileEntry) {
 	uint64_t fileOffset = fileEntry.offset;
 	uint32_t fileSize = fileEntry.size;
-
-	uint64_t firstChunk = calculateFirstContainingChunk(fileOffset, header.maxChunkSize);
-	uint64_t lastChunk = calculateLastContainingChunk(fileOffset, fileSize, header.maxChunkSize);
-
-	uint64_t firstChunkRow = findChunkWithOffset(firstChunk);
-	uint64_t lastChunkRow = findChunkWithOffset(lastChunk);
+	uint64_t firstChunkRow = findChunkWithOffset(fileEntry.offset);
+	uint64_t lastChunkRow = findChunkWithOffset(fileEntry.offset + fileEntry.size);
 	uint64_t maxNeededSize = ((lastChunkRow - firstChunkRow) + 1) * header.maxChunkSize;
 
 	int pos = 0;

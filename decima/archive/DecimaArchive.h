@@ -47,7 +47,7 @@ protected:
 	const char* FILEWRITEERROR = "Failed to open file for writing";
 	const char* FILENAMEERROR = "Failed to find a file with that name";
 public:
-	~DecimaArchive();
+	virtual ~DecimaArchive();
 	DecimaArchive(std::string filename, std::string extension);
 
 	virtual int open() = 0;

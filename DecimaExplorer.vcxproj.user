@@ -12,7 +12,7 @@
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LocalDebuggerCommandArguments>-e "G:\Games\PC\steamapps\common\Horizon Zero Dawn\Packed_DX12" models/characters/humans/heads/female/hannah/textures/hannah_head_set.core.stream</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>-e "G:\Games\PC\steamapps\common\Horizon Zero Dawn\Packed_DX12" models/characters/humans/aloy/textures/aloyhandrefactor_set</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug (GUI)|x64'">

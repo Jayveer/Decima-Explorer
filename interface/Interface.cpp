@@ -127,8 +127,13 @@ DecimaArchive* archiveFactory(const char* archiveFile) {
 	return new ArchiveBin(archiveFile);
 }
 
-void destroyArchive(DecimaArchive* archive) {
-	delete archive;
+void destroyArchive(DecimaArchive* archive, const char* archiveFile) {
+	const char* ext = getFileExtension(archiveFile).c_str();
+	if (ext == "mpk") {
+		return delete (ArchiveMoviePack*)archive;
+	}
+
+	return delete (ArchiveBin*)archive;
 }
 
 int Interface::extract(const char* archiveFile, int id, const char* output) {
@@ -147,12 +152,12 @@ int Interface::extract(const char* archiveFile, const char* input, const char* o
 	DecimaArchive* archive = archiveFactory(archiveFile);
 	archive->setMessageHandler(this);
 	if (!archive->open()) {
-		destroyArchive(archive);
+		destroyArchive(archive, archiveFile);
 		return 0;
 	}
 
 	archive->extractFile(input, output);
-	destroyArchive(archive);
+	destroyArchive(archive, archiveFile);
 	return 1;
 }
 
