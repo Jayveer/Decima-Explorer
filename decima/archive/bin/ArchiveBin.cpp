@@ -258,12 +258,14 @@ BinFileEntry ArchiveBin::getFileEntry(int id) {
 	}
 }
 
-
 int ArchiveBin::findChunkWithOffset(uint64_t offset) {
-	for (int i = 0; i < chunkTable.size(); i++) {
+	int i = 0;
+	for (; i < chunkTable.size(); i++) {
 		if (chunkTable[i].uncompressedOffset == offset)
 			return i;
 	}
+
+	return i;
 }
 
 DataBuffer ArchiveBin::extract(BinFileEntry fileEntry) {
