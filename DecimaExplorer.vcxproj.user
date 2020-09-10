@@ -24,4 +24,8 @@
     <LocalDebuggerCommandArguments>-extract "G:\Games\PC\steamapps\common\Death Stranding\data" \ds\models\item\ludk_ludenskeyring\core\ludk_main_big\model\parts\mesh_main_lx</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LocalDebuggerCommandArguments>-e "G:\Games\PC\steamapps\common\Horizon Zero Dawn\Packed_DX12" models/characters/humans/heads/female/hannah/textures/hannah_head_set.core.stream</LocalDebuggerCommandArguments>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
 </Project>
