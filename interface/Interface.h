@@ -39,7 +39,7 @@ protected:
 	void buildFileMap(const char* fileDirectory);
 	void extractFileMap(const char* fileDirectory);
 	void swap(const char* dataDir, const char* swapFile);
-	const char* getContainingBinFile(const char* filename);
+	const char* getContainingBinFile(const std::string& filename);
 	std::vector<std::string> getFiles(const std::string& directory);
 	int directoryExtract(const char* filename, std::string output);
 	int fileListExtract(const char* fileList);

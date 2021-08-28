@@ -80,10 +80,8 @@ void Interface::extractFileMap(const char* fileDirectory) {
 }
 
 
-const char* Interface::getContainingBinFile(const char* filename) {
-	std::string fname = filename;
-	if (!hasExtension(fname)) addExtension(fname, "core");
-	uint64_t hash = getFileHash(fname);
+const char* Interface::getContainingBinFile(const std::string& filename) {
+	uint64_t hash = getFileHash(filename);
 	return fileMap[hash];
 }
 
@@ -129,10 +127,30 @@ void Interface::setupOutput(const std::string& output) {
 }
 
 int Interface::directoryExtract(const char* filename, std::string output) {
-	const char* binFile = getContainingBinFile(filename);
-	if (binFile == NULL) return 0;
+	const int max_extensions = 6;
+	const char* extensions[max_extensions] = {"core", "stream", "core.stream", "coretext", "coredebug", "dep"};
+
+	//if (!hasExtension(fname)) 
+
+	// try default name first
+	std::string fname = filename;
+	const char* binFile = getContainingBinFile(fname);
+	if (binFile == NULL) {
+		// try common extensions (files like .soundbank.core exists in prefetch list so extension check isn't good)
+		for (int i = 0; i < max_extensions; i++) {
+			fname = filename;
+			addExtension(fname, extensions[i]);
+
+			binFile = getContainingBinFile(fname);
+			if (binFile != NULL)
+				break;
+		}
+	}
+	if (binFile == NULL)
+		return 0;
+
 	setupOutput(output);
-	int done = extract(binFile, filename, output.c_str());
+	int done = extract(binFile, fname.c_str(), output.c_str());
 	return done;
 }
 
