@@ -1,5 +1,6 @@
 #ignore the following directories
 .vs/
+.vscode/
 Debug/
 Release/
 Debug (GUI)/
