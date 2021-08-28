@@ -73,6 +73,20 @@ void CLI::dirExtract() {
 		return;
 	}
 
+	if (checkFileExists(argv[3])) {
+		std::string fileListName = argv[3];
+		if (hasExtension(fileListName, "txt")) {
+			int done = fileListExtract(fileListName.c_str());
+
+			char buf[512] = {0};
+			snprintf(buf, sizeof(buf), "finished extracting %s list, total: %d", fileListName.c_str(), done);
+			std::string message = buf;
+
+			showMessage(message.c_str());
+			return;
+		}
+	}
+
 	std::string output = argc == 5 ? argv[4] : argv[3];
 	int done = directoryExtract(argv[3], output);
 	if (done <= 0)

@@ -73,7 +73,6 @@ void Interface::extractFileMap(const char* fileDirectory) {
 		out.write(newLine, 2);
 	}
 
-	out.write(buf, strlen(buf));
 	out.write(newLine, 2);
 	snprintf(buf, sizeof(buf), "total: %i", count);
 	out.write(buf, strlen(buf));
@@ -135,6 +134,23 @@ int Interface::directoryExtract(const char* filename, std::string output) {
 	setupOutput(output);
 	int done = extract(binFile, filename, output.c_str());
 	return done;
+}
+
+int Interface::fileListExtract(const char* fileList) {
+	int count = 0;
+
+	std::ifstream infile(fileList);
+
+	std::string line;
+	while (std::getline(infile, line)) {
+        if (line.empty())
+			continue;
+		if (line.rfind("#", 0) == 0) //skip comments
+			continue;
+		count += directoryExtract(line.c_str(), line);
+	}
+
+	return count;
 }
 
 void Interface::batchExtract(const std::vector<char*>& filenames, std::string output, int batchSize, int batchOffset) {
