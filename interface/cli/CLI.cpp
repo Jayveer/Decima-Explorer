@@ -49,17 +49,20 @@ void CLI::fileExtract() {
 	std::string output = argc == 5 ? argv[4] : argv[3];
 	setupOutput(output);
 
+	int done;
 	if (isNumber(argv[3])) {
 		int id = argToNumber(argv[3]);
-		int ret = extract(argv[2], id, output.c_str());
-		if (!ret) return;
+		done = extract(argv[2], id, output.c_str());
 	} else {
-		int ret = extract(argv[2], argv[3], output.c_str());
-		if (!ret) return;
+		done = extract(argv[2], argv[3], output.c_str());
 	}
 
-	std::string message = "finished extracting file " + output;
-	showMessage(message.c_str());
+	if (done <= 0)
+		showError("extraction failed (id/name not found)");
+	else {
+		std::string message = "finished extracting file " + output;
+		showMessage(message.c_str());
+	}
 }
 
 void CLI::dirExtract() {
@@ -71,14 +74,22 @@ void CLI::dirExtract() {
 	}
 
 	std::string output = argc == 5 ? argv[4] : argv[3];
-	directoryExtract(argv[3], output);
-	showMessage("extraction finished");
+	int done = directoryExtract(argv[3], output);
+	if (done <= 0)
+		showError("extraction failed (name not found)");
+	else {
+		std::string message = "finished extracting file " + output;
+		showMessage(message.c_str());
+	}
 }
 
 void CLI::list() {
 	initPrefetch(argv[2]);
 	prefetchFile.extractFileTable();
 	showMessage("File table extracted to file_list.txt");
+
+	extractFileMap(argv[2]);
+	showMessage("Hash table extracted to file_hash.txt");
 }
 
 bool CLI::checkInput() {

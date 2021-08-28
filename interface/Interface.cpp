@@ -28,7 +28,6 @@ void Interface::buildFileMap(const char* fileDirectory) {
 		ArchiveBin decimaArchive(availableFiles[i].c_str());
 		decimaArchive.setMessageHandler(this);
 		if (!decimaArchive.open()) continue;
-
 		std::vector <BinFileEntry> fileTable = decimaArchive.getFileTable();
 
 		for (int j = 0; j < fileTable.size(); j++) {
@@ -36,6 +35,51 @@ void Interface::buildFileMap(const char* fileDirectory) {
 		}
 	}
 }
+
+
+struct BinFileEntryNumSorter {
+    inline bool operator() (const BinFileEntry& s1, const BinFileEntry& s2) {
+        return (s1.entryNum < s2.entryNum);
+    }
+};
+
+void Interface::extractFileMap(const char* fileDirectory) {
+	std::ofstream out("file_hash.txt", std::ios::binary);
+	const char* newLine = "\r\n";
+	char buf[1024];
+
+	std::vector<std::string> availableFiles = getFilesFromDirectory(fileDirectory, ".bin");
+
+    int count = 0;
+	for (int i = 0; i < availableFiles.size(); i++) {
+		const char* str = availableFiles[i].c_str();
+		uint32_t size = availableFiles[i].size();
+
+		out.write(str, size);
+		out.write(newLine, 2);
+
+		ArchiveBin decimaArchive(str);
+		//decimaArchive.setMessageHandler(this);
+		if (!decimaArchive.open()) continue;
+		std::vector <BinFileEntry> fileTable = decimaArchive.getFileTable();
+		std::sort(fileTable.begin(), fileTable.end(), BinFileEntryNumSorter());
+
+		for (int j = 0; j < fileTable.size(); j++) {
+			snprintf(buf, sizeof(buf), "- %i: %08x%08x", fileTable[j].entryNum, (uint32_t)(fileTable[j].hash >> 32), (uint32_t)(fileTable[j].hash));
+			out.write(buf, strlen(buf));
+			out.write(newLine, 2);
+		}
+		count += fileTable.size();
+		out.write(newLine, 2);
+	}
+
+	out.write(buf, strlen(buf));
+	out.write(newLine, 2);
+	snprintf(buf, sizeof(buf), "total: %i", count);
+	out.write(buf, strlen(buf));
+	out.write(newLine, 2);
+}
+
 
 const char* Interface::getContainingBinFile(const char* filename) {
 	std::string fname = filename;
@@ -85,11 +129,12 @@ void Interface::setupOutput(const std::string& output) {
 	if (path != "") createDirectoriesFromPath(path);
 }
 
-void Interface::directoryExtract(const char* filename, std::string output) {
+int Interface::directoryExtract(const char* filename, std::string output) {
 	const char* binFile = getContainingBinFile(filename);
-	if (binFile == NULL) return;
+	if (binFile == NULL) return 0;
 	setupOutput(output);
-	extract(binFile, filename, output.c_str());
+	int done = extract(binFile, filename, output.c_str());
+	return done;
 }
 
 void Interface::batchExtract(const std::vector<char*>& filenames, std::string output, int batchSize, int batchOffset) {
