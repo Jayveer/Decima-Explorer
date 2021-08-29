@@ -50,7 +50,9 @@ void CLI::fileExtract() {
 	setupOutput(outpath);
 
 	int done;
-	if (isNumber(argv[3])) {
+	if (argv[3][0] == '*') {
+		done = extractAllIds(argv[2]);
+	} else  if (isNumber(argv[3])) {
 		int id = argToNumber(argv[3]);
 		const char* output = argc == 5 ? argv[4] : argv[3];
 		done = extract(argv[2], id, output);

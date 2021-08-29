@@ -27,7 +27,7 @@ Decima Explorer supports both repacking and packing. Please note there are some 
 
 ##  Usage
 
-There are two flavours of Decima Explorer, one that can be run from the command line and one that runs as a Graphical User Interface. If the Ooz library fails to decompress a file you will need to use a version of the oodle dll. Repacking will require the oodle dll.
+There are two flavours of Decima Explorer, one that can be run from the command line and one that runs as a Graphical User Interface. If the Ooz library fails to decompress a file you will need to use a version of the oodle dll (x64 as this is a 64-bit program). Repacking will require the oodle dll.
 
 ### GUI
 
@@ -57,7 +57,12 @@ The same command can be used on movie files.
 ```
 DecimaExplorer.exe -extract input.bin /file/name/to/extract output.bin
 ```
-The example above is simlar to the last however the file's name is used to chose which file to extract. Only the extract and list commands are implemented for now.
+The example above is similar to the last however the file's name is used to chose which file to extract. Only the extract and list commands are implemented for now.
+
+```
+DecimaExplorer.exe -extract input.bin *
+```
+Extracts all IDs in .bin, same as passing ID 0/1/2.../N manually (may print an error at the end, ignore).
 
 ```
 DecimaExplorer.exe -extract "G:\path\to\game\data\files" /file/name/to/extract output.bin

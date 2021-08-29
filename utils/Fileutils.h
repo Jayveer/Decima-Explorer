@@ -123,6 +123,21 @@ std::string getFileExtension(const std::string& dirName) {
 }
 
 inline
+std::string getBaseFile(const std::string& pathName) {
+    std::string out = pathName;
+    int index = out.find_last_of(".");
+    if (index > 0)
+        out = out.substr(0, index);
+    index = out.find_last_of("\\");
+    if (index > 0)
+        out = out.substr(index + 1);
+    index = out.find_last_of("/");
+    if (index > 0)
+        out = out.substr(index + 1);
+    return out;
+}
+
+inline
 bool hasExtension(const std::string& dirName, const std::string& extension) {
     return getFileExtension(dirName) == extension;
 }

@@ -46,6 +46,7 @@ protected:
 	std::vector<std::string> getFiles(const std::string& directory);
 	int directoryExtract(const char* filename, const char* output);
 	int fileListExtract(const char* fileList);
+	int extractAllIds(const char* archiveFile);
 	int extract(const char* archiveFile, int id, const char* output);
 	int extract(const char* archiveFile, const char* input, const char* output);
 	void parallelExtract(const std::string& directory, const std::vector<char*>& selectedStrings);

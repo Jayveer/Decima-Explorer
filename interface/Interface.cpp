@@ -275,6 +275,32 @@ void destroyArchive(DecimaArchive* archive, const char* archiveFile) {
 	return delete (ArchiveBin*)archive;
 }
 
+int Interface::extractAllIds(const char* archiveFile) {
+	DecimaArchive* archive = archiveFactory(archiveFile);
+	archive->setMessageHandler(this);
+	if (!archive->open()) {
+		destroyArchive(archive, archiveFile);
+		return 0;
+	}
+
+	std::string path = getBaseFile(archiveFile);
+
+	createDirectoriesFromPath(path);
+	int id = 0;
+	char buf[1024];
+	while (true) {
+		snprintf(buf, sizeof(buf), "%s/%06i", path.c_str(), id);
+		std::cout << buf <<"\n";
+
+		int ret = archive->extractFile(id, buf);
+		if (ret <= 0)
+			break;
+		id++;
+	}
+	delete archive;
+	return 1;
+}
+
 int Interface::extract(const char* archiveFile, int id, const char* output) {
 	DecimaArchive* archive = archiveFactory(archiveFile);
 	archive->setMessageHandler(this);
