@@ -290,7 +290,7 @@ int Interface::extractAllIds(const char* archiveFile) {
 	char buf[1024];
 	while (true) {
 		snprintf(buf, sizeof(buf), "%s/%06i", path.c_str(), id);
-		std::cout << buf <<"\n";
+		//std::cout << buf <<"\n";
 
 		int ret = archive->extractFile(id, buf);
 		if (ret <= 0)
@@ -298,7 +298,7 @@ int Interface::extractAllIds(const char* archiveFile) {
 		id++;
 	}
 	delete archive;
-	return 1;
+	return id;
 }
 
 int Interface::extract(const char* archiveFile, int id, const char* output) {
