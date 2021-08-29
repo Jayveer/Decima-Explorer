@@ -54,6 +54,6 @@ public:
 	std::string getFilename();
 	std::string getExtension();
 	void setMessageHandler(MessageHandler* messageHandler);
-	virtual int extractFile(uint32_t id, std::string output) = 0;
-	virtual int extractFile(std::string filename, std::string output, bool suppressError = 0) = 0;
+	virtual int extractFile(uint32_t id, const char* output) = 0;
+	virtual int extractFile(std::string filename, const char* output, bool suppressError = 0) = 0;
 };

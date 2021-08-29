@@ -34,7 +34,7 @@ uint32_t ArchiveMoviePack::getFileEntryIndex(std::string filename) {
 	return -1;
 }
 
-int ArchiveMoviePack::extractFile(uint32_t id, std::string output) {
+int ArchiveMoviePack::extractFile(uint32_t id, const char* output) {
 	if (id < 0 || id >= fileTable.size()) {
 		this->messageHandler->showError(FILEINDEXERROR);
 		return 0;
@@ -45,7 +45,7 @@ int ArchiveMoviePack::extractFile(uint32_t id, std::string output) {
 	return 1;
 }
 
-int ArchiveMoviePack::extractFile(std::string filename, std::string output, bool suppressError) {
+int ArchiveMoviePack::extractFile(std::string filename, const char* output, bool suppressError) {
 	uint32_t i = getFileEntryIndex(filename);
 
 	if (i == -1) {

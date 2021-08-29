@@ -70,6 +70,7 @@ void ArchiveBin::parseFileTable(FILE* f, uint64_t fileTableCount) {
 		fread(&fileEntry.key2, 4, 1, f);
 
 		fileTable.push_back(fileEntry);
+		//hashFiles[fileEntry.hash] = &fileEntry;
 	}
 }
 
@@ -248,8 +249,45 @@ uint32_t ArchiveBin::getFileEntryIndex(const std::string& filename) {
 		if (fileTable[i].hash == hash)
 			return i;
 	}
+
+	//todo
+	/*
+	bool found = hashFiles.find(hash) != hashFiles.end();
+	if (found) {
+		return hashFiles[hash]->entryNum;
+	}
+	*/
+
 	return -1;
 }
+
+//todo unify with interface
+uint32_t ArchiveBin::getFileEntryIndexExt(std::string& filename) {
+	const int max_extensions = 6;
+	const char* extensions[max_extensions] = {"core", "stream", "core.stream", "coretext", "coredebug", "dep"};
+
+	// try default name first
+	std::string fname = filename;
+	uint32_t index = getFileEntryIndex(fname);
+	if (index != -1) {
+		return index;
+	}
+
+	// try common extensions (files like .soundbank.core exists in prefetch list so extension check isn't good)
+	for (int i = 0; i < max_extensions; i++) {
+		fname = filename;
+		addExtension(fname, extensions[i]);
+
+		index = getFileEntryIndex(fname);
+		if (index != -1) {
+			filename = fname;
+			return index;
+		}
+	}
+
+	return -1;
+}
+
 
 BinFileEntry ArchiveBin::getFileEntry(int id) {
 	for (int i = 0; i < fileTable.size(); i++) {
@@ -399,6 +437,7 @@ DataBuffer ArchiveBin::createFileEntries(const std::string& basePath, const std:
 			fileEntry.offset = pos;
 			fileEntry.size = filesize;
 			fileTable.push_back(fileEntry);
+			//hashFiles[fileEntry.hash] = &fileEntry;
 		}
 
 		int writePos = isUpdate ? pos - header.dataSize : pos;
@@ -471,6 +510,7 @@ void ArchiveBin::swapEntries(const std::vector<Swapper>& swapMap) {
 		std::string firstFile = swapMap[i].firstFile;
 		std::string secondFile = swapMap[i].secondFile;
 
+		//todo fix extensions
 		if (!hasExtension(firstFile)) addExtension(firstFile, "core");
 		if (!hasExtension(secondFile)) addExtension(secondFile, "core");
 
@@ -543,40 +583,41 @@ int ArchiveBin::update(const std::string& basePath, const std::vector<std::strin
 	return 1;
 }
 
-int ArchiveBin::extractFile(uint32_t id, std::string output) {
-	if (!hasExtension(output)) addExtension(output, "core");
-
+int ArchiveBin::extractFile(uint32_t id, const char* output) {
 	uint32_t i = getFileEntryIndex(id);
-
 	if (i == -1) {
 		this->messageHandler->showError(FILEINDEXERROR);
 		return 0;
 	}
 
+	//if (!hasExtension(output)) addExtension(output, "core");
+
 	DataBuffer data = extract(fileTable[i]);
 	if (!writeDataToFile(data, output)) return 0;
 	return 1;
 }
 
-int ArchiveBin::extractFile(std::string filename, std::string output, bool suppressError) {
-	if (!hasExtension(filename)) addExtension(filename, "core");
-	if (!hasExtension(output)) addExtension(output, "core");
-	uint32_t i = getFileEntryIndex(filename);
-
+int ArchiveBin::extractFile(std::string filename, const char* output, bool suppressError) {
+	uint32_t i = getFileEntryIndexExt(filename);
 	if (i == -1) {
 		if (!suppressError) this->messageHandler->showError(FILENAMEERROR);
 		return 0;
 	}
 
+	std::string outname;
+	if (output == NULL)
+		outname = filename;
+	else
+		outname = output;
+
 	DataBuffer data = extract(fileTable[i]);
-	if (!writeDataToFile(data, output)) return 0;
+	if (!writeDataToFile(data, outname)) return 0;
 	return 1;
 }
 
 DataBuffer ArchiveBin::extractFile(std::string filename) {
 	DataBuffer data;
-	if (!hasExtension(filename)) addExtension(filename, "core");
-	uint32_t i = getFileEntryIndex(filename);
+	uint32_t i = getFileEntryIndexExt(filename);
 
 	if (i == -1) {
 		this->messageHandler->showError(FILENAMEERROR);

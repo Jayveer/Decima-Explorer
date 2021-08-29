@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../DecimaArchive.h"
+//#include <unordered_map>
 
 typedef struct BinHeader {
 	uint32_t magic;
@@ -37,6 +38,7 @@ private:
 	BinHeader header = {0};
 	std::vector<BinFileEntry>  fileTable;
 	std::vector<BinChunkEntry> chunkTable;
+	//std::unordered_map<uint64_t, BinFileEntry*> hashFiles;
 
 	uint32_t murmurSalt[4]  = { 0x0FA3A9443, 0x0F41CAB62, 0x0F376811C, 0x0D2A89E3E };
 	uint32_t murmurSalt2[4] = { 0x06C084A37, 0x07E159D95, 0x03D5AF7E8, 0x018AA7D3F };
@@ -69,6 +71,7 @@ private:
 	DataBuffer getChunkData(BinChunkEntry chunkEntry);
 	void decryptChunkData(int32_t id, DataBuffer* data);
 	uint32_t getFileEntryIndex(const std::string& filename);
+	uint32_t getFileEntryIndexExt(std::string& filename);
 
 
 	uint64_t calculateDataOffset();
@@ -100,10 +103,10 @@ public:
 
 	int open() override;
 	DataBuffer extractFile(std::string filename);
-	int extractFile(uint32_t id, std::string output);
+	int extractFile(uint32_t id, const char* output);
 	void swapEntries(const std::vector<Swapper>& swapMap);
 	void nukeHashes(const std::vector<std::string>& fileList);
-	int extractFile(std::string filename, std::string output, bool suppressError = 0);
+	int extractFile(std::string filename, const char* output, bool suppressError = 0);
 	int create(const std::string& basePath, const std::vector<std::string>& fileList);
 	int update(const std::string& basePath, const std::vector<std::string>& fileList);
 	const std::vector<BinFileEntry>& getFileTable() { return fileTable; }

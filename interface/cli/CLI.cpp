@@ -46,22 +46,23 @@ void CLI::cliExtract() {
 }
 
 void CLI::fileExtract() {
-	std::string output = argc == 5 ? argv[4] : argv[3];
-	setupOutput(output);
+	std::string outpath = argc == 5 ? argv[4] : argv[3];
+	setupOutput(outpath);
 
 	int done;
 	if (isNumber(argv[3])) {
 		int id = argToNumber(argv[3]);
-		done = extract(argv[2], id, output.c_str());
+		const char* output = argc == 5 ? argv[4] : argv[3];
+		done = extract(argv[2], id, output);
 	} else {
-		done = extract(argv[2], argv[3], output.c_str());
+		const char* output = argc == 5 ? argv[4] : NULL;
+		done = extract(argv[2], argv[3], output);
 	}
 
 	if (done <= 0)
 		showError("extraction failed (id/name not found)");
 	else {
-		std::string message = "finished extracting file " + output;
-		showMessage(message.c_str());
+		showMessage("finished extracting file");
 	}
 }
 

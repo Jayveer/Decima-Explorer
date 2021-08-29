@@ -282,9 +282,9 @@ int Interface::extract(const char* archiveFile, int id, const char* output) {
 		destroyArchive(archive, archiveFile);
 		return 0;
 	}
-	archive->extractFile(id, output);
+	int ret = archive->extractFile(id, output);
 	delete archive;
-	return 1;
+	return ret;
 }
 
 int Interface::extract(const char* archiveFile, const char* input, const char* output) {
@@ -295,9 +295,9 @@ int Interface::extract(const char* archiveFile, const char* input, const char* o
 		return 0;
 	}
 
-	archive->extractFile(input, output);
+	int ret = archive->extractFile(input, output);
 	destroyArchive(archive, archiveFile);
-	return 1;
+	return ret;
 }
 
 std::vector<std::string> Interface::getFiles(const std::string& directory) {
