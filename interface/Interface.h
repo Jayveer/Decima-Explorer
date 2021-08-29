@@ -37,6 +37,9 @@ protected:
 	int initPrefetch(const char* binFile);
 	void setupOutput(const std::string& output);
 	void buildFileMap(const char* fileDirectory);
+	bool getFinalFilename(const char* filename, std::string& p_binName, std::string& p_fname);
+
+	bool loadHashNames(const char* fileDirectory, std::unordered_map<uint64_t, std::string>& hashNames);
 	void extractFileMap(const char* fileDirectory);
 	void swap(const char* dataDir, const char* swapFile);
 	const char* getContainingBinFile(const std::string& filename);

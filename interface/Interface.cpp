@@ -36,6 +36,37 @@ void Interface::buildFileMap(const char* fileDirectory) {
 	}
 }
 
+bool Interface::getFinalFilename(const char* filename, std::string& p_binName, std::string& p_fname) {
+	const int max_extensions = 6;
+	const char* extensions[max_extensions] = {"core", "stream", "core.stream", "coretext", "coredebug", "dep"};
+
+	// try default name first
+	std::string fname = filename;
+	const char* binFile = getContainingBinFile(fname);
+	if (binFile != NULL) {
+		p_binName = binFile;
+		p_fname = fname;
+		return true;
+	}
+
+	// try common extensions (files like .soundbank.core exists in prefetch list so extension check isn't good)
+	for (int i = 0; i < max_extensions; i++) {
+		fname = filename;
+		addExtension(fname, extensions[i]);
+
+		binFile = getContainingBinFile(fname);
+		if (binFile != NULL) {
+			p_binName = binFile;
+			p_fname = fname;
+			return true;
+		}
+	}
+
+	p_binName = "";
+	p_fname = "";
+	return false;
+}
+
 
 struct BinFileEntryNumSorter {
     inline bool operator() (const BinFileEntry& s1, const BinFileEntry& s2) {
@@ -43,10 +74,42 @@ struct BinFileEntryNumSorter {
     }
 };
 
+bool Interface::loadHashNames(const char* fileDirectory, std::unordered_map<uint64_t, std::string>& hashNames) {
+	const char* fileList = "filenames-all.txt";
+	if (!checkFileExists(fileList))
+		return false;
+
+	buildFileMap(fileDirectory);
+
+	std::ifstream infile(fileList);
+
+	std::string binFile;
+	std::string fname;
+	std::string line;
+	while (std::getline(infile, line)) {
+        if (line.empty())
+			continue;
+		if (line.rfind("#", 0) == 0) //skip comments
+			continue;
+
+		if (!getFinalFilename(line.c_str(), binFile, fname))
+			continue;
+
+		uint64_t hash = getFileHash(fname);
+		hashNames[hash] = fname;
+	}
+
+	return true;
+}
+
 void Interface::extractFileMap(const char* fileDirectory) {
 	std::ofstream out("file_hash.txt", std::ios::binary);
 	const char* newLine = "\r\n";
 	char buf[1024];
+
+	// get names if possible
+	std::unordered_map<uint64_t, std::string> hashNames;
+	loadHashNames(fileDirectory, hashNames);
 
 	std::vector<std::string> availableFiles = getFilesFromDirectory(fileDirectory, ".bin");
 
@@ -65,7 +128,17 @@ void Interface::extractFileMap(const char* fileDirectory) {
 		std::sort(fileTable.begin(), fileTable.end(), BinFileEntryNumSorter());
 
 		for (int j = 0; j < fileTable.size(); j++) {
-			snprintf(buf, sizeof(buf), "- %i: %08x%08x", fileTable[j].entryNum, (uint32_t)(fileTable[j].hash >> 32), (uint32_t)(fileTable[j].hash));
+			uint32_t entryNum = fileTable[j].entryNum;
+			uint64_t hash = fileTable[j].hash;
+
+			bool found = hashNames.find(hash) != hashNames.end();
+			if (found) {
+				std::string fname = hashNames[hash];
+				snprintf(buf, sizeof(buf), "- %i: %08x%08x = %s", entryNum, (uint32_t)(hash >> 32), (uint32_t)(hash), fname.c_str());
+			}
+			else {
+				snprintf(buf, sizeof(buf), "- %i: %08x%08x", entryNum, (uint32_t)(hash >> 32), (uint32_t)(hash));
+			}
 			out.write(buf, strlen(buf));
 			out.write(newLine, 2);
 		}
@@ -127,33 +200,16 @@ void Interface::setupOutput(const std::string& output) {
 }
 
 int Interface::directoryExtract(const char* filename, const char* output) {
-	const int max_extensions = 6;
-	const char* extensions[max_extensions] = {"core", "stream", "core.stream", "coretext", "coredebug", "dep"};
-
-	//if (!hasExtension(fname)) 
-
-	// try default name first
-	std::string fname = filename;
-	const char* binFile = getContainingBinFile(fname);
-	if (binFile == NULL) {
-		// try common extensions (files like .soundbank.core exists in prefetch list so extension check isn't good)
-		for (int i = 0; i < max_extensions; i++) {
-			fname = filename;
-			addExtension(fname, extensions[i]);
-
-			binFile = getContainingBinFile(fname);
-			if (binFile != NULL)
-				break;
-		}
-	}
-	if (binFile == NULL)
+	std::string binFile;
+	std::string fname;
+	if (!getFinalFilename(filename, binFile, fname))
 		return 0;
 
 	if (output == NULL)
 		output = fname.c_str();
 
 	setupOutput(output);
-	int done = extract(binFile, fname.c_str(), output);
+	int done = extract(binFile.c_str(), fname.c_str(), output);
 	return done;
 }
 
