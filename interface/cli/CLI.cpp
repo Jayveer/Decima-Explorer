@@ -68,13 +68,14 @@ void CLI::fileExtract() {
 void CLI::dirExtract() {
 	buildFileMap(argv[2]);
 
-	if (isNumber(argv[3])) {
+	const char* name = argv[3];
+	if (isNumber(name)) {
 		showError("IDs cannot be used with directory extract");
 		return;
 	}
 
-	if (checkFileExists(argv[3])) {
-		std::string fileListName = argv[3];
+	if (checkFileExists(name)) {
+		std::string fileListName = name;
 		if (hasExtension(fileListName, "txt")) {
 			int done = fileListExtract(fileListName.c_str());
 
@@ -87,12 +88,13 @@ void CLI::dirExtract() {
 		}
 	}
 
-	std::string output = argc == 5 ? argv[4] : argv[3];
-	int done = directoryExtract(argv[3], output);
+	const char* output = argc >= 5 ? argv[4] : NULL;
+	int done = directoryExtract(name, output);
 	if (done <= 0)
 		showError("extraction failed (name not found)");
 	else {
-		std::string message = "finished extracting file " + output;
+		std::string infile = name;
+		std::string message = "finished extracting file " + infile;
 		showMessage(message.c_str());
 	}
 }
@@ -144,13 +146,13 @@ argcRange CLI::getArgCount(CLI_COMMAND command) {
 	}
 }
 
-int CLI::argToNumber(char* arg) {
+int CLI::argToNumber(const char* arg) {
 	int num;
 	sscanf(arg, "%d", &num);
 	return num;
 }
 
-CLI_COMMAND CLI::argToCommand(char* arg) {
+CLI_COMMAND CLI::argToCommand(const char* arg) {
 	if (!strcmp(arg, "-extract") || !strcmp(arg, "-e"))
 		return EXTRACT;
 	if (!strcmp(arg, "-list")    || !strcmp(arg, "-l"))
@@ -163,7 +165,7 @@ CLI_COMMAND CLI::argToCommand(char* arg) {
 		return SWAP;
 }
 
-bool CLI::isNumber(char* arg) {
+bool CLI::isNumber(const char* arg) {
 	for (int i = 0; arg[i] != 0; i++) {
 		if (!isdigit(arg[i]))
 			return false;
@@ -171,7 +173,7 @@ bool CLI::isNumber(char* arg) {
 	return true;
 }
 
-bool CLI::isCommand(char* arg) {
+bool CLI::isCommand(const char* arg) {
 	return arg[0] == 0x2D;
 }
 

@@ -126,7 +126,7 @@ void Interface::setupOutput(const std::string& output) {
 	if (path != "") createDirectoriesFromPath(path);
 }
 
-int Interface::directoryExtract(const char* filename, std::string output) {
+int Interface::directoryExtract(const char* filename, const char* output) {
 	const int max_extensions = 6;
 	const char* extensions[max_extensions] = {"core", "stream", "core.stream", "coretext", "coredebug", "dep"};
 
@@ -149,8 +149,11 @@ int Interface::directoryExtract(const char* filename, std::string output) {
 	if (binFile == NULL)
 		return 0;
 
+	if (output == NULL)
+		output = fname.c_str();
+
 	setupOutput(output);
-	int done = extract(binFile, fname.c_str(), output.c_str());
+	int done = extract(binFile, fname.c_str(), output);
 	return done;
 }
 
@@ -165,7 +168,7 @@ int Interface::fileListExtract(const char* fileList) {
 			continue;
 		if (line.rfind("#", 0) == 0) //skip comments
 			continue;
-		count += directoryExtract(line.c_str(), line);
+		count += directoryExtract(line.c_str(), NULL);
 	}
 
 	return count;
@@ -175,8 +178,8 @@ void Interface::batchExtract(const std::vector<char*>& filenames, std::string ou
 	int step = batchSize < 10 ? 1 : batchSize / 10;
 
 	for (int i = batchOffset; i < batchSize + batchOffset; i++) {
-		std::string newOutput = addFileToPath(filenames[i], output);
-		directoryExtract(filenames[i], newOutput);
+		std::string newOutput = addFileToPath(filenames[i], output); //todo fix output name
+		directoryExtract(filenames[i], newOutput.c_str());
 		if ((i - batchOffset) % step == 0) updateProgress(step);
 		if (this->forceQuit) return;
 	}

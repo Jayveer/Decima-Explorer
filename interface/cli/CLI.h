@@ -64,10 +64,10 @@ private:
 	void printUsage();
 	bool checkInput();
 	void fileExtract();
-	bool isNumber(char* arg);
-	bool isCommand(char* arg);
-	int argToNumber(char* arg);
-	CLI_COMMAND argToCommand(char* arg);
+	bool isNumber(const char* arg);
+	bool isCommand(const char* arg);
+	int argToNumber(const char* arg);
+	CLI_COMMAND argToCommand(const char* arg);
 	argcRange getArgCount(CLI_COMMAND command);
 	void processCommand(CLI_COMMAND command, char* arg);
 	void removeHashes(const std::vector<std::string>& fileList, const char* dataFolder);
