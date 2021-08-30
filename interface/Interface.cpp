@@ -109,7 +109,7 @@ void Interface::extractFileMap(const char* fileDirectory) {
 
 	// get names if possible
 	std::unordered_map<uint64_t, std::string> hashNames;
-	loadHashNames(fileDirectory, hashNames);
+	bool loadedNames = loadHashNames(fileDirectory, hashNames);
 
 	std::vector<std::string> availableFiles = getFilesFromDirectory(fileDirectory, ".bin");
 
@@ -131,16 +131,19 @@ void Interface::extractFileMap(const char* fileDirectory) {
 			uint32_t entryNum = fileTable[j].entryNum;
 			uint64_t hash = fileTable[j].hash;
 
-			bool found = hashNames.find(hash) != hashNames.end();
-			if (found) {
-				std::string fname = hashNames[hash];
+			if (loadedNames) {
+				bool found = hashNames.find(hash) != hashNames.end();
+				std::string fname = found ? hashNames[hash] : "?";
+				//if (!found) {
 				snprintf(buf, sizeof(buf), "- %i: %08x%08x = %s", entryNum, (uint32_t)(hash >> 32), (uint32_t)(hash), fname.c_str());
-			}
-			else {
+				out.write(buf, strlen(buf));
+				out.write(newLine, 2);
+				//}
+			} else {
 				snprintf(buf, sizeof(buf), "- %i: %08x%08x", entryNum, (uint32_t)(hash >> 32), (uint32_t)(hash));
+				out.write(buf, strlen(buf));
+				out.write(newLine, 2);
 			}
-			out.write(buf, strlen(buf));
-			out.write(newLine, 2);
 		}
 		count += fileTable.size();
 		out.write(newLine, 2);
