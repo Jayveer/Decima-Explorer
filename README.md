@@ -27,17 +27,17 @@ Decima Explorer supports both repacking and packing. Please note there are some 
 
 ##  Usage
 
-There are two flavours of Decima Explorer, one that can be run from the command line and one that runs as a Graphical User Interface. If the Ooz library fails to decompress a file you will need to use a version of the oodle dll. Repacking will require the oodle dll.
+There are two flavours of Decima Explorer, one that can be run from the command line and one that runs as a Graphical User Interface. If the Ooz library fails to decompress a file you will need to use a version of the oodle dll (x64 as this is a 64-bit program). Repacking will require the oodle dll.
 
 ### GUI
 
-With the GUI version you can select the initial data directory of the game and it will populate a file list based on the games cache prefetch. You can use the keyboard shortcut Ctrl+F to filter this list for the items you are interested in. You can select all the items with Ctrl+A or by Ctrl or shift clicking. With the items you wish to extract selected you can press the extract button and choose a directory in which to extract, when extracting multiple files with the GUI extraction will be multithreaded and should use all available cores. It is currently not possible to extract .mpk archives with the GUI.
+With the GUI version you can select the initial data directory of the game and it will populate a file list based on the games cache prefetch (not complete!). You can use the keyboard shortcut Ctrl+F to filter this list for the items you are interested in. You can select all the items with Ctrl+A or by Ctrl or shift clicking. With the items you wish to extract selected you can press the extract button and choose a directory in which to extract, when extracting multiple files with the GUI extraction will be multithreaded and should use all available cores. It is currently not possible to extract .mpk archives with the GUI.
 
 There is also a separate GUI for packing and repacking files. I decided to separate this for now for a cleaner UX. When repacking you must first select a folder that contains the complete path for a file, this is because the directory is used when hashing. You can then select and output, if it is a bin file that already exists it will attempt to repack that file. If it is a file that doesnt exist it will pack the files into a new bin file.
 
 ### CLI
 
-With the CLI version there are various commands that can be used, they are list, extract, pack and repack. List will dump all the strings from the game's cache prefetch. Extract can extract either with a directory as the input or by file. When extracting by file you can use the file ID to extract as well, this is useful as it doesn't require knowing the filename to extract a particular entry. This currently supports both .bin and .mpk archives. Repack can be used to repack core files to their original .bin file. A root directory should be chosen so that the path from the root directory will match the hashed file name. For example if you extract a file and keep its original filename and directory structure to C:\Files, you can repack by using C:\Files as the base path. Pack uses a base directory the same way as Repack but instread of an existing Bin as the input, it allows you to specify an output bin file to create. Packing and Repacking require oo2core_7_win64.dll to be present alongside Decima Explorer. Below are example instructions that can be used on the command line;
+With the CLI version there are various commands that can be used, they are list, extract, pack and repack. List will dump all the strings from the game's cache prefetch (not complete!). Extract can extract either with a directory as the input or by file. When extracting by file you can use the file ID to extract as well, this is useful as it doesn't require knowing the filename to extract a particular entry. This currently supports both .bin and .mpk archives. Repack can be used to repack core files to their original .bin file. A root directory should be chosen so that the path from the root directory will match the hashed file name. For example if you extract a file and keep its original filename and directory structure to C:\Files, you can repack by using C:\Files as the base path. Pack uses a base directory the same way as Repack but instread of an existing Bin as the input, it allows you to specify an output bin file to create. Packing and Repacking require oo2core_7_win64.dll to be present alongside Decima Explorer. Below are example instructions that can be used on the command line;
 
 ```
 DecimaExplorer.exe -list "G:\path\to\game\data\files"
@@ -57,7 +57,12 @@ The same command can be used on movie files.
 ```
 DecimaExplorer.exe -extract input.bin /file/name/to/extract output.bin
 ```
-The example above is simlar to the last however the file's name is used to chose which file to extract. Only the extract and list commands are implemented for now.
+The example above is similar to the last however the file's name is used to chose which file to extract. Only the extract and list commands are implemented for now.
+
+```
+DecimaExplorer.exe -extract input.bin *
+```
+Extracts all IDs in .bin, same as passing ID 0/1/2.../N manually (may print an error at the end, ignore).
 
 ```
 DecimaExplorer.exe -extract "G:\path\to\game\data\files" /file/name/to/extract output.bin
@@ -68,6 +73,11 @@ Here a directory is passed in as the file to extract from, this will allow the t
 DecimaExplorer.exe -extract "G:\path\to\game\data\files" /file/name/to/extract
 ```
 It is possible to omit the output file, in this case the input filename or fileID will be used as the file name. If it is a directory, the directory structure will be created.
+
+```
+DecimaExplorer.exe -extract "G:\path\to\game\data\files" filelist.txt
+```
+Rather than extracting one by one, you can pass a text list with all names you want to extract. Since not all names are listed in the prefetch list (-l) this is useful to get extra files in bulk. Names can be found in various .core files from the prefetch list. Non-existant names are ignored.
 
 ```
 DecimaExplorer.exe -pack "G:\path\to\files\to\pack" output.bin

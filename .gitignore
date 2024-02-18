@@ -1,5 +1,7 @@
 #ignore the following directories
-.vs/
+.*
+!/.gitignore
+!.gitattributes
 Debug/
 Release/
 Debug (GUI)/

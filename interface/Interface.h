@@ -37,10 +37,16 @@ protected:
 	int initPrefetch(const char* binFile);
 	void setupOutput(const std::string& output);
 	void buildFileMap(const char* fileDirectory);
+	bool getFinalFilename(const char* filename, std::string& p_binName, std::string& p_fname);
+
+	bool loadHashNames(const char* fileDirectory, std::unordered_map<uint64_t, std::string>& hashNames);
+	void extractFileMap(const char* fileDirectory);
 	void swap(const char* dataDir, const char* swapFile);
-	const char* getContainingBinFile(const char* filename);
+	const char* getContainingBinFile(const std::string& filename);
 	std::vector<std::string> getFiles(const std::string& directory);
-	void directoryExtract(const char* filename, std::string output);
+	int directoryExtract(const char* filename, const char* output);
+	int fileListExtract(const char* fileList);
+	int extractAllIds(const char* archiveFile);
 	int extract(const char* archiveFile, int id, const char* output);
 	int extract(const char* archiveFile, const char* input, const char* output);
 	void parallelExtract(const std::string& directory, const std::vector<char*>& selectedStrings);

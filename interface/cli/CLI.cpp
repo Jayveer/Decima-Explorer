@@ -46,39 +46,69 @@ void CLI::cliExtract() {
 }
 
 void CLI::fileExtract() {
-	std::string output = argc == 5 ? argv[4] : argv[3];
-	setupOutput(output);
+	std::string outpath = argc == 5 ? argv[4] : argv[3];
+	setupOutput(outpath);
 
-	if (isNumber(argv[3])) {
+	int done;
+	if (argv[3][0] == '*') {
+		done = extractAllIds(argv[2]);
+	} else  if (isNumber(argv[3])) {
 		int id = argToNumber(argv[3]);
-		int ret = extract(argv[2], id, output.c_str());
-		if (!ret) return;
+		const char* output = argc == 5 ? argv[4] : argv[3];
+		done = extract(argv[2], id, output);
 	} else {
-		int ret = extract(argv[2], argv[3], output.c_str());
-		if (!ret) return;
+		const char* output = argc == 5 ? argv[4] : NULL;
+		done = extract(argv[2], argv[3], output);
 	}
 
-	std::string message = "finished extracting file " + output;
-	showMessage(message.c_str());
+	if (done <= 0)
+		showError("extraction failed (id/name not found)");
+	else {
+		showMessage("finished extracting file");
+	}
 }
 
 void CLI::dirExtract() {
 	buildFileMap(argv[2]);
 
-	if (isNumber(argv[3])) {
+	const char* name = argv[3];
+	if (isNumber(name)) {
 		showError("IDs cannot be used with directory extract");
 		return;
 	}
 
-	std::string output = argc == 5 ? argv[4] : argv[3];
-	directoryExtract(argv[3], output);
-	showMessage("extraction finished");
+	if (checkFileExists(name)) {
+		std::string fileListName = name;
+		if (hasExtension(fileListName, "txt")) {
+			int done = fileListExtract(fileListName.c_str());
+
+			char buf[512] = {0};
+			snprintf(buf, sizeof(buf), "finished extracting %s list, total: %d", fileListName.c_str(), done);
+			std::string message = buf;
+
+			showMessage(message.c_str());
+			return;
+		}
+	}
+
+	const char* output = argc >= 5 ? argv[4] : NULL;
+	int done = directoryExtract(name, output);
+	if (done <= 0)
+		showError("extraction failed (name not found)");
+	else {
+		std::string infile = name;
+		std::string message = "finished extracting file " + infile;
+		showMessage(message.c_str());
+	}
 }
 
 void CLI::list() {
 	initPrefetch(argv[2]);
 	prefetchFile.extractFileTable();
 	showMessage("File table extracted to file_list.txt");
+
+	extractFileMap(argv[2]);
+	showMessage("Hash table extracted to file_hash.txt");
 }
 
 bool CLI::checkInput() {
@@ -119,13 +149,13 @@ argcRange CLI::getArgCount(CLI_COMMAND command) {
 	}
 }
 
-int CLI::argToNumber(char* arg) {
+int CLI::argToNumber(const char* arg) {
 	int num;
 	sscanf(arg, "%d", &num);
 	return num;
 }
 
-CLI_COMMAND CLI::argToCommand(char* arg) {
+CLI_COMMAND CLI::argToCommand(const char* arg) {
 	if (!strcmp(arg, "-extract") || !strcmp(arg, "-e"))
 		return EXTRACT;
 	if (!strcmp(arg, "-list")    || !strcmp(arg, "-l"))
@@ -138,7 +168,7 @@ CLI_COMMAND CLI::argToCommand(char* arg) {
 		return SWAP;
 }
 
-bool CLI::isNumber(char* arg) {
+bool CLI::isNumber(const char* arg) {
 	for (int i = 0; arg[i] != 0; i++) {
 		if (!isdigit(arg[i]))
 			return false;
@@ -146,7 +176,7 @@ bool CLI::isNumber(char* arg) {
 	return true;
 }
 
-bool CLI::isCommand(char* arg) {
+bool CLI::isCommand(const char* arg) {
 	return arg[0] == 0x2D;
 }
 

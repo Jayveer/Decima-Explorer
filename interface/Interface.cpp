@@ -28,7 +28,6 @@ void Interface::buildFileMap(const char* fileDirectory) {
 		ArchiveBin decimaArchive(availableFiles[i].c_str());
 		decimaArchive.setMessageHandler(this);
 		if (!decimaArchive.open()) continue;
-
 		std::vector <BinFileEntry> fileTable = decimaArchive.getFileTable();
 
 		for (int j = 0; j < fileTable.size(); j++) {
@@ -37,10 +36,128 @@ void Interface::buildFileMap(const char* fileDirectory) {
 	}
 }
 
-const char* Interface::getContainingBinFile(const char* filename) {
+bool Interface::getFinalFilename(const char* filename, std::string& p_binName, std::string& p_fname) {
+	const int max_extensions = 6;
+	const char* extensions[max_extensions] = {"core", "stream", "core.stream", "coretext", "coredebug", "dep"};
+
+	// try default name first
 	std::string fname = filename;
-	if (!hasExtension(fname)) addExtension(fname, "core");
-	uint64_t hash = getFileHash(fname);
+	const char* binFile = getContainingBinFile(fname);
+	if (binFile != NULL) {
+		p_binName = binFile;
+		p_fname = fname;
+		return true;
+	}
+
+	// try common extensions (files like .soundbank.core exists in prefetch list so extension check isn't good)
+	for (int i = 0; i < max_extensions; i++) {
+		fname = filename;
+		addExtension(fname, extensions[i]);
+
+		binFile = getContainingBinFile(fname);
+		if (binFile != NULL) {
+			p_binName = binFile;
+			p_fname = fname;
+			return true;
+		}
+	}
+
+	p_binName = "";
+	p_fname = "";
+	return false;
+}
+
+
+struct BinFileEntryNumSorter {
+    inline bool operator() (const BinFileEntry& s1, const BinFileEntry& s2) {
+        return (s1.entryNum < s2.entryNum);
+    }
+};
+
+bool Interface::loadHashNames(const char* fileDirectory, std::unordered_map<uint64_t, std::string>& hashNames) {
+	const char* fileList = "filenames-all.txt";
+	if (!checkFileExists(fileList))
+		return false;
+
+	buildFileMap(fileDirectory);
+
+	std::ifstream infile(fileList);
+
+	std::string binFile;
+	std::string fname;
+	std::string line;
+	while (std::getline(infile, line)) {
+        if (line.empty())
+			continue;
+		if (line.rfind("#", 0) == 0) //skip comments
+			continue;
+
+		if (!getFinalFilename(line.c_str(), binFile, fname))
+			continue;
+
+		uint64_t hash = getFileHash(fname);
+		hashNames[hash] = fname;
+	}
+
+	return true;
+}
+
+void Interface::extractFileMap(const char* fileDirectory) {
+	std::ofstream out("file_hash.txt", std::ios::binary);
+	const char* newLine = "\r\n";
+	char buf[1024];
+
+	// get names if possible
+	std::unordered_map<uint64_t, std::string> hashNames;
+	bool loadedNames = loadHashNames(fileDirectory, hashNames);
+
+	std::vector<std::string> availableFiles = getFilesFromDirectory(fileDirectory, ".bin");
+
+    int count = 0;
+	for (int i = 0; i < availableFiles.size(); i++) {
+		const char* str = availableFiles[i].c_str();
+		uint32_t size = availableFiles[i].size();
+
+		out.write(str, size);
+		out.write(newLine, 2);
+
+		ArchiveBin decimaArchive(str);
+		//decimaArchive.setMessageHandler(this);
+		if (!decimaArchive.open()) continue;
+		std::vector <BinFileEntry> fileTable = decimaArchive.getFileTable();
+		std::sort(fileTable.begin(), fileTable.end(), BinFileEntryNumSorter());
+
+		for (int j = 0; j < fileTable.size(); j++) {
+			uint32_t entryNum = fileTable[j].entryNum;
+			uint64_t hash = fileTable[j].hash;
+
+			if (loadedNames) {
+				bool found = hashNames.find(hash) != hashNames.end();
+				std::string fname = found ? hashNames[hash] : "?";
+				//if (!found) {
+				snprintf(buf, sizeof(buf), "- %i: %08x%08x = %s", entryNum, (uint32_t)(hash >> 32), (uint32_t)(hash), fname.c_str());
+				out.write(buf, strlen(buf));
+				out.write(newLine, 2);
+				//}
+			} else {
+				snprintf(buf, sizeof(buf), "- %i: %08x%08x", entryNum, (uint32_t)(hash >> 32), (uint32_t)(hash));
+				out.write(buf, strlen(buf));
+				out.write(newLine, 2);
+			}
+		}
+		count += fileTable.size();
+		out.write(newLine, 2);
+	}
+
+	out.write(newLine, 2);
+	snprintf(buf, sizeof(buf), "total: %i", count);
+	out.write(buf, strlen(buf));
+	out.write(newLine, 2);
+}
+
+
+const char* Interface::getContainingBinFile(const std::string& filename) {
+	uint64_t hash = getFileHash(filename);
 	return fileMap[hash];
 }
 
@@ -85,19 +202,43 @@ void Interface::setupOutput(const std::string& output) {
 	if (path != "") createDirectoriesFromPath(path);
 }
 
-void Interface::directoryExtract(const char* filename, std::string output) {
-	const char* binFile = getContainingBinFile(filename);
-	if (binFile == NULL) return;
+int Interface::directoryExtract(const char* filename, const char* output) {
+	std::string binFile;
+	std::string fname;
+	if (!getFinalFilename(filename, binFile, fname))
+		return 0;
+
+	if (output == NULL)
+		output = fname.c_str();
+
 	setupOutput(output);
-	extract(binFile, filename, output.c_str());
+	int done = extract(binFile.c_str(), fname.c_str(), output);
+	return done;
+}
+
+int Interface::fileListExtract(const char* fileList) {
+	int count = 0;
+
+	std::ifstream infile(fileList);
+
+	std::string line;
+	while (std::getline(infile, line)) {
+        if (line.empty())
+			continue;
+		if (line.rfind("#", 0) == 0) //skip comments
+			continue;
+		count += directoryExtract(line.c_str(), NULL);
+	}
+
+	return count;
 }
 
 void Interface::batchExtract(const std::vector<char*>& filenames, std::string output, int batchSize, int batchOffset) {
 	int step = batchSize < 10 ? 1 : batchSize / 10;
 
 	for (int i = batchOffset; i < batchSize + batchOffset; i++) {
-		std::string newOutput = addFileToPath(filenames[i], output);
-		directoryExtract(filenames[i], newOutput);
+		std::string newOutput = addFileToPath(filenames[i], output); //todo fix output name
+		directoryExtract(filenames[i], newOutput.c_str());
 		if ((i - batchOffset) % step == 0) updateProgress(step);
 		if (this->forceQuit) return;
 	}
@@ -119,8 +260,9 @@ void Interface::deinitPrefetch() {
 }
 
 DecimaArchive* archiveFactory(const char* archiveFile) {
-	const char* ext = getFileExtension(archiveFile).c_str();
+	std::string ext = getFileExtension(archiveFile);
 	if (ext == "mpk") {
+		std::cout << "archive movie pack\n";
 		return new ArchiveMoviePack(archiveFile);
 	}
 
@@ -128,12 +270,38 @@ DecimaArchive* archiveFactory(const char* archiveFile) {
 }
 
 void destroyArchive(DecimaArchive* archive, const char* archiveFile) {
-	const char* ext = getFileExtension(archiveFile).c_str();
+	std::string ext = getFileExtension(archiveFile);
 	if (ext == "mpk") {
 		return delete (ArchiveMoviePack*)archive;
 	}
 
 	return delete (ArchiveBin*)archive;
+}
+
+int Interface::extractAllIds(const char* archiveFile) {
+	DecimaArchive* archive = archiveFactory(archiveFile);
+	archive->setMessageHandler(this);
+	if (!archive->open()) {
+		destroyArchive(archive, archiveFile);
+		return 0;
+	}
+
+	std::string path = getBaseFile(archiveFile);
+
+	createDirectoriesFromPath(path);
+	int id = 0;
+	char buf[1024];
+	while (true) {
+		snprintf(buf, sizeof(buf), "%s/%06i", path.c_str(), id);
+		//std::cout << buf <<"\n";
+
+		int ret = archive->extractFile(id, buf);
+		if (ret <= 0)
+			break;
+		id++;
+	}
+	delete archive;
+	return id;
 }
 
 int Interface::extract(const char* archiveFile, int id, const char* output) {
@@ -143,9 +311,9 @@ int Interface::extract(const char* archiveFile, int id, const char* output) {
 		destroyArchive(archive, archiveFile);
 		return 0;
 	}
-	archive->extractFile(id, output);
+	int ret = archive->extractFile(id, output);
 	delete archive;
-	return 1;
+	return ret;
 }
 
 int Interface::extract(const char* archiveFile, const char* input, const char* output) {
@@ -156,9 +324,9 @@ int Interface::extract(const char* archiveFile, const char* input, const char* o
 		return 0;
 	}
 
-	archive->extractFile(input, output);
+	int ret = archive->extractFile(input, output);
 	destroyArchive(archive, archiveFile);
-	return 1;
+	return ret;
 }
 
 std::vector<std::string> Interface::getFiles(const std::string& directory) {

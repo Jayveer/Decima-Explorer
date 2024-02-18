@@ -40,6 +40,6 @@ public:
 	ArchiveMoviePack(std::string filename);
 	~ArchiveMoviePack();
 	int open() override;
-	int extractFile(uint32_t id, std::string output);
-	int extractFile(std::string filename, std::string output, bool suppressError = 0);
+	int extractFile(uint32_t id, const char* output);
+	int extractFile(std::string filename, const char* output, bool suppressError = 0);
 };

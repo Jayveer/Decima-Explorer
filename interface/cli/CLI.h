@@ -31,6 +31,7 @@ private:
 								"\t DecimaExplorer.exe [-e/-extract] inputfile filename outputfile\n"
 								"\t DecimaExplorer.exe [-e/-extract] [directory containing data files] filename outputfile\n"
 								"\t DecimaExplorer.exe [-e/-extract] [directory containing data files] filename\n"
+								"\t DecimaExplorer.exe [-e/-extract] [directory containing data files] [file list].txt\n"
 								"\t DecimaExplorer.exe [-r/-repack] [bin file to repack] [directory containing directories of core files]\n"
 								"\t DecimaExplorer.exe [-p/-pack] [directory containing directories of core files] outputfile\n"
 								"\t DecimaExplorer.exe [-s/-swap] [directory containing data files] [swap text file]\n"
@@ -63,10 +64,10 @@ private:
 	void printUsage();
 	bool checkInput();
 	void fileExtract();
-	bool isNumber(char* arg);
-	bool isCommand(char* arg);
-	int argToNumber(char* arg);
-	CLI_COMMAND argToCommand(char* arg);
+	bool isNumber(const char* arg);
+	bool isCommand(const char* arg);
+	int argToNumber(const char* arg);
+	CLI_COMMAND argToCommand(const char* arg);
 	argcRange getArgCount(CLI_COMMAND command);
 	void processCommand(CLI_COMMAND command, char* arg);
 	void removeHashes(const std::vector<std::string>& fileList, const char* dataFolder);
