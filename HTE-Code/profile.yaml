@@ -1,0 +1,52 @@
+schema: hte-code-repo-profile/1.0
+repository: "D:\\github\\Decima-Explorer"
+origin: "https://github.com/acrinym/Decima-Explorer.git"
+head_at_scan: "fc6520123b77e14b1b3ff4d797ce6c3e6daca328"
+branch_at_scan: "main"
+dirty_entries_at_scan: 6
+baseline: hte-code-v2-depth5
+central_hte_root: "D:\\github\\HTE-Code"
+baseline_contract: "D:\\github\\HTE-Code\\core\\BASELINE-CONTRACT.md"
+pack_root: "D:\\github\\HTE-Code\\packs"
+composition_mode: additive
+status: generated-from-live-repository
+inclusion_reason:
+  - "acrinym-origin"
+  - "explicit-override:include"
+  - "override-evidence:GitHub estate audit: maintained/edited fork target acrinym/Decima-Explorer."
+  - "has-upstream-remote"
+packs:
+  language:
+    - "language.c-cpp-header"
+    - "language.cpp"
+    - "language.c"
+  framework: []
+  compiler:
+    - "compiler.msvc"
+  runtime:
+    - "runtime.native"
+  toolchain:
+    - "toolchain.msbuild"
+  platform:
+    - "platform.windows"
+  interop: []
+  format:
+    - "format.markdown"
+  protocol:
+    - "protocol.http-rest"
+repo_authority:
+  - no-repo-local-authority-files-discovered
+repo_invariants:
+  - discover-from-repo-authority-before-edit
+  - preserve-unrelated-dirty-work
+  - no-worktrees-without-justin-confirmation
+  - hte-depth5-baseline-always-active
+  - all-detected-packs-compose-additively
+qualification:
+  - establish-live-branch-head-dirty-state
+  - use-repo-native-build-and-test-instructions
+  - run-pack-specific-edge-campaigns-for-changed-surfaces
+  - exact-head-evidence-required-for-final-qualification
+learning:
+  motifs: []
+  superseded_motifs: []

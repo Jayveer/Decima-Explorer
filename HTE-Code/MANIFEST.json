@@ -1,0 +1,208 @@
+{
+  "schema": "hte-code-repo-bundle/1.1",
+  "generated_from": "D:\\github\\HTE-Code",
+  "repo": "D:\\github\\Decima-Explorer",
+  "origin": "https://github.com/acrinym/Decima-Explorer.git",
+  "head_at_generation": "fc6520123b77e14b1b3ff4d797ce6c3e6daca328",
+  "baseline": {
+    "central_path": "D:\\github\\HTE-Code\\core\\HTE-Code-v2.0-Depth5.md",
+    "sha256": "8499c642f5246003ae6328a8ed3b1543fcd77046ccf81722d000497b86e4e5b4"
+  },
+  "packs": [
+    {
+      "id": "language.c-cpp-header",
+      "documents": [
+        {
+          "name": "CONCERNS.md",
+          "central_path": "D:\\github\\HTE-Code\\packs\\languages\\c-cpp-header\\CONCERNS.md",
+          "sha256": "36a1991412ea906fb0a02ea5752fcf563d6907f9e5919a33c25ab6b4c9fc9d41"
+        },
+        {
+          "name": "DEPTH5.md",
+          "central_path": "D:\\github\\HTE-Code\\packs\\languages\\c-cpp-header\\DEPTH5.md",
+          "sha256": "5ca23961d087112fc80d7b03bbedc50bc5460450531491ff235181c796fb739f"
+        },
+        {
+          "name": "FULL-COVERAGE.md",
+          "central_path": "D:\\github\\HTE-Code\\packs\\languages\\c-cpp-header\\FULL-COVERAGE.md",
+          "sha256": "5c1918c2b0164e1a22cd6f0d4663a22e7e33febf631dc2cf3bd28559c4f82f79"
+        }
+      ]
+    },
+    {
+      "id": "language.cpp",
+      "documents": [
+        {
+          "name": "CONCERNS.md",
+          "central_path": "D:\\github\\HTE-Code\\packs\\languages\\cpp\\CONCERNS.md",
+          "sha256": "dd9f19642322d22994f12c6fba16fb2f24769ccf4cb311a435b80aad4a2de554"
+        },
+        {
+          "name": "DEPTH5.md",
+          "central_path": "D:\\github\\HTE-Code\\packs\\languages\\cpp\\DEPTH5.md",
+          "sha256": "d5d182523c2659dc89dfb8ad8df41cbc46f34bfa4869a31199f21bd54376ced6"
+        },
+        {
+          "name": "FULL-COVERAGE.md",
+          "central_path": "D:\\github\\HTE-Code\\packs\\languages\\cpp\\FULL-COVERAGE.md",
+          "sha256": "4629dfce35a6576d92396fb7c435a608570070c88bbf115049b547e7ef7d13ea"
+        }
+      ]
+    },
+    {
+      "id": "language.c",
+      "documents": [
+        {
+          "name": "CONCERNS.md",
+          "central_path": "D:\\github\\HTE-Code\\packs\\languages\\c\\CONCERNS.md",
+          "sha256": "e5336c6e527f7f307d8278d2da3e2f802d308135defba69f25fec5bd4e90da72"
+        },
+        {
+          "name": "DEPTH5.md",
+          "central_path": "D:\\github\\HTE-Code\\packs\\languages\\c\\DEPTH5.md",
+          "sha256": "b46874cedebbcadf745a1df18408e189eb17c58455c3e21de7a02ea5e02ae43c"
+        },
+        {
+          "name": "FULL-COVERAGE.md",
+          "central_path": "D:\\github\\HTE-Code\\packs\\languages\\c\\FULL-COVERAGE.md",
+          "sha256": "221757dcf5404c6731786770f49c5b38aaa444e9ee89d71ece900706d1d43376"
+        }
+      ]
+    },
+    {
+      "id": "compiler.msvc",
+      "documents": [
+        {
+          "name": "CONCERNS.md",
+          "central_path": "D:\\github\\HTE-Code\\packs\\compilers\\msvc\\CONCERNS.md",
+          "sha256": "07c7fa91a0b171bfda6bd7f91d00934e546083aa0e8d19d86b28ea8f385669d3"
+        },
+        {
+          "name": "DEPTH5.md",
+          "central_path": "D:\\github\\HTE-Code\\packs\\compilers\\msvc\\DEPTH5.md",
+          "sha256": "02272941794371cc4ca2920579c4822a0ac0be81f4f6a03df2c3cb53b51d42ea"
+        },
+        {
+          "name": "GAPS.md",
+          "central_path": "D:\\github\\HTE-Code\\packs\\compilers\\msvc\\GAPS.md",
+          "sha256": "eac38d1ff42d0671d467e4d7d4b272078a17c4195cca06d3e3d5fa36c5acf4ae"
+        }
+      ]
+    },
+    {
+      "id": "runtime.native",
+      "documents": [
+        {
+          "name": "CONCERNS.md",
+          "central_path": "D:\\github\\HTE-Code\\packs\\runtimes\\native\\CONCERNS.md",
+          "sha256": "885c69fd212d752401417a45ad5f67c64b65e2e38b5520ac1f862845f234a72a"
+        },
+        {
+          "name": "DEPTH5.md",
+          "central_path": "D:\\github\\HTE-Code\\packs\\runtimes\\native\\DEPTH5.md",
+          "sha256": "19d6ed14f9008e4cc4cd23fd33f4496741d3236e064c1081a32a0dc1a18be1af"
+        },
+        {
+          "name": "GAPS.md",
+          "central_path": "D:\\github\\HTE-Code\\packs\\runtimes\\native\\GAPS.md",
+          "sha256": "394930c31f0be34eae92e771f540c41b222aa7e7625df0835adbf6769df32951"
+        }
+      ]
+    },
+    {
+      "id": "toolchain.msbuild",
+      "documents": [
+        {
+          "name": "CONCERNS.md",
+          "central_path": "D:\\github\\HTE-Code\\packs\\toolchains\\msbuild\\CONCERNS.md",
+          "sha256": "0b1e00be5cc3962bf1d73839c886e99f7e00b07089b9bb262324ed0b9d700fef"
+        },
+        {
+          "name": "DEPTH5.md",
+          "central_path": "D:\\github\\HTE-Code\\packs\\toolchains\\msbuild\\DEPTH5.md",
+          "sha256": "8df16100daa2e642e873b4f4cc29de54f48c5342826b84bc3ef73787d306487d"
+        },
+        {
+          "name": "GAPS.md",
+          "central_path": "D:\\github\\HTE-Code\\packs\\toolchains\\msbuild\\GAPS.md",
+          "sha256": "834eb9a5e4aa083cce60a7eb2a0c57b214085b192ba12b1751c11304b6d2d0ba"
+        }
+      ]
+    },
+    {
+      "id": "platform.windows",
+      "documents": [
+        {
+          "name": "CONCERNS.md",
+          "central_path": "D:\\github\\HTE-Code\\packs\\platforms\\windows\\CONCERNS.md",
+          "sha256": "08f2f414d4054d195b97d6f22b2efcc06d935e38ed822f21a7f9829329d382fd"
+        },
+        {
+          "name": "DEPTH5.md",
+          "central_path": "D:\\github\\HTE-Code\\packs\\platforms\\windows\\DEPTH5.md",
+          "sha256": "f3a8f7e2e881a1ac1318db9f7b8165038180e874db45d33a19984d30ecc89790"
+        },
+        {
+          "name": "FULL-COVERAGE.md",
+          "central_path": "D:\\github\\HTE-Code\\packs\\platforms\\windows\\FULL-COVERAGE.md",
+          "sha256": "c838d9adf9c2ca378a3ad4ea1eb9ae8245cf3d8983729c0dfc4c52715726807e"
+        },
+        {
+          "name": "GAPS.md",
+          "central_path": "D:\\github\\HTE-Code\\packs\\platforms\\windows\\GAPS.md",
+          "sha256": "df75458b96d54e6e18ed39a50eeab79d3a1f0cd4dfcb316f429fbba03471b950"
+        }
+      ]
+    },
+    {
+      "id": "format.markdown",
+      "documents": [
+        {
+          "name": "CONCERNS.md",
+          "central_path": "D:\\github\\HTE-Code\\packs\\formats\\markdown\\CONCERNS.md",
+          "sha256": "3d11d132127e2546450dd409098a98a3099896267c338d201be518812148fe96"
+        },
+        {
+          "name": "DEPTH5.md",
+          "central_path": "D:\\github\\HTE-Code\\packs\\formats\\markdown\\DEPTH5.md",
+          "sha256": "ad09e7392c7463a70cd0326711f2be1de584d95db2549bc6039fd91d47959e99"
+        },
+        {
+          "name": "FULL-COVERAGE.md",
+          "central_path": "D:\\github\\HTE-Code\\packs\\formats\\markdown\\FULL-COVERAGE.md",
+          "sha256": "4f4d544b048c947c012e18edd7fd6ca0a02f1b2d2b3c97d03d16efa617e61d16"
+        },
+        {
+          "name": "GAPS.md",
+          "central_path": "D:\\github\\HTE-Code\\packs\\formats\\markdown\\GAPS.md",
+          "sha256": "e3c52aff1bc3b5d08ff2352211a9a041d25e60d2d62c938ba7e81127520084b8"
+        }
+      ]
+    },
+    {
+      "id": "protocol.http-rest",
+      "documents": [
+        {
+          "name": "CONCERNS.md",
+          "central_path": "D:\\github\\HTE-Code\\packs\\protocols\\http-rest\\CONCERNS.md",
+          "sha256": "5af719bbd8c45599d8034293f7f218f381771bc57592077eee0c924cfc1e0eda"
+        },
+        {
+          "name": "DEPTH5.md",
+          "central_path": "D:\\github\\HTE-Code\\packs\\protocols\\http-rest\\DEPTH5.md",
+          "sha256": "a15e272e3f7620b6918f5e2d8241b56a3282431f259d038549eb1859b9c77dad"
+        },
+        {
+          "name": "FULL-COVERAGE.md",
+          "central_path": "D:\\github\\HTE-Code\\packs\\protocols\\http-rest\\FULL-COVERAGE.md",
+          "sha256": "ad3e4cc927a14a23ae1a616663daab74b2db679e0dc045d15133f839213ab4c3"
+        }
+      ]
+    }
+  ],
+  "analyzer_plan": {
+    "central_path": "D:\\github\\HTE-Code\\repo-profiles\\acrinym__Decima-Explorer\\analyzer-plan.json",
+    "sha256": "49a4d5b8173a0cb7ea96c6b9d2cc33b508f913fcfcc297f9ce4a29facacb4727"
+  },
+  "repo_authorities": []
+}

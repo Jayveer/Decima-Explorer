@@ -1,0 +1,268 @@
+{
+  "schema": "hte-code-analyzer-plan/1.0",
+  "repo_profile": "acrinym__Decima-Explorer",
+  "repo": "D:\\github\\Decima-Explorer",
+  "head_at_scan": "fc6520123b77e14b1b3ff4d797ce6c3e6daca328",
+  "policy": [
+    "Candidates are not automatic execution instructions.",
+    "Repository-local AGENTS/CLAUDE/Cursor rules and build documentation take precedence.",
+    "Resolve exact tool version, configuration, target, and environment before using evidence.",
+    "Prefer repository wrappers and configured analyzers over generic candidate forms.",
+    "Static, compile, and unit-test success do not substitute for runtime/integration qualification.",
+    "Do not install tools, mutate dependencies, launch heavy GUI/emulator workloads, or touch external services merely because a candidate appears here."
+  ],
+  "resolved_languages": [
+    "c-cpp-header",
+    "cpp",
+    "c"
+  ],
+  "evidence_phases": {
+    "availability_probes": [
+      {
+        "language": "c-cpp-header",
+        "candidate": "clang++ --version"
+      },
+      {
+        "language": "c-cpp-header",
+        "candidate": "g++ --version"
+      },
+      {
+        "language": "c-cpp-header",
+        "candidate": "cl"
+      },
+      {
+        "language": "cpp",
+        "candidate": "clang++ --version"
+      },
+      {
+        "language": "cpp",
+        "candidate": "g++ --version"
+      },
+      {
+        "language": "cpp",
+        "candidate": "cl"
+      },
+      {
+        "language": "c",
+        "candidate": "clang --version"
+      },
+      {
+        "language": "c",
+        "candidate": "gcc --version"
+      },
+      {
+        "language": "c",
+        "candidate": "cl"
+      }
+    ],
+    "syntax_or_compile": [
+      {
+        "language": "c-cpp-header",
+        "candidate": "compile a tiny TU that includes the header first/alone"
+      },
+      {
+        "language": "cpp",
+        "candidate": "clang++ -fsyntax-only <translation-unit>"
+      },
+      {
+        "language": "cpp",
+        "candidate": "g++ -fsyntax-only <translation-unit>"
+      },
+      {
+        "language": "c",
+        "candidate": "clang -fsyntax-only <translation-unit>"
+      },
+      {
+        "language": "c",
+        "candidate": "gcc -fsyntax-only <translation-unit>"
+      }
+    ],
+    "static_analysis": [
+      {
+        "language": "c-cpp-header",
+        "candidate": "clang-tidy consumer TU"
+      },
+      {
+        "language": "c-cpp-header",
+        "candidate": "include-what-you-use when configured"
+      },
+      {
+        "language": "cpp",
+        "candidate": "clang-tidy <translation-unit>"
+      },
+      {
+        "language": "cpp",
+        "candidate": "cppcheck --enable=warning,style,performance,portability <paths>"
+      },
+      {
+        "language": "c",
+        "candidate": "clang-tidy <translation-unit>"
+      },
+      {
+        "language": "c",
+        "candidate": "cppcheck --enable=warning,style,performance,portability <paths>"
+      }
+    ],
+    "tests": [
+      {
+        "language": "c-cpp-header",
+        "candidate": "multi-TU consumer fixtures"
+      },
+      {
+        "language": "cpp",
+        "candidate": "repo build/test harness"
+      },
+      {
+        "language": "c",
+        "candidate": "repo build/test harness"
+      }
+    ],
+    "dynamic_analysis": [
+      {
+        "language": "cpp",
+        "candidate": "ASan"
+      },
+      {
+        "language": "cpp",
+        "candidate": "UBSan"
+      },
+      {
+        "language": "cpp",
+        "candidate": "TSan"
+      },
+      {
+        "language": "cpp",
+        "candidate": "Valgrind where supported"
+      },
+      {
+        "language": "c",
+        "candidate": "ASan"
+      },
+      {
+        "language": "c",
+        "candidate": "UBSan"
+      },
+      {
+        "language": "c",
+        "candidate": "TSan where supported"
+      },
+      {
+        "language": "c",
+        "candidate": "Valgrind on supported targets"
+      }
+    ]
+  },
+  "language_registry": {
+    "c-cpp-header": {
+      "availability_probes": [
+        "clang++ --version",
+        "g++ --version",
+        "cl"
+      ],
+      "syntax_or_compile": [
+        "compile a tiny TU that includes the header first/alone"
+      ],
+      "static_analysis": [
+        "clang-tidy consumer TU",
+        "include-what-you-use when configured"
+      ],
+      "tests": [
+        "multi-TU consumer fixtures"
+      ],
+      "dynamic_analysis": [],
+      "notes": [
+        "Header self-containment and include-order permutations are qualification surfaces."
+      ]
+    },
+    "cpp": {
+      "availability_probes": [
+        "clang++ --version",
+        "g++ --version",
+        "cl"
+      ],
+      "syntax_or_compile": [
+        "clang++ -fsyntax-only <translation-unit>",
+        "g++ -fsyntax-only <translation-unit>"
+      ],
+      "static_analysis": [
+        "clang-tidy <translation-unit>",
+        "cppcheck --enable=warning,style,performance,portability <paths>"
+      ],
+      "tests": [
+        "repo build/test harness"
+      ],
+      "dynamic_analysis": [
+        "ASan",
+        "UBSan",
+        "TSan",
+        "Valgrind where supported"
+      ],
+      "notes": [
+        "Test Debug and optimized Release; ODR/ABI/linker issues require whole-build evidence."
+      ]
+    },
+    "c": {
+      "availability_probes": [
+        "clang --version",
+        "gcc --version",
+        "cl"
+      ],
+      "syntax_or_compile": [
+        "clang -fsyntax-only <translation-unit>",
+        "gcc -fsyntax-only <translation-unit>"
+      ],
+      "static_analysis": [
+        "clang-tidy <translation-unit>",
+        "cppcheck --enable=warning,style,performance,portability <paths>"
+      ],
+      "tests": [
+        "repo build/test harness"
+      ],
+      "dynamic_analysis": [
+        "ASan",
+        "UBSan",
+        "TSan where supported",
+        "Valgrind on supported targets"
+      ],
+      "notes": [
+        "Compile commands/defines/includes must match the real build; isolated syntax checks can lie."
+      ]
+    }
+  },
+  "notes": [
+    {
+      "language": "c-cpp-header",
+      "note": "Header self-containment and include-order permutations are qualification surfaces."
+    },
+    {
+      "language": "cpp",
+      "note": "Test Debug and optimized Release; ODR/ABI/linker issues require whole-build evidence."
+    },
+    {
+      "language": "c",
+      "note": "Compile commands/defines/includes must match the real build; isolated syntax checks can lie."
+    }
+  ],
+  "unresolved_nonlanguage_surfaces": {
+    "frameworks": [],
+    "compilers": [
+      "msvc"
+    ],
+    "runtimes": [
+      "native"
+    ],
+    "toolchains": [
+      "msbuild"
+    ],
+    "platforms": [
+      "windows"
+    ],
+    "interop": [],
+    "formats": [
+      "markdown"
+    ],
+    "protocols": [
+      "http-rest"
+    ]
+  }
+}

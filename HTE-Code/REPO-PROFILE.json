@@ -1,0 +1,66 @@
+{
+  "schema": "hte-code-repo-profile/1.0",
+  "id": "acrinym__Decima-Explorer",
+  "repo": "D:\\github\\Decima-Explorer",
+  "origin": "https://github.com/acrinym/Decima-Explorer.git",
+  "head_at_scan": "fc6520123b77e14b1b3ff4d797ce6c3e6daca328",
+  "branch_at_scan": "main",
+  "baseline": "hte-code-v2-depth5",
+  "packs": [
+    "language.c-cpp-header",
+    "language.cpp",
+    "language.c",
+    "compiler.msvc",
+    "runtime.native",
+    "toolchain.msbuild",
+    "platform.windows",
+    "format.markdown",
+    "protocol.http-rest"
+  ],
+  "languages": [
+    {
+      "name": "c-cpp-header",
+      "files": 30
+    },
+    {
+      "name": "cpp",
+      "files": 24
+    },
+    {
+      "name": "c",
+      "files": 1
+    }
+  ],
+  "frameworks": [],
+  "compilers": [
+    "msvc"
+  ],
+  "runtimes": [
+    "native"
+  ],
+  "toolchains": [
+    "msbuild"
+  ],
+  "platforms": [
+    "windows"
+  ],
+  "interop": [],
+  "formats": [
+    {
+      "name": "markdown",
+      "files": 3
+    }
+  ],
+  "protocols": [
+    {
+      "name": "http-rest",
+      "files": 1
+    }
+  ],
+  "inclusion_reason": [
+    "acrinym-origin",
+    "explicit-override:include",
+    "override-evidence:GitHub estate audit: maintained/edited fork target acrinym/Decima-Explorer.",
+    "has-upstream-remote"
+  ]
+}
